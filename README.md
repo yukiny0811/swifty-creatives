@@ -1,3 +1,4 @@
 # SwiftyCreatives
 
-A description of this package.
+Still in alpha.
+Creative coding library for Swift.
