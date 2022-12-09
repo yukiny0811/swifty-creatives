@@ -12,10 +12,11 @@ import SwiftUI
 @available(macOS 10.15, *)
 public struct MetalView<
     DrawProcess: ProcessBase,
-    CameraConfig: CameraConfigBase
+    CameraConfig: CameraConfigBase,
+    DrawConfig: DrawConfigBase
 >: NSViewRepresentable {
     
-    typealias SomeRenderer = Renderer<DrawProcess, CameraConfig>
+    typealias SomeRenderer = Renderer<DrawProcess, CameraConfig, DrawConfig>
     
     public typealias NSViewType = MTKView
     var renderer: SomeRenderer
@@ -34,12 +35,14 @@ public struct MetalView<
     }
 }
 
+@available(macOS 10.15, *)
 class TouchableMTKView<
     DrawProcess: ProcessBase,
-    CameraConfig: CameraConfigBase
+    CameraConfig: CameraConfigBase,
+    DrawConfig: DrawConfigBase
 >: MTKView {
     
-    typealias SomeRenderer = Renderer<DrawProcess, CameraConfig>
+    typealias SomeRenderer = Renderer<DrawProcess, CameraConfig, DrawConfig>
     
     init(renderer: SomeRenderer) {
         super.init(frame: .zero, device: ShaderCore.device)
@@ -47,8 +50,8 @@ class TouchableMTKView<
         self.delegate = renderer
         self.enableSetNeedsDisplay = false
         self.colorPixelFormat = .bgra8Unorm
-        self.framebufferOnly = false
-        self.preferredFramesPerSecond = 60
+        self.framebufferOnly = true
+        self.preferredFramesPerSecond = 120
         self.autoResizeDrawable = true
         self.layer?.isOpaque = false
         self.clearColor = MTLClearColor()
