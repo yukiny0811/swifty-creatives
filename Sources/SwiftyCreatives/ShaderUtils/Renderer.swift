@@ -35,19 +35,7 @@ public class Renderer<
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
         
-// https://developer.apple.com/documentation/metal/mtlrenderpipelinecolorattachmentdescriptor
-        renderPipelineDescriptor.colorAttachments[0].rgbBlendOperation = .add
-        renderPipelineDescriptor.colorAttachments[0].alphaBlendOperation = .add
-        renderPipelineDescriptor.colorAttachments[0].sourceRGBBlendFactor = .one
-        renderPipelineDescriptor.colorAttachments[0].sourceAlphaBlendFactor = .one
-        renderPipelineDescriptor.colorAttachments[0].destinationRGBBlendFactor = .one
-        renderPipelineDescriptor.colorAttachments[0].destinationAlphaBlendFactor = .one
-//        renderPipelineDescriptor.colorAttachments[0].rgbBlendOperation = .add
-//        renderPipelineDescriptor.colorAttachments[0].alphaBlendOperation = .add
-//        renderPipelineDescriptor.colorAttachments[0].sourceRGBBlendFactor = .one
-//        renderPipelineDescriptor.colorAttachments[0].sourceAlphaBlendFactor = .one
-//        renderPipelineDescriptor.colorAttachments[0].destinationRGBBlendFactor = .zero
-//        renderPipelineDescriptor.colorAttachments[0].destinationAlphaBlendFactor = .zero
+        DrawConfig.blendMode.setMode(descsriptor: renderPipelineDescriptor)
         
         renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "test_vertex")
         renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "test_fragment")
