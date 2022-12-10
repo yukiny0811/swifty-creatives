@@ -49,7 +49,7 @@ public class Box {
             Vertex(position: VertexPoint.D, color: simd_float4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale),
             Vertex(position: VertexPoint.A, color: simd_float4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale),
             Vertex(position: VertexPoint.R, color: simd_float4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale),
-            Vertex(position: VertexPoint.Q, color: simd_float4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale)
+            Vertex(position: VertexPoint.Q, color: simd_float4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale),
         ]
         buffer = ShaderCore.device.makeBuffer(bytes: vertexDatas, length: Vertex.memorySize * vertexDatas.count, options: [])!
     }

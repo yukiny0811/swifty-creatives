@@ -94,7 +94,7 @@ public class Renderer<
     }
 
     public func draw(in view: MTKView) {
-        drawProcess.update()
+
 //        sumFrameRate.remove(at: 0)
 //        sumFrameRate.append(Float(1.0 / Date().timeIntervalSince(latestDate)))
 //        print("framerate: \(sumFrameRate.reduce(0, +) / Float(sumFrameRate.count))")
@@ -151,6 +151,7 @@ public class Renderer<
         // -- 0.0006
 
         //--------
+        drawProcess.update()
         drawProcess.draw(encoder: renderCommandEncoder!)
         
         renderCommandEncoder?.endEncoding()
@@ -162,3 +163,4 @@ public class Renderer<
         
     }
 }
+
