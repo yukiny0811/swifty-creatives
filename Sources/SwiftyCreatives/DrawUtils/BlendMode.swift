@@ -23,10 +23,10 @@ public enum BlendMode {
         case .add:
             descsriptor.colorAttachments[0].rgbBlendOperation = .add
             descsriptor.colorAttachments[0].alphaBlendOperation = .add
-            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .one
             descsriptor.colorAttachments[0].sourceAlphaBlendFactor = .one
             descsriptor.colorAttachments[0].destinationRGBBlendFactor = .one
-            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
+            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .one
         }
     }
 }

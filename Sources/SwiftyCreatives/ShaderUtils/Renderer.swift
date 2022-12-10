@@ -10,7 +10,6 @@ import CoreImage
 import MetalKit
 import GLKit
 
-@available(macOS 10.15, *)
 public class Renderer<
     DrawProcess: ProcessBase,
     CameraConfig: CameraConfigBase,
@@ -132,7 +131,6 @@ public class Renderer<
         let renderCommandEncoder = parallelEncoder?.makeRenderCommandEncoder()
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
-        renderCommandEncoder?.setDepthClipMode(.clip)
         renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
         renderCommandEncoder?.setVertexBuffer(vertexUniformBuffer, offset: 0, index: 1)
