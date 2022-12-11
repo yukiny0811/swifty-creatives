@@ -117,7 +117,7 @@ public class Renderer<
         
         let vertexUniform = [
             VertexUniform(
-                mat: camera.perspectiveMatrix * camera.simdMatrix
+                mat: camera.combinedMatrix
             )
         ]
         

@@ -16,17 +16,18 @@ public enum BlendMode {
         case .blend:
             descsriptor.colorAttachments[0].rgbBlendOperation = .add
             descsriptor.colorAttachments[0].alphaBlendOperation = .add
-            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .one
-            descsriptor.colorAttachments[0].sourceAlphaBlendFactor = .one
-            descsriptor.colorAttachments[0].destinationRGBBlendFactor = .zero
-            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .zero
+            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+            descsriptor.colorAttachments[0].sourceAlphaBlendFactor = .sourceAlpha
+            descsriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
+            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
         case .add:
+            // FIXME: Add Blending Error
             descsriptor.colorAttachments[0].rgbBlendOperation = .add
             descsriptor.colorAttachments[0].alphaBlendOperation = .add
-            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .one
-            descsriptor.colorAttachments[0].sourceAlphaBlendFactor = .one
-            descsriptor.colorAttachments[0].destinationRGBBlendFactor = .one
-            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .one
+            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+            descsriptor.colorAttachments[0].sourceAlphaBlendFactor = .sourceAlpha
+            descsriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
+            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
         }
     }
 }
