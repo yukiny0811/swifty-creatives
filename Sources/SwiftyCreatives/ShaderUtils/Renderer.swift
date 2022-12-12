@@ -131,7 +131,7 @@ public class Renderer<
         let renderCommandEncoder = parallelEncoder?.makeRenderCommandEncoder()
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
-        renderCommandEncoder?.setDepthStencilState(depthStencilState)
+//        renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
         renderCommandEncoder?.setVertexBuffer(vertexUniformBuffer, offset: 0, index: 1)
 

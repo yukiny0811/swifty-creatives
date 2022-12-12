@@ -16,10 +16,10 @@ public enum BlendMode {
         case .blend:
             descsriptor.colorAttachments[0].rgbBlendOperation = .add
             descsriptor.colorAttachments[0].alphaBlendOperation = .add
-            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+            descsriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceColor
             descsriptor.colorAttachments[0].sourceAlphaBlendFactor = .sourceAlpha
-            descsriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
-            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
+            descsriptor.colorAttachments[0].destinationRGBBlendFactor = .zero
+            descsriptor.colorAttachments[0].destinationAlphaBlendFactor = .zero
         case .add:
             // FIXME: Add Blending Error
             descsriptor.colorAttachments[0].rgbBlendOperation = .add
