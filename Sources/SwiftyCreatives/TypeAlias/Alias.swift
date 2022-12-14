@@ -6,7 +6,6 @@
 //
 
 // MARK: - SwiftUI
-
 import SwiftUI
 
 #if os(macOS)
@@ -16,7 +15,6 @@ typealias ViewRepresentable = UIViewRepresentable
 #endif
 
 // MARK: - simd
-
 import simd
 
 public typealias f2 = simd_float2

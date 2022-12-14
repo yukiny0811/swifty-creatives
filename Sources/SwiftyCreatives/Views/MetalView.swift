@@ -91,8 +91,8 @@ class TouchableMTKView: MTKView {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let diff = touch.location(in: self) - touch.previousLocation(in: self)
-        (self.delegate as! SomeRenderer).camera.rotateAroundX(Float(diff.y) * 0.01)
-        (self.delegate as! SomeRenderer).camera.rotateAroundY(Float(diff.x) * 0.01)
+        renderer.camera.rotateAroundX(Float(diff.y) * 0.01)
+        renderer.camera.rotateAroundY(Float(diff.x) * 0.01)
     }
     #endif
 }
