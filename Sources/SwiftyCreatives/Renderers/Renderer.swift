@@ -5,10 +5,7 @@
 //  Created by Yuki Kuwashima on 2022/12/08.
 //
 
-import Combine
-import CoreImage
 import MetalKit
-import GLKit
 
 public class Renderer<
     DrawProcess: ProcessBase,
@@ -43,19 +40,19 @@ public class Renderer<
         
         vertexDescriptor.attributes[1].format = .float4
         vertexDescriptor.attributes[1].bufferIndex = 0
-        vertexDescriptor.attributes[1].offset = MemoryLayout<simd_float3>.size
+        vertexDescriptor.attributes[1].offset = f3.memorySize
         
         vertexDescriptor.attributes[2].format = .float3
         vertexDescriptor.attributes[2].bufferIndex = 0
-        vertexDescriptor.attributes[2].offset = MemoryLayout<simd_float3>.size + MemoryLayout<simd_float4>.size
+        vertexDescriptor.attributes[2].offset = f3.memorySize + f4.memorySize
         
         vertexDescriptor.attributes[3].format = .float3
         vertexDescriptor.attributes[3].bufferIndex = 0
-        vertexDescriptor.attributes[3].offset = MemoryLayout<simd_float3>.size + MemoryLayout<simd_float4>.size + (MemoryLayout<simd_float3>.size * 1)
+        vertexDescriptor.attributes[3].offset = f3.memorySize + f4.memorySize + (f3.memorySize * 1)
         
         vertexDescriptor.attributes[4].format = .float3
         vertexDescriptor.attributes[4].bufferIndex = 0
-        vertexDescriptor.attributes[4].offset = MemoryLayout<simd_float3>.size + MemoryLayout<simd_float4>.size + (MemoryLayout<simd_float3>.size * 2)
+        vertexDescriptor.attributes[4].offset = f3.memorySize + f4.memorySize + (f3.memorySize * 2)
         
         vertexDescriptor.layouts[0].stride = vertexMemorySize
         

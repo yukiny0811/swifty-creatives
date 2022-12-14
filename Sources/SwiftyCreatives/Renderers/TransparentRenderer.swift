@@ -5,14 +5,11 @@
 //  Created by Yuki Kuwashima on 2022/12/14.
 //
 
-import Combine
-import CoreImage
 import MetalKit
-import GLKit
 
 struct FrameUniforms {
-    var projectionMatrix: simd_float4x4
-    var viewMatrix: simd_float4x4
+    var projectionMatrix: f4x4
+    var viewMatrix: f4x4
     static var memorySize: Int {
         return MemoryLayout<FrameUniforms>.stride
     }
@@ -67,23 +64,23 @@ class TransparentRenderer<
         vertexDescriptor.attributes[4].offset = 0
         vertexDescriptor.attributes[4].bufferIndex = 4
         
-        vertexDescriptor.layouts[0].stride = simd_float3.memorySize
+        vertexDescriptor.layouts[0].stride = f3.memorySize
         vertexDescriptor.layouts[0].stepRate = 1
         vertexDescriptor.layouts[0].stepFunction = .perVertex
         
-        vertexDescriptor.layouts[1].stride = simd_float4.memorySize
+        vertexDescriptor.layouts[1].stride = f4.memorySize
         vertexDescriptor.layouts[1].stepRate = 1
         vertexDescriptor.layouts[1].stepFunction = .perVertex
         
-        vertexDescriptor.layouts[2].stride = simd_float3.memorySize
+        vertexDescriptor.layouts[2].stride = f3.memorySize
         vertexDescriptor.layouts[2].stepRate = 1
         vertexDescriptor.layouts[2].stepFunction = .perVertex
         
-        vertexDescriptor.layouts[3].stride = simd_float3.memorySize
+        vertexDescriptor.layouts[3].stride = f3.memorySize
         vertexDescriptor.layouts[3].stepRate = 1
         vertexDescriptor.layouts[3].stepFunction = .perVertex
         
-        vertexDescriptor.layouts[4].stride = simd_float3.memorySize
+        vertexDescriptor.layouts[4].stride = f3.memorySize
         vertexDescriptor.layouts[4].stepRate = 1
         vertexDescriptor.layouts[4].stepFunction = .perVertex
         

@@ -5,8 +5,6 @@
 //  Created by Yuki Kuwashima on 2022/12/08.
 //
 
-import Foundation
-
 import Metal
 
 public final class ShaderCore {

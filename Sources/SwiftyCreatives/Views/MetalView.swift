@@ -18,7 +18,7 @@ public struct MetalView<
     DrawProcess: ProcessBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: Alias.ViewRepresentable {
+>: ViewRepresentable {
     
     public typealias NSViewType = MTKView
     var renderer: any RendererBase {

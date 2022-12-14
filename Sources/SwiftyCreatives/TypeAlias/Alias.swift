@@ -5,20 +5,21 @@
 //  Created by Yuki Kuwashima on 2022/12/10.
 //
 
-#if os(macOS)
-import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
+// MARK: - SwiftUI
 
 import SwiftUI
 
-final class Alias {
-    
-    #if os(macOS)
-    typealias ViewRepresentable = NSViewRepresentable
-    #elseif os(iOS)
-    typealias ViewRepresentable = UIViewRepresentable
-    #endif
-        
-}
+#if os(macOS)
+typealias ViewRepresentable = NSViewRepresentable
+#elseif os(iOS)
+typealias ViewRepresentable = UIViewRepresentable
+#endif
+
+// MARK: - simd
+
+import simd
+
+public typealias f2 = simd_float2
+public typealias f3 = simd_float3
+public typealias f4 = simd_float4
+public typealias f4x4 = simd_float4x4

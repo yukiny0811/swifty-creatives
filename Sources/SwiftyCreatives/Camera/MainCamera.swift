@@ -16,9 +16,9 @@ public class MainCamera<
     var matrixX: GLKMatrix4
     var matrixY: GLKMatrix4
     var matrixT: GLKMatrix4
-    var simdMatrix: simd_float4x4 = simd_float4x4(0)
-    var perspectiveMatrix: simd_float4x4 = simd_float4x4(0)
-    var combinedMatrix: simd_float4x4 = simd_float4x4(0)
+    var simdMatrix: f4x4 = f4x4(0)
+    var perspectiveMatrix: f4x4 = f4x4(0)
+    var combinedMatrix: f4x4 = f4x4(0)
     public init() {
         matrixX = GLKMatrix4Identity
         matrixY = GLKMatrix4Identity
