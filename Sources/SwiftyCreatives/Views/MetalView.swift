@@ -15,42 +15,38 @@ import UIKit
 #endif
 
 public struct MetalView<
-    DrawProcess: ProcessBase,
+    DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: ViewRepresentable {
     
     public typealias NSViewType = MTKView
+    
     var renderer: any RendererBase {
-        switch DrawConfig.blendMode {
-        case .normalBlend:
-            return Renderer<DrawProcess, CameraConfig, DrawConfig>()
-        case .add:
-            return Renderer<DrawProcess, CameraConfig, DrawConfig>()
-        case .alphaBlend:
-            return TransparentRenderer<DrawProcess, CameraConfig, DrawConfig>()
-        }
+        DrawConfig.blendMode.getRenderer(
+            p: DrawProcess.self,
+            c: CameraConfig.self,
+            d: DrawConfig.self
+        )
     }
     
-    public init() {
-        
-    }
+    public init() {}
     
-#if os(macOS)
+    #if os(macOS)
     public func makeNSView(context: Context) -> MTKView {
         let mtkView = TouchableMTKView(renderer: renderer)
         return mtkView
     }
     public func updateNSView(_ nsView: MTKView, context: Context) {
     }
-#elseif os(iOS)
+    #elseif os(iOS)
     public func makeUIView(context: Context) -> MTKView {
         let mtkView = TouchableMTKView(renderer: renderer)
         return mtkView
     }
     public func updateUIView(_ uiView: MTKView, context: Context) {
     }
-#endif
+    #endif
 }
 
 class TouchableMTKView: MTKView {

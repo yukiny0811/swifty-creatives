@@ -1,13 +1,13 @@
 //
-//  Renderer.swift
+//  AddRenderer.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2022/12/08.
+//  Created by Yuki Kuwashima on 2022/12/15.
 //
 
 import MetalKit
 
-public class Renderer<
+public class AddRenderer<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
@@ -17,7 +17,6 @@ public class Renderer<
     let vertexDescriptor: MTLVertexDescriptor
     let drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
-    let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
 
     public override init() {
@@ -27,8 +26,8 @@ public class Renderer<
         renderPipelineDescriptor.stencilAttachmentPixelFormat = .depth32Float_stencil8
         renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
         
-        renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "normal_vertex")
-        renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "normal_fragment")
+        renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "add_vertex")
+        renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "add_fragment")
         
         vertexDescriptor = Self.createVertexDescriptor()
         
@@ -39,8 +38,6 @@ public class Renderer<
         self.drawProcess = DrawProcess.init()
         
         camera = MainCamera()
-        let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
-        self.depthStencilState = ShaderCore.device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
         
         super.init()
         
@@ -84,7 +81,6 @@ public class Renderer<
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
-        renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
         renderCommandEncoder?.setVertexBuffer(uniformBuffer, offset: 0, index: 5)
 

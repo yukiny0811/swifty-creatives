@@ -1,36 +1,24 @@
 //
 //  TransparentShader.metal
-//  
 //
-//  Created by Yuki Kuwashima on 2022/12/14.
+//  Original source code from Apple Inc. https://developer.apple.com/videos/play/tech-talks/605/
+//  Modified by Yuki Kuwashima on 2022/12/14.
 //
+//  Copyright © 2017 Apple Inc.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <metal_stdlib>
+#include "Types.metal"
 using namespace metal;
-
-// MARK: structs
-
-struct FrameUniforms {
-    float4x4 projectionMatrix;
-    float4x4 viewMatrix;
-};
-
-struct ColorInOut {
-    float4 position [[ position ]];
-    float4 color;
-};
-
-struct Vertex {
-    float3 position [[ attribute(0) ]];
-    float4 color [[ attribute(1) ]];
-    float3 modelPos [[ attribute(2) ]];
-    float3 modelRot [[ attribute(3) ]];
-    float3 modelScale [[ attribute(4) ]];
-};
 
 // MARK: vertexTransform
 
-vertex ColorInOut vertexTransform(Vertex vIn [[ stage_in ]],
+vertex RasterizerData vertexTransform(Vertex vIn [[ stage_in ]],
                                   constant FrameUniforms &frameUniforms [[ buffer(5) ]]) {
 
     float4x4 modelTransMatrix = float4x4(float4(1.0, 0.0, 0.0, vIn.modelPos.x),
@@ -66,7 +54,7 @@ vertex ColorInOut vertexTransform(Vertex vIn [[ stage_in ]],
     
     float4x4 modelMatrix = transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
     
-    ColorInOut out;
+    RasterizerData out;
     float4 position = float4(vIn.position, 1.0);
     out.position = frameUniforms.projectionMatrix * frameUniforms.viewMatrix * modelMatrix * position;
     out.color = vIn.color;
@@ -133,7 +121,7 @@ inline void InsertFragment(OITDataT oitData, half4 color, half depth, half trans
 }
 
 template <typename OITDataT>
-void OITFragmentFunction(ColorInOut in,
+void OITFragmentFunction(RasterizerData in,
                          constant FrameUniforms &uniforms,
                          OITDataT oitData) {
     const float depth = in.position.z / in.position.w;
@@ -162,12 +150,12 @@ half4 OITResolve(OITData<NUM_LAYERS> pixelData) {
         finalColor += (half4)pixelData.colors[i] * transmittance;
         transmittance *= (half)pixelData.transmittances[i];
     }
-    finalColor.w = 1;
+//    finalColor.w = 1;
     return finalColor;
 }
 
 fragment FragOut<4>
-OITFragmentFunction_4Layer(ColorInOut in [[ stage_in ]],
+OITFragmentFunction_4Layer(RasterizerData in [[ stage_in ]],
                            constant FrameUniforms &uniforms [[ buffer (5) ]],
                            OITImageblock<4> oitImageblock [[ imageblock_data ]]) {
     OITFragmentFunction(in, uniforms, &oitImageblock.oitData);

@@ -1,22 +1,21 @@
 //
 //  TransparentRenderer.swift
-//  
 //
-//  Created by Yuki Kuwashima on 2022/12/14.
+//  Original source code from Apple Inc. https://developer.apple.com/videos/play/tech-talks/605/
+//  Modified by Yuki Kuwashima on 2022/12/14.
 //
+//  Copyright © 2017 Apple Inc.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import MetalKit
-
-struct FrameUniforms {
-    var projectionMatrix: f4x4
-    var viewMatrix: f4x4
-    static var memorySize: Int {
-        return MemoryLayout<FrameUniforms>.stride
-    }
-} 
     
 class TransparentRenderer<
-    DrawProcess: ProcessBase,
+    DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: NSObject, MTKViewDelegate, RendererBase {
@@ -29,7 +28,7 @@ class TransparentRenderer<
     
     let optimalTileSize = MTLSize(width: 32, height: 16, depth: 1)
     
-    let drawProcess: ProcessBase
+    let drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     
     override init() {
@@ -42,47 +41,7 @@ class TransparentRenderer<
         let clearFunction = try! ShaderCore.library.makeFunction(name: "OITClear_4Layer", constantValues: constantValue)
         
         // MARK: - vertexDescriptor
-        vertexDescriptor = MTLVertexDescriptor()
-        
-        vertexDescriptor.attributes[0].format = .float3
-        vertexDescriptor.attributes[0].offset = 0
-        vertexDescriptor.attributes[0].bufferIndex = 0
-        
-        vertexDescriptor.attributes[1].format = .float4
-        vertexDescriptor.attributes[1].offset = 0
-        vertexDescriptor.attributes[1].bufferIndex = 1
-        
-        vertexDescriptor.attributes[2].format = .float3
-        vertexDescriptor.attributes[2].offset = 0
-        vertexDescriptor.attributes[2].bufferIndex = 2
-        
-        vertexDescriptor.attributes[3].format = .float3
-        vertexDescriptor.attributes[3].offset = 0
-        vertexDescriptor.attributes[3].bufferIndex = 3
-        
-        vertexDescriptor.attributes[4].format = .float3
-        vertexDescriptor.attributes[4].offset = 0
-        vertexDescriptor.attributes[4].bufferIndex = 4
-        
-        vertexDescriptor.layouts[0].stride = f3.memorySize
-        vertexDescriptor.layouts[0].stepRate = 1
-        vertexDescriptor.layouts[0].stepFunction = .perVertex
-        
-        vertexDescriptor.layouts[1].stride = f4.memorySize
-        vertexDescriptor.layouts[1].stepRate = 1
-        vertexDescriptor.layouts[1].stepFunction = .perVertex
-        
-        vertexDescriptor.layouts[2].stride = f3.memorySize
-        vertexDescriptor.layouts[2].stepRate = 1
-        vertexDescriptor.layouts[2].stepFunction = .perVertex
-        
-        vertexDescriptor.layouts[3].stride = f3.memorySize
-        vertexDescriptor.layouts[3].stepRate = 1
-        vertexDescriptor.layouts[3].stepFunction = .perVertex
-        
-        vertexDescriptor.layouts[4].stride = f3.memorySize
-        vertexDescriptor.layouts[4].stepRate = 1
-        vertexDescriptor.layouts[4].stepFunction = .perVertex
+        vertexDescriptor = Self.createVertexDescriptor()
         
         // MARK: - render pipeline descriptor
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
@@ -108,9 +67,7 @@ class TransparentRenderer<
         clearTileState = try! ShaderCore.device.makeRenderPipelineState(tileDescriptor: tileDesc, options: .argumentInfo, reflection: nil) // FIXME: argumentinfo?
         
         // MARK: - Depth Descriptor
-        let depthStateDesc = MTLDepthStencilDescriptor()
-        depthStateDesc.depthCompareFunction = .less
-        depthStateDesc.isDepthWriteEnabled = false
+        let depthStateDesc = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: false)
         depthState = ShaderCore.device.makeDepthStencilState(descriptor: depthStateDesc)!
         
         
@@ -160,19 +117,19 @@ class TransparentRenderer<
         
         // MARK: - set buffer
         
-        let frameUniform = [
-            FrameUniforms(
+        let uniform = [
+            Uniform(
                 projectionMatrix: camera.perspectiveMatrix,
                 viewMatrix: camera.simdMatrix
             )
         ]
-        let frameUniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
-            bytes: frameUniform,
-            length: FrameUniforms.memorySize * 1
+        let uniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
+            bytes: uniform,
+            length: Uniform.memorySize * 1
         )!
         
-        renderEncoder.setVertexBuffer(frameUniformBuffer, offset: 0, index: 5)
-        renderEncoder.setFragmentBuffer(frameUniformBuffer, offset: 0, index: 5)
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 5)
+        renderEncoder.setFragmentBuffer(uniformBuffer, offset: 0, index: 5)
         
         // MARK: - draw primitive
         drawProcess.update()

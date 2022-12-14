@@ -1,5 +1,5 @@
 //
-//  ProcessBase.swift
+//  SketchBase.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2022/12/08.
@@ -7,7 +7,7 @@
 
 import Metal
 
-public protocol ProcessBase {
+public protocol SketchBase {
     init()
     func setup()
     func update()

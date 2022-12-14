@@ -14,71 +14,129 @@ public class Rectangle {
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
         static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
         static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
+        static let count = 4
     }
-    private var vertexDatas: [Vertex] = []
-    private var buffer: MTLBuffer
-    private var pos: f3
-    private var rot: f3
-    private var scale: f3
+    
+    private var posBuf: MTLBuffer
+    private var colBuf: MTLBuffer
+    private var mPosBuf: MTLBuffer
+    private var mRotBuf: MTLBuffer
+    private var mScaleBuf: MTLBuffer
+    
+    private var mPos: f3
+    private var mRot: f3
+    private var mScale: f3
+    
+    //  A, B, D, C
+    let positionDatas: [f3] = [
+        VertexPoint.A,
+        VertexPoint.B,
+        VertexPoint.D,
+        VertexPoint.C
+    ]
+    
+    var colorDatas: [f4] = [
+        f4.zero,
+        f4.zero,
+        f4.zero,
+        f4.zero
+    ]
+    
+    var mPosDatas: [f3] = [
+        f3.zero,
+        f3.zero,
+        f3.zero,
+        f3.zero
+    ]
+    
+    var mRotDatas: [f3] = [
+        f3.zero,
+        f3.zero,
+        f3.zero,
+        f3.zero
+    ]
+    
+    var mScaleDatas: [f3] = [
+        f3.one,
+        f3.one,
+        f3.one,
+        f3.one
+    ]
+    
     public init(pos: f3) {
-        self.pos = pos
-        self.rot = f3.zero
-        self.scale = f3.one
-        let modelPos = self.pos * Rectangle.shrinkScale
-        vertexDatas = [
-            Vertex(position: VertexPoint.A, color: f4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale),
-            Vertex(position: VertexPoint.B, color: f4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale),
-            Vertex(position: VertexPoint.D, color: f4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale),
-            Vertex(position: VertexPoint.C, color: f4.zero, modelPos: modelPos, modelRot: rot, modelScale: scale)
-        ]
-        buffer = ShaderCore.device.makeBuffer(bytes: vertexDatas, length: Vertex.memorySize * vertexDatas.count, options: [])!
+        self.mPos = pos
+        self.mRot = f3.zero
+        self.mScale = f3.one
+        
+        posBuf = ShaderCore.device.makeBuffer(
+            bytes: positionDatas,
+            length: f3.memorySize * VertexPoint.count)!
+        
+        colBuf = ShaderCore.device.makeBuffer(
+            bytes: colorDatas,
+            length: f4.memorySize * VertexPoint.count)!
+        
+        mPosBuf = ShaderCore.device.makeBuffer(
+            bytes: mPosDatas,
+            length: f3.memorySize * VertexPoint.count)!
+        
+        mRotBuf = ShaderCore.device.makeBuffer(
+            bytes: mRotDatas,
+            length: f3.memorySize * VertexPoint.count)!
+        
+        mScaleBuf = ShaderCore.device.makeBuffer(
+            bytes: mScaleDatas,
+            length: f3.memorySize * VertexPoint.count)!
+        
+        self.setPosition(self.mPos)
     }
     public func setColor(_ r: Float, _ g: Float, _ b: Float, _ a: Float) {
         let simdColor = f4(r, g, b, a)
-        vertexDatas[0].color = simdColor
-        vertexDatas[1].color = simdColor
-        vertexDatas[2].color = simdColor
-        vertexDatas[3].color = simdColor
-        updateBuffer()
+        colorDatas[0] = simdColor
+        colorDatas[1] = simdColor
+        colorDatas[2] = simdColor
+        colorDatas[3] = simdColor
+        colBuf.contents().copyMemory(from: colorDatas, byteCount: f4.memorySize * VertexPoint.count)
     }
     public func setPosition(_ p: f3) {
-        self.pos = p * Rectangle.shrinkScale
-        vertexDatas[0].modelPos = self.pos
-        vertexDatas[1].modelPos = self.pos
-        vertexDatas[2].modelPos = self.pos
-        vertexDatas[3].modelPos = self.pos
-        updateBuffer()
+        self.mPos = p * Rectangle.shrinkScale
+        mPosDatas[0] = self.mPos
+        mPosDatas[1] = self.mPos
+        mPosDatas[2] = self.mPos
+        mPosDatas[3] = self.mPos
+        mPosBuf.contents().copyMemory(from: mPosDatas, byteCount: f3.memorySize * VertexPoint.count)
     }
     public func setScale(_ s: f3) {
-        self.scale = s
-        vertexDatas[0].modelScale = s
-        vertexDatas[1].modelScale = s
-        vertexDatas[2].modelScale = s
-        vertexDatas[3].modelScale = s
-        updateBuffer()
+        self.mScale = s
+        mScaleDatas[0] = s
+        mScaleDatas[1] = s
+        mScaleDatas[2] = s
+        mScaleDatas[3] = s
+        mScaleBuf.contents().copyMemory(from: mScaleDatas, byteCount: f3.memorySize * VertexPoint.count)
     }
     public func setRotation(_ r: f3) {
-        self.rot = r
-        vertexDatas[0].modelRot = r
-        vertexDatas[1].modelRot = r
-        vertexDatas[2].modelRot = r
-        vertexDatas[3].modelRot = r
-        updateBuffer()
+        self.mRot = r
+        mRotDatas[0] = r
+        mRotDatas[1] = r
+        mRotDatas[2] = r
+        mRotDatas[3] = r
+        mRotBuf.contents().copyMemory(from: mRotDatas, byteCount: f3.memorySize * VertexPoint.count)
     }
     public func getScale() -> f3 {
-        return scale
+        return mScale
     }
     public func getRotation() -> f3 {
-        return rot
+        return mRot
     }
     public func getPosition() -> f3 {
-        return pos
+        return mPos
     }
     public func draw(_ encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(buffer, offset: 0, index: 0)
-        encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: vertexDatas.count)
-    }
-    private func updateBuffer() {
-        buffer.contents().copyMemory(from: vertexDatas, byteCount: Vertex.memorySize * vertexDatas.count)
+        encoder.setVertexBuffer(posBuf, offset: 0, index: 0)
+        encoder.setVertexBuffer(colBuf, offset: 0, index: 1)
+        encoder.setVertexBuffer(mPosBuf, offset: 0, index: 2)
+        encoder.setVertexBuffer(mRotBuf, offset: 0, index: 3)
+        encoder.setVertexBuffer(mScaleBuf, offset: 0, index: 4)
+        encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: VertexPoint.count)
     }
 }
