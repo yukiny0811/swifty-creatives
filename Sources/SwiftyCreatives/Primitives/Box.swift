@@ -27,6 +27,7 @@ public class Box {
     private var mRotBuf: MTLBuffer
     private var mScaleBuf: MTLBuffer
     
+    private var color: f4
     private var mPos: f3
     private var mRot: f3
     private var mScale: f3
@@ -121,6 +122,7 @@ public class Box {
         self.mPos = pos
         self.mRot = f3.zero
         self.mScale = f3.one
+        self.color = f4.zero
         
         posBuf = ShaderCore.device.makeBuffer(
             bytes: positionDatas,
@@ -146,6 +148,7 @@ public class Box {
     }
     public func setColor(_ r: Float, _ g: Float, _ b: Float, _ a: Float) {
         let simdColor = f4(r, g, b, a)
+        self.color = simdColor
         colorDatas[0] = simdColor
         colorDatas[1] = simdColor
         colorDatas[2] = simdColor
@@ -215,6 +218,9 @@ public class Box {
         mRotDatas[12] = r
         mRotDatas[13] = r
         mRotBuf.contents().copyMemory(from: mRotDatas, byteCount: f3.memorySize * VertexPoint.count)
+    }
+    public func getColor() -> f4 {
+        return color
     }
     public func getScale() -> f3 {
         return mScale

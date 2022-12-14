@@ -22,6 +22,7 @@ public class Triangle {
     private var mRotBuf: MTLBuffer
     private var mScaleBuf: MTLBuffer
     
+    private var color: f4
     private var mPos: f3
     private var mRot: f3
     private var mScale: f3
@@ -61,6 +62,7 @@ public class Triangle {
         self.mPos = pos
         self.mRot = f3.zero
         self.mScale = f3.one
+        self.color = f4.zero
         
         posBuf = ShaderCore.device.makeBuffer(
             bytes: positionDatas,
@@ -111,6 +113,9 @@ public class Triangle {
         mRotDatas[1] = r
         mRotDatas[2] = r
         mRotBuf.contents().copyMemory(from: mRotDatas, byteCount: f3.memorySize * VertexPoint.count)
+    }
+    public func getColor() -> f4 {
+        return color
     }
     public func getScale() -> f3 {
         return mScale

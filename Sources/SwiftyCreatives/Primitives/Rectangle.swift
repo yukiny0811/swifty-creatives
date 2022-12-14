@@ -23,6 +23,7 @@ public class Rectangle {
     private var mRotBuf: MTLBuffer
     private var mScaleBuf: MTLBuffer
     
+    private var color: f4
     private var mPos: f3
     private var mRot: f3
     private var mScale: f3
@@ -67,6 +68,7 @@ public class Rectangle {
         self.mPos = pos
         self.mRot = f3.zero
         self.mScale = f3.one
+        self.color = f4.zero
         
         posBuf = ShaderCore.device.makeBuffer(
             bytes: positionDatas,
@@ -92,6 +94,7 @@ public class Rectangle {
     }
     public func setColor(_ r: Float, _ g: Float, _ b: Float, _ a: Float) {
         let simdColor = f4(r, g, b, a)
+        self.color = simdColor
         colorDatas[0] = simdColor
         colorDatas[1] = simdColor
         colorDatas[2] = simdColor
@@ -121,6 +124,9 @@ public class Rectangle {
         mRotDatas[2] = r
         mRotDatas[3] = r
         mRotBuf.contents().copyMemory(from: mRotDatas, byteCount: f3.memorySize * VertexPoint.count)
+    }
+    public func getScale() -> f4 {
+        return color
     }
     public func getScale() -> f3 {
         return mScale
