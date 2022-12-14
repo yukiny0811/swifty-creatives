@@ -20,7 +20,7 @@ public struct MetalView<
     DrawConfig: DrawConfigBase
 >: Alias.ViewRepresentable {
     
-    typealias SomeRenderer = Renderer<DrawProcess, CameraConfig, DrawConfig>
+    typealias SomeRenderer = TransparentRenderer<DrawProcess, CameraConfig, DrawConfig>
     
     public typealias NSViewType = MTKView
     var renderer: SomeRenderer
@@ -52,7 +52,7 @@ class TouchableMTKView<
     DrawConfig: DrawConfigBase
 >: MTKView {
     
-    typealias SomeRenderer = Renderer<DrawProcess, CameraConfig, DrawConfig>
+    typealias SomeRenderer = TransparentRenderer<DrawProcess, CameraConfig, DrawConfig>
     
     init(renderer: SomeRenderer) {
         super.init(frame: .zero, device: ShaderCore.device)
@@ -70,6 +70,7 @@ class TouchableMTKView<
         #endif
         self.clearColor = MTLClearColor()
         self.depthStencilPixelFormat = .depth32Float_stencil8
+        self.sampleCount = 1
         self.clearDepth = 1.0
     }
     
