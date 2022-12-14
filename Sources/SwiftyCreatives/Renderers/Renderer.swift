@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Renderer.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2022/12/08.

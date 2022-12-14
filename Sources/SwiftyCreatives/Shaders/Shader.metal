@@ -1,6 +1,5 @@
 //
-//  RenderShader.metal
-//  Yeahhhhh
+//  Shader.metal
 //
 //  Created by クワシマ・ユウキ on 2021/02/04.
 //
