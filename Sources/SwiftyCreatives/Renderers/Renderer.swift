@@ -14,13 +14,13 @@ public class Renderer<
     DrawProcess: ProcessBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate {
+>: NSObject, MTKViewDelegate, RendererBase {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexMemorySize: Int
     let vertexDescriptor: MTLVertexDescriptor
     let drawProcess: ProcessBase
-    let camera: MainCamera<CameraConfig>
+    var camera: MainCamera<CameraConfig>
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
 
@@ -30,8 +30,6 @@ public class Renderer<
         renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
         renderPipelineDescriptor.stencilAttachmentPixelFormat = .depth32Float_stencil8
         renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
-        
-        DrawConfig.blendMode.setMode(descsriptor: renderPipelineDescriptor)
         
         renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "test_vertex")
         renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "test_fragment")

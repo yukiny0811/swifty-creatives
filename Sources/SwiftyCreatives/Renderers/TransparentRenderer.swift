@@ -22,7 +22,7 @@ class TransparentRenderer<
     DrawProcess: ProcessBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate {
+>: NSObject, MTKViewDelegate, RendererBase {
     
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState
@@ -33,7 +33,7 @@ class TransparentRenderer<
     let optimalTileSize = MTLSize(width: 32, height: 16, depth: 1)
     
     let drawProcess: ProcessBase
-    let camera: MainCamera<CameraConfig>
+    var camera: MainCamera<CameraConfig>
     
     override init() {
         

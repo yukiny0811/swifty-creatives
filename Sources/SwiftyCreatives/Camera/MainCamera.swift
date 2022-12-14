@@ -9,7 +9,7 @@ import GLKit
 
 public class MainCamera<
     Config: CameraConfigBase
-> {
+>: MainCameraBase {
     var frameWidth: Float = 0
     var frameHeight: Float = 0
     var matrix: GLKMatrix4

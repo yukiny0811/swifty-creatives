@@ -20,13 +20,20 @@ public struct MetalView<
     DrawConfig: DrawConfigBase
 >: Alias.ViewRepresentable {
     
-    typealias SomeRenderer = TransparentRenderer<DrawProcess, CameraConfig, DrawConfig>
-    
     public typealias NSViewType = MTKView
-    var renderer: SomeRenderer
+    var renderer: any RendererBase {
+        switch DrawConfig.blendMode {
+        case .normalBlend:
+            return Renderer<DrawProcess, CameraConfig, DrawConfig>()
+        case .add:
+            return Renderer<DrawProcess, CameraConfig, DrawConfig>()
+        case .alphaBlend:
+            return TransparentRenderer<DrawProcess, CameraConfig, DrawConfig>()
+        }
+    }
     
     public init() {
-        self.renderer = SomeRenderer()
+        
     }
     
 #if os(macOS)
@@ -46,15 +53,12 @@ public struct MetalView<
 #endif
 }
 
-class TouchableMTKView<
-    DrawProcess: ProcessBase,
-    CameraConfig: CameraConfigBase,
-    DrawConfig: DrawConfigBase
->: MTKView {
+class TouchableMTKView: MTKView {
     
-    typealias SomeRenderer = TransparentRenderer<DrawProcess, CameraConfig, DrawConfig>
+    var renderer: any RendererBase
     
-    init(renderer: SomeRenderer) {
+    init(renderer: any RendererBase) {
+        self.renderer = renderer
         super.init(frame: .zero, device: ShaderCore.device)
         self.frame = .zero
         self.delegate = renderer
@@ -80,8 +84,8 @@ class TouchableMTKView<
     
     #if os(macOS)
     override func mouseDragged(with event: NSEvent) {
-        (self.delegate as! SomeRenderer).camera.rotateAroundX(Float(event.deltaY) * 0.01)
-        (self.delegate as! SomeRenderer).camera.rotateAroundY(Float(event.deltaX) * 0.01)
+        renderer.camera.rotateAroundX(Float(event.deltaY) * 0.01)
+        renderer.camera.rotateAroundY(Float(event.deltaX) * 0.01)
     }
     #elseif os(iOS)
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
