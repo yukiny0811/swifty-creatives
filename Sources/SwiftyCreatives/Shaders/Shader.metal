@@ -77,6 +77,6 @@ vertex RasterizerData test_vertex (const VertexIn vIn [[ stage_in ]],
     return rd;
 }
 
-fragment half4 test_fragment (RasterizerData rd [[stage_in]], half4 c [[color(0)]]){
-    return half4(rd.color) + c;
+fragment half4 test_fragment (RasterizerData rd [[stage_in]]){
+    return half4(rd.color);
 }

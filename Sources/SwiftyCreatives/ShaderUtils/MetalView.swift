@@ -59,7 +59,7 @@ class TouchableMTKView<
         self.frame = .zero
         self.delegate = renderer
         self.enableSetNeedsDisplay = false
-        self.colorPixelFormat = .bgra8Unorm
+        self.colorPixelFormat = .bgra8Unorm_srgb
         self.framebufferOnly = true
         self.preferredFramesPerSecond = 120
         self.autoResizeDrawable = true
@@ -69,7 +69,7 @@ class TouchableMTKView<
         self.layer.isOpaque = false
         #endif
         self.clearColor = MTLClearColor()
-        self.depthStencilPixelFormat = .depth32Float
+        self.depthStencilPixelFormat = .depth32Float_stencil8
         self.clearDepth = 1.0
     }
     

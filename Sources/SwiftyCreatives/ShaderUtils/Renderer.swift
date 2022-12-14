@@ -16,11 +16,6 @@ public class Renderer<
     DrawConfig: DrawConfigBase
 >: NSObject, MTKViewDelegate {
     
-    var latestDate = Date()
-    var sumFrameRate: [Float] = [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    ]
-    
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexMemorySize: Int
     let vertexDescriptor: MTLVertexDescriptor
@@ -31,15 +26,15 @@ public class Renderer<
 
     public override init() {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-        renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+        renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
+        renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
+        renderPipelineDescriptor.stencilAttachmentPixelFormat = .depth32Float_stencil8
         renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
         
         DrawConfig.blendMode.setMode(descsriptor: renderPipelineDescriptor)
         
         renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "test_vertex")
         renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "test_fragment")
-        
-        renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
         
         vertexMemorySize = MemoryLayout<Vertex>.stride
         
@@ -93,12 +88,6 @@ public class Renderer<
     }
 
     public func draw(in view: MTKView) {
-
-//        sumFrameRate.remove(at: 0)
-//        sumFrameRate.append(Float(1.0 / Date().timeIntervalSince(latestDate)))
-//        print("framerate: \(sumFrameRate.reduce(0, +) / Float(sumFrameRate.count))")
-//        
-//        latestDate = Date()
         drawProcess.cameraProcess(camera: camera)
         view.drawableSize = CGSize(
             width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
@@ -112,26 +101,20 @@ public class Renderer<
             return
         }
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
-        
-        // -- 0.00015
-        
         let vertexUniform = [
             VertexUniform(
                 mat: camera.combinedMatrix
             )
         ]
-        
         let vertexUniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
             bytes: vertexUniform,
             length: MemoryLayout<VertexUniform>.stride * vertexUniform.count
         )!
         
-        let parallelEncoder = commandBuffer?.makeParallelRenderCommandEncoder(descriptor: renderPassDescriptor)
-        
-        let renderCommandEncoder = parallelEncoder?.makeRenderCommandEncoder()
+        let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
-//        renderCommandEncoder?.setDepthStencilState(depthStencilState)
+        renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
         renderCommandEncoder?.setVertexBuffer(vertexUniformBuffer, offset: 0, index: 1)
 
@@ -146,19 +129,12 @@ public class Renderer<
             )
         )
         
-        // -- 0.0006
-
-        //--------
         drawProcess.update()
         drawProcess.draw(encoder: renderCommandEncoder!)
         
         renderCommandEncoder?.endEncoding()
-        parallelEncoder?.endEncoding()
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
-        //--------
-        
-        
     }
 }
 
