@@ -126,7 +126,10 @@ void OITFragmentFunction(RasterizerData in,
                          OITDataT oitData) {
     const float depth = in.position.z / in.position.w;
     half4 fragmentColor = half4(in.color);
-    fragmentColor.rgb *= (1 - fragmentColor.a);
+    
+//    fragmentColor.rgb *= (1 - fragmentColor.a);
+    fragmentColor.rgb *= fragmentColor.a;
+    
     InsertFragment(oitData, fragmentColor, depth, 1 - fragmentColor.a);
 }
 
