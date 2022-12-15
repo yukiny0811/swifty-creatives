@@ -7,8 +7,8 @@
 
 import Metal
 
-public class Triangle {
-    private static let shrinkScale: Float = 0.01
+public class Triangle: PrimitiveBase {
+    static let shrinkScale: Float = 0.01
     private final class VertexPoint {
         static let A: f3 = f3(x: 0, y: 1.0, z: 0.0)
         static let B: f3 = f3(x: cos(Float.pi * 7.0 / 6.0), y: sin(Float.pi * 7.0 / 6.0), z: 0.0)
@@ -16,16 +16,16 @@ public class Triangle {
         static let count = 3
     }
     
-    private var posBuf: MTLBuffer
-    private var colBuf: MTLBuffer
-    private var mPosBuf: MTLBuffer
-    private var mRotBuf: MTLBuffer
-    private var mScaleBuf: MTLBuffer
+    var posBuf: MTLBuffer
+    var colBuf: MTLBuffer
+    var mPosBuf: MTLBuffer
+    var mRotBuf: MTLBuffer
+    var mScaleBuf: MTLBuffer
     
-    private var color: f4
-    private var mPos: f3
-    private var mRot: f3
-    private var mScale: f3
+    var color: f4
+    var mPos: f3
+    var mRot: f3
+    var mScale: f3
     
     //  A, B, D, C
     let positionDatas: [f3] = [

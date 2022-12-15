@@ -7,8 +7,8 @@
 
 import Metal
 
-public class Box {
-    private static let shrinkScale: Float = 0.01
+public class Box: PrimitiveBase {
+    static let shrinkScale: Float = 0.01
     private final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   1.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   1.0)
@@ -21,16 +21,16 @@ public class Box {
         static let count = 14
     }
     
-    private var posBuf: MTLBuffer
-    private var colBuf: MTLBuffer
-    private var mPosBuf: MTLBuffer
-    private var mRotBuf: MTLBuffer
-    private var mScaleBuf: MTLBuffer
+    var posBuf: MTLBuffer
+    var colBuf: MTLBuffer
+    var mPosBuf: MTLBuffer
+    var mRotBuf: MTLBuffer
+    var mScaleBuf: MTLBuffer
     
-    private var color: f4
-    private var mPos: f3
-    private var mRot: f3
-    private var mScale: f3
+    var color: f4
+    var mPos: f3
+    var mRot: f3
+    var mScale: f3
     
     //  T, S, C, B, A, S, Q, T, R, C, D, A, R, Q
     let positionDatas: [f3] = [

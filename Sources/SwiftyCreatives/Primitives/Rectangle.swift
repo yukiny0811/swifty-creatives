@@ -7,8 +7,8 @@
 
 import Metal
 
-public class Rectangle {
-    private static let shrinkScale: Float = 0.01
+public class Rectangle: PrimitiveBase {
+    static let shrinkScale: Float = 0.01
     private final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
@@ -17,16 +17,16 @@ public class Rectangle {
         static let count = 4
     }
     
-    private var posBuf: MTLBuffer
-    private var colBuf: MTLBuffer
-    private var mPosBuf: MTLBuffer
-    private var mRotBuf: MTLBuffer
-    private var mScaleBuf: MTLBuffer
+    var posBuf: MTLBuffer
+    var colBuf: MTLBuffer
+    var mPosBuf: MTLBuffer
+    var mRotBuf: MTLBuffer
+    var mScaleBuf: MTLBuffer
     
-    private var color: f4
-    private var mPos: f3
-    private var mRot: f3
-    private var mScale: f3
+    var color: f4
+    var mPos: f3
+    var mRot: f3
+    var mScale: f3
     
     //  A, B, D, C
     let positionDatas: [f3] = [
@@ -125,7 +125,7 @@ public class Rectangle {
         mRotDatas[3] = r
         mRotBuf.contents().copyMemory(from: mRotDatas, byteCount: f3.memorySize * VertexPoint.count)
     }
-    public func getScale() -> f4 {
+    public func getColor() -> f4 {
         return color
     }
     public func getScale() -> f3 {

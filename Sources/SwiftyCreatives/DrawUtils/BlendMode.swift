@@ -11,6 +11,7 @@ public enum BlendMode {
     case normalBlend
     case add
     case alphaBlend
+    
     func getRenderer<
         P: SketchBase,
         C: CameraConfigBase,

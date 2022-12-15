@@ -120,7 +120,7 @@ class TransparentRenderer<
         let uniform = [
             Uniform(
                 projectionMatrix: camera.perspectiveMatrix,
-                viewMatrix: camera.simdMatrix
+                viewMatrix: camera.mainMatrix
             )
         ]
         let uniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
