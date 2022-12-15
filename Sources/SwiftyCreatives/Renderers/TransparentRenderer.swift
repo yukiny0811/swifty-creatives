@@ -28,7 +28,7 @@ class TransparentRenderer<
     
     let optimalTileSize = MTLSize(width: 32, height: 16, depth: 1)
     
-    let drawProcess: SketchBase
+    var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     
     override init() {

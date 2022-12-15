@@ -15,7 +15,7 @@ public class Renderer<
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
-    let drawProcess: SketchBase
+    var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState

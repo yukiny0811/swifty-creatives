@@ -10,6 +10,7 @@ import MetalKit
 protocol RendererBase: MTKViewDelegate {
     associatedtype Camera: MainCameraBase
     var camera: Camera { get }
+    var drawProcess: any SketchBase { get set }
 }
 
 extension RendererBase {

@@ -26,7 +26,7 @@ final class MySketch: SketchBase {
     var boxes: [Box] = []
     var elapsed: Float = 0
     func setup() {
-        for _ in 0..<100 {
+        for _ in 0..<1000 {
             let box = Box(pos: f3.randomPoint(-1000...1000))
             box.setColor(
                 Float.random(in: 0...1),

@@ -79,16 +79,56 @@ class TouchableMTKView: MTKView {
     }
     
     #if os(macOS)
+    override func mouseDown(with event: NSEvent) {
+        renderer.drawProcess.mouseDown(with: event)
+    }
     override func mouseDragged(with event: NSEvent) {
         renderer.camera.rotateAroundX(Float(event.deltaY) * 0.01)
         renderer.camera.rotateAroundY(Float(event.deltaX) * 0.01)
+        renderer.drawProcess.mouseDragged(with: event)
     }
-    #elseif os(iOS)
+    override func mouseUp(with event: NSEvent) {
+        renderer.drawProcess.mouseUp(with: event)
+    }
+    override func mouseEntered(with event: NSEvent) {
+        renderer.drawProcess.mouseEntered(with: event)
+    }
+    override func mouseExited(with event: NSEvent) {
+        renderer.drawProcess.mouseExited(with: event)
+    }
+    override func keyDown(with event: NSEvent) {
+        renderer.drawProcess.keyDown(with: event)
+    }
+    override func keyUp(with event: NSEvent) {
+        renderer.drawProcess.keyUp(with: event)
+    }
+    override func viewWillStartLiveResize() {
+        renderer.drawProcess.viewWillStartLiveResize()
+    }
+    override func resize(withOldSuperviewSize oldSize: NSSize) {
+        renderer.drawProcess.resize(withOldSuperviewSize: oldSize)
+    }
+    override func viewDidEndLiveResize() {
+        renderer.drawProcess.viewDidEndLiveResize()
+    }
+    #endif
+    
+    #if os(iOS)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        renderer.drawProcess.touchesBegan(touches, with: event)
+    }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let diff = touch.location(in: self) - touch.previousLocation(in: self)
         renderer.camera.rotateAroundX(Float(diff.y) * 0.01)
         renderer.camera.rotateAroundY(Float(diff.x) * 0.01)
+        renderer.drawProcess.touchesMoved(touches, with: event)
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        renderer.drawProcess.touchesEnded(touches, with: event)
+    }
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        renderer.drawProcess.touchesCancelled(touches, with: event)
     }
     #endif
 }
