@@ -49,7 +49,7 @@ final class MySketch: SketchBase {
         elapsed += 0.01
     }
     
-    func cameraProcess(camera: SwiftyCreatives.MainCamera<some SwiftyCreatives.CameraConfigBase>) {
+    func cameraProcess(camera: MainCamera<some CameraConfigBase>) {
         camera.rotateAroundY(0.01)
     }
     

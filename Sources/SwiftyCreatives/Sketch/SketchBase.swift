@@ -18,9 +18,31 @@ public protocol SketchBase {
     func setup()
     func update()
     func draw(encoder: MTLRenderCommandEncoder)
+    
+    func cameraProcess(camera: MainCamera<some CameraConfigBase>)
+    
+    #if os(macOS)
+    func mouseDown(with event: NSEvent)
+    func mouseDragged(with event: NSEvent)
+    func mouseUp(with event: NSEvent)
+    func mouseEntered(with event: NSEvent)
+    func mouseExited(with event: NSEvent)
+    func keyDown(with event: NSEvent)
+    func keyUp(with event: NSEvent)
+    func viewWillStartLiveResize()
+    func resize(withOldSuperviewSize oldSize: NSSize)
+    func viewDidEndLiveResize()
+    #endif
+
+    #if os(iOS)
+    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
+    func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?)
+    func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?)
+    #endif
 }
 
-extension SketchBase {
+public extension SketchBase {
     
     func cameraProcess(camera: MainCamera<some CameraConfigBase>) {}
     
