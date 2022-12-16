@@ -14,7 +14,7 @@ import AppKit
 import UIKit
 #endif
 
-public struct MetalView<
+public struct SketchView<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase

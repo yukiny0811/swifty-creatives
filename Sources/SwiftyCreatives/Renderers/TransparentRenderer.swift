@@ -18,7 +18,7 @@ class TransparentRenderer<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate, DetailedRendererBase {
+>: NSObject, MTKViewDelegate, RendererBase {
     
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState
@@ -31,7 +31,8 @@ class TransparentRenderer<
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     
-    var mainBuffer: BufferPass
+    var projectionBuf: MTLBuffer
+    var viewBuf: MTLBuffer
     
     override init() {
         
@@ -73,18 +74,10 @@ class TransparentRenderer<
         depthState = ShaderCore.device.makeDepthStencilState(descriptor: depthStateDesc)!
         
         
+        self.drawProcess = DrawProcess.init()
         
-        self.mainBuffer = BufferPass(
-            colBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_Color.memorySize)!,
-            mPosBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelPos.memorySize)!,
-            mRotBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelRot.memorySize)!,
-            mScaleBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelScale.memorySize)!,
-            projectionBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ProjectMatrix.memorySize)!,
-            viewBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ViewMatrix.memorySize)!
-        )
-        
-        self.drawProcess = DrawProcess.init(pass: mainBuffer)
-        
+        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
+        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
         
         camera = MainCamera()
         
@@ -130,19 +123,10 @@ class TransparentRenderer<
         
         // MARK: - set buffer
         
-        let uniform = [
-            Uniform(
-                projectionMatrix: camera.perspectiveMatrix,
-                viewMatrix: camera.mainMatrix
-            )
-        ]
-        let uniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
-            bytes: uniform,
-            length: Uniform.memorySize * 1
-        )!
-        
-        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 5)
-        renderEncoder.setFragmentBuffer(uniformBuffer, offset: 0, index: 5)
+        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
+        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
+        renderEncoder.setVertexBuffer(projectionBuf, offset: 0, index: 5)
+        renderEncoder.setVertexBuffer(viewBuf, offset: 0, index: 6)
         
         // MARK: - draw primitive
         drawProcess.update()

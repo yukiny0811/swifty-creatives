@@ -19,45 +19,50 @@ using namespace metal;
 // MARK: vertexTransform
 
 vertex RasterizerData vertexTransform(Vertex vIn [[ stage_in ]],
-                                  constant FrameUniforms &frameUniforms [[ buffer(5) ]]) {
+                                      const device FrameUniforms_Color& uniformColor [[ buffer(1) ]],
+                                      const device FrameUniforms_ModelPos& uniformModelPos [[ buffer(2) ]],
+                                      const device FrameUniforms_ModelRot& uniformModelRot [[ buffer(3) ]],
+                                      const device FrameUniforms_ModelScale& uniformModelScale [[ buffer(4) ]],
+                                      const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(5) ]],
+                                      const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(6) ]]) {
 
-    float4x4 modelTransMatrix = float4x4(float4(1.0, 0.0, 0.0, vIn.modelPos.x),
-                                         float4(0.0, 1.0, 0.0, vIn.modelPos.y),
-                                         float4(0.0, 0.0, 1.0, vIn.modelPos.z),
+    float4x4 modelTransMatrix = float4x4(float4(1.0, 0.0, 0.0, uniformModelPos.value.x),
+                                         float4(0.0, 1.0, 0.0, uniformModelPos.value.y),
+                                         float4(0.0, 0.0, 1.0, uniformModelPos.value.z),
                                          float4(0.0, 0.0, 0.0, 1.0));
 
-    const float cosX = cos(vIn.modelRot.x);
-    const float sinX = sin(vIn.modelRot.x);
+    const float cosX = cos(uniformModelRot.value.x);
+    const float sinX = sin(uniformModelRot.value.x);
     float4x4 modelRotateXMatrix = float4x4(float4(1.0, 0.0, 0.0, 0.0),
                                            float4(0.0, cosX, -sinX, 0.0),
                                            float4(0.0, sinX, cosX, 0.0),
                                            float4(0.0, 0.0, 0.0, 1.0));
 
-    const float cosY = cos(vIn.modelRot.y);
-    const float sinY = sin(vIn.modelRot.y);
+    const float cosY = cos(uniformModelRot.value.y);
+    const float sinY = sin(uniformModelRot.value.y);
     float4x4 modelRotateYMatrix = float4x4(float4(cosY, 0.0, sinY, 0.0),
                                            float4(0.0, 1.0, 0.0, 0.0),
                                            float4(-sinY, 0.0, cosY, 0.0),
                                            float4(0.0, 0.0, 0.0, 1.0));
 
-    const float cosZ = cos(vIn.modelRot.z);
-    const float sinZ = sin(vIn.modelRot.z);
+    const float cosZ = cos(uniformModelRot.value.z);
+    const float sinZ = sin(uniformModelRot.value.z);
     float4x4 modelRotateZMatrix = float4x4(float4(cosZ, -sinZ, 0.0, 0.0),
                                            float4(sinZ, cosZ, 0.0, 0.0),
                                            float4(0.0, 0.0, 1.0, 0.0),
                                            float4(0.0, 0.0, 0.0, 1.0));
                                                 
-    float4x4 modelScaleMatrix = float4x4(float4(vIn.modelScale.x, 0.0, 0.0, 0.0),
-                                         float4(0.0, vIn.modelScale.y, 0.0, 0.0),
-                                         float4(0.0, 0.0, vIn.modelScale.z, 0.0),
+    float4x4 modelScaleMatrix = float4x4(float4(uniformModelScale.value.x, 0.0, 0.0, 0.0),
+                                         float4(0.0, uniformModelScale.value.y, 0.0, 0.0),
+                                         float4(0.0, 0.0, uniformModelScale.value.z, 0.0),
                                          float4(0.0, 0.0, 0.0, 1.0));
     
     float4x4 modelMatrix = transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
     
     RasterizerData out;
     float4 position = float4(vIn.position, 1.0);
-    out.position = frameUniforms.projectionMatrix * frameUniforms.viewMatrix * modelMatrix * position;
-    out.color = vIn.color;
+    out.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * position;
+    out.color = uniformColor.value;
     return out;
 }
 
@@ -122,7 +127,6 @@ inline void InsertFragment(OITDataT oitData, half4 color, half depth, half trans
 
 template <typename OITDataT>
 void OITFragmentFunction(RasterizerData in,
-                         constant FrameUniforms &uniforms,
                          OITDataT oitData) {
     const float depth = in.position.z / in.position.w;
     half4 fragmentColor = half4(in.color);
@@ -159,9 +163,8 @@ half4 OITResolve(OITData<NUM_LAYERS> pixelData) {
 
 fragment FragOut<4>
 OITFragmentFunction_4Layer(RasterizerData in [[ stage_in ]],
-                           constant FrameUniforms &uniforms [[ buffer (5) ]],
                            OITImageblock<4> oitImageblock [[ imageblock_data ]]) {
-    OITFragmentFunction(in, uniforms, &oitImageblock.oitData);
+    OITFragmentFunction(in, &oitImageblock.oitData);
     FragOut<4> Out;
     Out.aoitImageBlock = oitImageblock;
     return Out;

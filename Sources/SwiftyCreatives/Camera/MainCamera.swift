@@ -19,8 +19,8 @@ public class MainCamera<
     var matrixY: GLKMatrix4
     var matrixT: GLKMatrix4
     
-    var mainMatrix: f4x4 = f4x4(0)
-    var perspectiveMatrix: f4x4 = f4x4(0)
+    var mainMatrix: [f4x4] = [f4x4(0)]
+    var perspectiveMatrix: [f4x4] = [f4x4(0)]
     
     public init() {
         matrixX = GLKMatrix4Identity
@@ -53,7 +53,7 @@ public class MainCamera<
     }
     
     public func updateMatrix() {
-        mainMatrix = matrix.toSimd()
+        mainMatrix[0] = matrix.toSimd()
     }
     public func updatePMatrix() {
         let pmat = GLKMatrix4MakePerspective(
@@ -62,7 +62,7 @@ public class MainCamera<
             Config.near,
             Config.far
         )
-        perspectiveMatrix = pmat.toSimd()
+        perspectiveMatrix[0] = pmat.toSimd()
     }
     
     public func setFrame(width: Float, height: Float) {

@@ -12,3 +12,25 @@ protocol RendererBase: MTKViewDelegate {
     var camera: Camera { get }
     var drawProcess: any SketchBase { get set }
 }
+
+extension RendererBase {
+    static func createVertexDescriptor() -> MTLVertexDescriptor {
+        let vertexDescriptor = MTLVertexDescriptor()
+        
+        vertexDescriptor.attributes[0].format = .float3
+        vertexDescriptor.attributes[0].offset = 0
+        vertexDescriptor.attributes[0].bufferIndex = 0
+        
+        vertexDescriptor.layouts[0].stride = f3.memorySize
+        vertexDescriptor.layouts[0].stepRate = 1
+        vertexDescriptor.layouts[0].stepFunction = .perVertex
+        
+        return vertexDescriptor
+    }
+    static func createDepthStencilDescriptor(compareFunc: MTLCompareFunction, writeDepth: Bool) -> MTLDepthStencilDescriptor {
+        let depthStateDesc = MTLDepthStencilDescriptor()
+        depthStateDesc.depthCompareFunction = compareFunc
+        depthStateDesc.isDepthWriteEnabled = writeDepth
+        return depthStateDesc
+    }
+}

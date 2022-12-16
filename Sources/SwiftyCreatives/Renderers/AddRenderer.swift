@@ -7,20 +7,20 @@
 
 import MetalKit
 
-public class SimpleRenderer<
+public class AddRenderer<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate, SimpleRendererBase {
+>: NSObject, MTKViewDelegate, RendererBase {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
-    let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
     
-    var mainBuffer: BufferPass
+    var projectionBuf: MTLBuffer
+    var viewBuf: MTLBuffer
 
     public override init() {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -29,8 +29,8 @@ public class SimpleRenderer<
         renderPipelineDescriptor.stencilAttachmentPixelFormat = .depth32Float_stencil8
         renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
         
-        renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "simple_normal_vertex")
-        renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "simple_normal_fragment")
+        renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "add_vertex")
+        renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "add_fragment")
         
         vertexDescriptor = Self.createVertexDescriptor()
         
@@ -38,24 +38,18 @@ public class SimpleRenderer<
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
-        self.mainBuffer = BufferPass(
-            colBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_Color.memorySize)!,
-            mPosBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelPos.memorySize)!,
-            mRotBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelRot.memorySize)!,
-            mScaleBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelScale.memorySize)!,
-            projectionBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ProjectMatrix.memorySize)!,
-            viewBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ViewMatrix.memorySize)!
-        )
         
-        self.drawProcess = DrawProcess.init(pass: mainBuffer)
+        self.drawProcess = DrawProcess.init()
         
         camera = MainCamera()
-        let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
-        self.depthStencilState = ShaderCore.device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
+        
+        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
+        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
         
         super.init()
         
         self.drawProcess.setup()
+        
         
     }
 
@@ -82,18 +76,12 @@ public class SimpleRenderer<
         
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
+        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
+        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
+        renderCommandEncoder?.setVertexBuffer(projectionBuf, offset: 0, index: 5)
+        renderCommandEncoder?.setVertexBuffer(viewBuf, offset: 0, index: 6)
+        
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
-        renderCommandEncoder?.setDepthStencilState(depthStencilState)
-        
-        mainBuffer.projectionBuf.contents().copyMemory(from: [camera.perspectiveMatrix], byteCount: SimpleUniform_ProjectMatrix.memorySize)
-        mainBuffer.viewBuf.contents().copyMemory(from: [camera.mainMatrix], byteCount: SimpleUniform_ViewMatrix.memorySize)
-        
-        renderCommandEncoder?.setVertexBuffer(mainBuffer.colBuf, offset: 0, index: 1)
-        renderCommandEncoder?.setVertexBuffer(mainBuffer.mPosBuf, offset: 0, index: 2)
-        renderCommandEncoder?.setVertexBuffer(mainBuffer.mRotBuf, offset: 0, index: 3)
-        renderCommandEncoder?.setVertexBuffer(mainBuffer.mScaleBuf, offset: 0, index: 4)
-        renderCommandEncoder?.setVertexBuffer(mainBuffer.projectionBuf, offset: 0, index: 5)
-        renderCommandEncoder?.setVertexBuffer(mainBuffer.viewBuf, offset: 0, index: 6)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(
@@ -112,6 +100,5 @@ public class SimpleRenderer<
         renderCommandEncoder?.endEncoding()
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
-        
     }
 }

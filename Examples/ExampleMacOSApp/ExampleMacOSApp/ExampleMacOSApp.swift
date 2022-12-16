@@ -15,45 +15,67 @@ struct ExampleMacOSApp: App {
             ZStack {
                 Text("Swifty-Creatives Example")
                     .font(.largeTitle)
-                MetalView<MySketch, MainCameraConfig, MyDrawConfig>()
+                VStack {
+                    HStack {
+                        SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
+                        SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
+                        SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
+                    }
+                    HStack {
+                        SketchView<MySketch, MainCameraConfig, MyDrawConfigNormal>()
+                        SketchView<MySketch, MainCameraConfig, MyDrawConfigAdd>()
+                        SketchView<MySketch, MainCameraConfig, MyDrawConfigAlpha>()
+                    }
+                }
             }
             .background(.black)
         }
     }
 }
 
-final class MyDrawConfig: DrawConfigBase {
+final class MyDrawConfigNormal: DrawConfigBase {
     static var contentScaleFactor: Int = 3
     static var blendMode: SwiftyCreatives.BlendMode = .normalBlend
-    static var sketchMode: SketchMode = .simple
 }
 
-final class MySketch: Sketch {
+final class MyDrawConfigAdd: DrawConfigBase {
+    static var contentScaleFactor: Int = 3
+    static var blendMode: SwiftyCreatives.BlendMode = .add
+}
+
+final class MyDrawConfigAlpha: DrawConfigBase {
+    static var contentScaleFactor: Int = 3
+    static var blendMode: SwiftyCreatives.BlendMode = .alphaBlend
+}
+
+final class MySketch: SketchBase {
     
-    let b1 = Box()
-    let b2 = Box()
+    var boxes: [Box] = []
+    var elapsed: Float = 0.0
     
-    override func setup() {
-        setColor(f4(1, 0, 0, 1))
-        setPos(f3.zero)
-        setRot(f3.zero)
-        setScale(f3.one)
+    func setup() {
+        for _ in 0...100 {
+            let box = Box()
+            box.setColor(f4.randomPoint(0...1))
+            box.setPos(f3.randomPoint(-10...10))
+            box.setScale(f3.one * Float.random(in: 0.3...3))
+            boxes.append(box)
+        }
     }
-    override func update() {
+    func update() {
+        for b in boxes {
+            b.setColor(f4(sin(elapsed), b.color.y, b.color.z, b.color.w))
+        }
+        elapsed += 0.01
     }
     
-    override func cameraProcess(camera: MainCamera<some CameraConfigBase>) {
-        
+    func cameraProcess(camera: MainCamera<some CameraConfigBase>) {
+        camera.rotateAroundY(0.01)
     }
     
-    override func draw(encoder: MTLRenderCommandEncoder) {
-        
-        setPos(f3(10, 0, 10))
-        setColor(f4(1, 1, 0, 1))
-        b1.draw(encoder, pass)
-        
-        setPos(f3(10, 10, 0))
-        setColor(f4(1, 0, 1, 1))
-        b2.draw(encoder, pass)
+    func draw(encoder: MTLRenderCommandEncoder) {
+        for b in boxes {
+            b.draw(encoder)
+        }
     }
 }

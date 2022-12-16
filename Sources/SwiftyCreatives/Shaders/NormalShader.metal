@@ -6,10 +6,10 @@
 //
 
 #include <metal_stdlib>
-#include "Simple_Types.metal"
+#include "Types.metal"
 using namespace metal;
 
-vertex RasterizerData simple_normal_vertex (const Vertex vIn [[ stage_in ]],
+vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
                                             const device FrameUniforms_Color& uniformColor [[ buffer(1) ]],
                                             const device FrameUniforms_ModelPos& uniformModelPos [[ buffer(2) ]],
                                             const device FrameUniforms_ModelRot& uniformModelRot [[ buffer(3) ]],
@@ -57,6 +57,6 @@ vertex RasterizerData simple_normal_vertex (const Vertex vIn [[ stage_in ]],
     return rd;
 }
 
-fragment half4 simple_normal_fragment (RasterizerData rd [[stage_in]]) {
+fragment half4 normal_fragment (RasterizerData rd [[stage_in]]) {
     return half4(rd.color.x, rd.color.y, rd.color.z, 1);
 }
