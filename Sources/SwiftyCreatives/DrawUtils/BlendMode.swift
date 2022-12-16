@@ -19,7 +19,11 @@ public enum BlendMode {
     >(p: P.Type, c: C.Type, d: D.Type) -> any RendererBase {
         switch self {
         case .normalBlend:
-            return Renderer<P, C, D>()
+            if D.sketchMode == .simple {
+                return SimpleRenderer<P, C, D>()
+            } else {
+                return Renderer<P, C, D>()
+            }
         case .add:
             return AddRenderer<P, C, D>()
         case .alphaBlend:

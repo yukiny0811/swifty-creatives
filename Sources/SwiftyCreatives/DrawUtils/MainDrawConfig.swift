@@ -8,4 +8,5 @@
 public final class MainDrawConfig: DrawConfigBase {
     public static var contentScaleFactor: Int = 3
     public static var blendMode: BlendMode = .alphaBlend
+    public static var sketchMode: SketchMode = .simple
 }

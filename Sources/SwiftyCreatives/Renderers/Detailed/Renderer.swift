@@ -11,7 +11,7 @@ public class Renderer<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate, RendererBase {
+>: NSObject, MTKViewDelegate, DetailedRendererBase {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
@@ -19,6 +19,8 @@ public class Renderer<
     var camera: MainCamera<CameraConfig>
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
+    
+    var mainBuffer: BufferPass
 
     public override init() {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -36,7 +38,16 @@ public class Renderer<
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
-        self.drawProcess = DrawProcess.init()
+        self.mainBuffer = BufferPass(
+            colBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_Color.memorySize)!,
+            mPosBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelPos.memorySize)!,
+            mRotBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelRot.memorySize)!,
+            mScaleBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelScale.memorySize)!,
+            projectionBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ProjectMatrix.memorySize)!,
+            viewBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ViewMatrix.memorySize)!
+        )
+        
+        self.drawProcess = DrawProcess.init(pass: mainBuffer)
         
         camera = MainCamera()
         let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)

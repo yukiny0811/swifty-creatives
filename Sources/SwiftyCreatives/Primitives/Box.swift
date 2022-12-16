@@ -7,8 +7,8 @@
 
 import Metal
 
-public class SimpleBox {
-    private final class VertexPoint {
+public class Box {
+    final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   1.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   1.0)
         static let C: f3 = f3(x:  1.0, y:  -1.0, z:   1.0)
@@ -17,35 +17,48 @@ public class SimpleBox {
         static let R: f3 = f3(x:  1.0, y:   1.0, z:  -1.0)
         static let S: f3 = f3(x: -1.0, y:  -1.0, z:  -1.0)
         static let T: f3 = f3(x:  1.0, y:  -1.0, z:  -1.0)
-        static let count = 14
     }
-    let posBuf: MTLBuffer
+    public static let vertexCount: Int = 14
+    public static let buffer: MTLBuffer = ShaderCore.device.makeBuffer(
+        bytes: [
+            VertexPoint.T,
+            VertexPoint.S,
+            VertexPoint.C,
+            VertexPoint.B,
+            VertexPoint.A,
+            VertexPoint.S,
+            VertexPoint.Q,
+            VertexPoint.T,
+            VertexPoint.R,
+            VertexPoint.C,
+            VertexPoint.D,
+            VertexPoint.A,
+            VertexPoint.R,
+            VertexPoint.Q
+        ], length: f3.memorySize * vertexCount
+    )!
+    public static let primitiveType: MTLPrimitiveType = .triangleStrip
     
-    //  T, S, C, B, A, S, Q, T, R, C, D, A, R, Q
-    let positionDatas: [f3] = [
-        VertexPoint.T,
-        VertexPoint.S,
-        VertexPoint.C,
-        VertexPoint.B,
-        VertexPoint.A,
-        VertexPoint.S,
-        VertexPoint.Q,
-        VertexPoint.T,
-        VertexPoint.R,
-        VertexPoint.C,
-        VertexPoint.D,
-        VertexPoint.A,
-        VertexPoint.R,
-        VertexPoint.Q
-    ]
-    
+    public var colBuf: MTLBuffer
+    public var mPosBuf: MTLBuffer
+    public var mRotBuf: MTLBuffer
+    public var mScaleBuf: MTLBuffer
     public init() {
-        posBuf = ShaderCore.device.makeBuffer(
-            bytes: positionDatas,
-            length: f3.memorySize * VertexPoint.count)!
+        self.colBuf = ShaderCore.device.makeBuffer(length: f4.memorySize)!
+        self.mPosBuf = ShaderCore.device.makeBuffer(length: f3.memorySize)!
+        self.mRotBuf = ShaderCore.device.makeBuffer(length: f3.memorySize)!
+        self.mScaleBuf = ShaderCore.device.makeBuffer(length: f3.memorySize)!
     }
-    public func draw(_ encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(posBuf, offset: 0, index: 0)
-        encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: VertexPoint.count)
+    public func draw(_ encoder: MTLRenderCommandEncoder, _ pass: BufferPass) {
+        self.colBuf.contents().copyMemory(from: pass.colBuf.contents(), byteCount: f4.memorySize)
+        self.mPosBuf = pass.mPosBuf
+        self.mRotBuf = pass.mRotBuf
+        self.mScaleBuf = pass.mScaleBuf
+        encoder.setVertexBuffer(Self.buffer, offset: 0, index: 0)
+        encoder.setVertexBuffer(colBuf, offset: 0, index: 1)
+        encoder.setVertexBuffer(mPosBuf, offset: 0, index: 2)
+        encoder.setVertexBuffer(mRotBuf, offset: 0, index: 3)
+        encoder.setVertexBuffer(mScaleBuf, offset: 0, index: 4)
+        encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: Self.vertexCount)
     }
 }

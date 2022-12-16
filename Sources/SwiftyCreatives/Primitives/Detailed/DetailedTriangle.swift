@@ -7,7 +7,7 @@
 
 import Metal
 
-public class Triangle: PrimitiveBase {
+public class DetailedTriangle: DetailedPrimitiveBase {
     static let shrinkScale: Float = 0.01
     private final class VertexPoint {
         static let A: f3 = f3(x: 0, y: 1.0, z: 0.0)
@@ -94,7 +94,7 @@ public class Triangle: PrimitiveBase {
         colBuf.contents().copyMemory(from: colorDatas, byteCount: f4.memorySize * VertexPoint.count)
     }
     public func setPosition(_ p: f3) {
-        self.mPos = p * Triangle.shrinkScale
+        self.mPos = p * Self.shrinkScale
         mPosDatas[0] = self.mPos
         mPosDatas[1] = self.mPos
         mPosDatas[2] = self.mPos

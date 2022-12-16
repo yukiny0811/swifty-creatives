@@ -8,4 +8,5 @@
 public protocol DrawConfigBase {
     static var contentScaleFactor: Int { get }
     static var blendMode: BlendMode { get }
+    static var sketchMode: SketchMode { get }
 }

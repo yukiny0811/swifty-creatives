@@ -18,7 +18,7 @@ class TransparentRenderer<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate, RendererBase {
+>: NSObject, MTKViewDelegate, DetailedRendererBase {
     
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState
@@ -30,6 +30,8 @@ class TransparentRenderer<
     
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
+    
+    var mainBuffer: BufferPass
     
     override init() {
         
@@ -72,7 +74,18 @@ class TransparentRenderer<
         
         
         
-        self.drawProcess = DrawProcess.init()
+        self.mainBuffer = BufferPass(
+            colBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_Color.memorySize)!,
+            mPosBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelPos.memorySize)!,
+            mRotBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelRot.memorySize)!,
+            mScaleBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ModelScale.memorySize)!,
+            projectionBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ProjectMatrix.memorySize)!,
+            viewBuf: ShaderCore.device.makeBuffer(length: SimpleUniform_ViewMatrix.memorySize)!
+        )
+        
+        self.drawProcess = DrawProcess.init(pass: mainBuffer)
+        
+        
         camera = MainCamera()
         
         super.init()
