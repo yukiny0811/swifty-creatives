@@ -1,8 +1,8 @@
 //
-//  AddRenderer.swift
+//  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2022/12/15.
+//  Created by Yuki Kuwashima on 2022/12/16.
 //
 
 import MetalKit
@@ -18,6 +18,9 @@ public class AddRenderer<
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     let renderPipelineState: MTLRenderPipelineState
+    
+    var projectionBuf: MTLBuffer
+    var viewBuf: MTLBuffer
 
     public override init() {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -35,9 +38,13 @@ public class AddRenderer<
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
+        
         self.drawProcess = DrawProcess.init()
         
         camera = MainCamera()
+        
+        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
+        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
         
         super.init()
         
@@ -67,22 +74,14 @@ public class AddRenderer<
         }
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
-        let uniform = [
-            Uniform(
-                projectionMatrix: camera.perspectiveMatrix,
-                viewMatrix: camera.mainMatrix
-            )
-        ]
-        let uniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
-            bytes: uniform,
-            length: Uniform.memorySize * 1
-        )!
-        
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
-        renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
+        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
+        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
+        renderCommandEncoder?.setVertexBuffer(projectionBuf, offset: 0, index: 5)
+        renderCommandEncoder?.setVertexBuffer(viewBuf, offset: 0, index: 6)
         
-        renderCommandEncoder?.setVertexBuffer(uniformBuffer, offset: 0, index: 5)
+        renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(
@@ -103,4 +102,3 @@ public class AddRenderer<
         commandBuffer?.commit()
     }
 }
-

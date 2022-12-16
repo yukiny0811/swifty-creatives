@@ -1,13 +1,13 @@
 //
-//  Renderer.swift
+//  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2022/12/08.
+//  Created by Yuki Kuwashima on 2022/12/16.
 //
 
 import MetalKit
 
-public class Renderer<
+public class NormalBlendRenderer<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
@@ -19,6 +19,9 @@ public class Renderer<
     var camera: MainCamera<CameraConfig>
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
+    
+    var projectionBuf: MTLBuffer
+    var viewBuf: MTLBuffer
 
     public override init() {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -42,10 +45,12 @@ public class Renderer<
         let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
         self.depthStencilState = ShaderCore.device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
         
+        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
+        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
+        
         super.init()
         
         self.drawProcess.setup()
-        
         
     }
 
@@ -70,23 +75,15 @@ public class Renderer<
         }
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
-        let uniform = [
-            Uniform(
-                projectionMatrix: camera.perspectiveMatrix,
-                viewMatrix: camera.mainMatrix
-            )
-        ]
-        let uniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
-            bytes: uniform,
-            length: Uniform.memorySize * 1
-        )!
-        
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
-        renderCommandEncoder?.setVertexBuffer(uniformBuffer, offset: 0, index: 5)
+        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
+        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
+        renderCommandEncoder?.setVertexBuffer(projectionBuf, offset: 0, index: 5)
+        renderCommandEncoder?.setVertexBuffer(viewBuf, offset: 0, index: 6)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(
@@ -105,6 +102,6 @@ public class Renderer<
         renderCommandEncoder?.endEncoding()
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
+        
     }
 }
-

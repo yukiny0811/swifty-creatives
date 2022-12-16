@@ -31,6 +31,9 @@ class TransparentRenderer<
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     
+    var projectionBuf: MTLBuffer
+    var viewBuf: MTLBuffer
+    
     override init() {
         
         // MARK: - functions
@@ -71,8 +74,11 @@ class TransparentRenderer<
         depthState = ShaderCore.device.makeDepthStencilState(descriptor: depthStateDesc)!
         
         
-        
         self.drawProcess = DrawProcess.init()
+        
+        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
+        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
+        
         camera = MainCamera()
         
         super.init()
@@ -117,19 +123,10 @@ class TransparentRenderer<
         
         // MARK: - set buffer
         
-        let uniform = [
-            Uniform(
-                projectionMatrix: camera.perspectiveMatrix,
-                viewMatrix: camera.mainMatrix
-            )
-        ]
-        let uniformBuffer: MTLBuffer = ShaderCore.device.makeBuffer(
-            bytes: uniform,
-            length: Uniform.memorySize * 1
-        )!
-        
-        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 5)
-        renderEncoder.setFragmentBuffer(uniformBuffer, offset: 0, index: 5)
+        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
+        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
+        renderEncoder.setVertexBuffer(projectionBuf, offset: 0, index: 5)
+        renderEncoder.setVertexBuffer(viewBuf, offset: 0, index: 6)
         
         // MARK: - draw primitive
         drawProcess.update()

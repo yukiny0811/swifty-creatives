@@ -13,8 +13,12 @@ import AppKit
 import UIKit
 #endif
 
-public protocol SketchBase {
+public protocol SketchBase: AnyObject {
+    
+    // MARK: initializer
     init()
+    
+    // MARK: functions
     func setup()
     func update()
     func draw(encoder: MTLRenderCommandEncoder)

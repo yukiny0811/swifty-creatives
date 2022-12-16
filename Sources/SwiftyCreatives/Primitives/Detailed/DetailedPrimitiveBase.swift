@@ -7,7 +7,7 @@
 
 import Metal
 
-protocol PrimitiveBase {
+protocol DetailedPrimitiveBase {
     static var shrinkScale: Float { get }
     
     var posBuf: MTLBuffer { get set }
