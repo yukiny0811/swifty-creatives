@@ -9,13 +9,12 @@ Creative coding library for Swift.
 
 ![ExampleMacOSApp 2022年-12月-16日 18 08 41](https://user-images.githubusercontent.com/28947703/208063423-3ad00c20-1d1c-48b8-8996-2d43e1365fe4.gif)
 
-Sample Code
-```.swift
+## Sample Code
+```MySketch.swift
+// main sketch process
 final class MySketch: SketchBase {
-    
     var boxes: [Box] = []
     var elapsed: Float = 0.0
-    
     func setup() {
         for _ in 0...100 {
             let box = Box()
@@ -31,15 +30,50 @@ final class MySketch: SketchBase {
         }
         elapsed += 0.01
     }
-    
     func cameraProcess(camera: MainCamera<some CameraConfigBase>) {
         camera.rotateAroundY(0.01)
     }
-    
     func draw(encoder: MTLRenderCommandEncoder) {
         for b in boxes {
             b.draw(encoder)
         }
     }
 }
+```
+
+```Config.swift
+// configs (optional)
+final class MyDrawConfigNormal: DrawConfigBase {
+    static var contentScaleFactor: Int = 3
+    static var blendMode: SwiftyCreatives.BlendMode = .normalBlend
+}
+final class MyDrawConfigAdd: DrawConfigBase {
+    static var contentScaleFactor: Int = 3
+    static var blendMode: SwiftyCreatives.BlendMode = .add
+}
+final class MyDrawConfigAlpha: DrawConfigBase {
+    static var contentScaleFactor: Int = 3
+    static var blendMode: SwiftyCreatives.BlendMode = .alphaBlend
+}
+```
+
+```View.swift
+// you can use SketchView as SwiftUI View
+ZStack {
+    Text("Swifty-Creatives Example")
+        .font(.largeTitle)
+    VStack {
+        HStack {
+            SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
+            SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
+            SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
+        }
+        HStack {
+            SketchView<MySketch, MainCameraConfig, MyDrawConfigNormal>()
+            SketchView<MySketch, MainCameraConfig, MyDrawConfigAdd>()
+            SketchView<MySketch, MainCameraConfig, MyDrawConfigAlpha>()
+        }
+    }
+}
+.background(.black)
 ```
