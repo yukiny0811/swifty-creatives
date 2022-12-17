@@ -49,10 +49,10 @@ final class MyDrawConfigAlpha: DrawConfigBase {
 }
 
 final class MySketch: SketchBase {
-    
+
     var boxes: [Box] = []
     var elapsed: Float = 0.0
-    
+
     func setup() {
         for _ in 0...100 {
             let box = Box()
@@ -62,17 +62,18 @@ final class MySketch: SketchBase {
             boxes.append(box)
         }
     }
+
     func update() {
         for b in boxes {
             b.setColor(f4(sin(elapsed), b.color.y, b.color.z, b.color.w))
         }
         elapsed += 0.01
     }
-    
+
     func cameraProcess(camera: MainCamera<some CameraConfigBase>) {
         camera.rotateAroundY(0.01)
     }
-    
+
     func draw(encoder: MTLRenderCommandEncoder) {
         for b in boxes {
             b.draw(encoder)

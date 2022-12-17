@@ -14,15 +14,20 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     private var mRotBuf: MTLBuffer
     private var mScaleBuf: MTLBuffer
     
-    private var _color: [f4] = [f4.zero]
-    private var _mPos: [f3] = [f3.zero]
-    private var _mRot: [f3] = [f3.zero]
-    private var _mScale: [f3] = [f3.one]
+    private var colorPointer: UnsafeMutablePointer<f4>
+    private var posPointer: UnsafeMutablePointer<f3>
+    private var rotPointer: UnsafeMutablePointer<f3>
+    private var scalePointer: UnsafeMutablePointer<f3>
     
-    public var color: f4 { _color[0] }
-    public var pos: f3 { _mPos[0] }
-    public var rot: f3 { _mRot[0] }
-    public var scale: f3 { _mScale[0] }
+    private var _color: f4 = f4.zero
+    private var _mPos: f3 = f3.zero
+    private var _mRot: f3 = f3.zero
+    private var _mScale: f3 = f3.one
+    
+    public var color: f4 { _color }
+    public var pos: f3 { _mPos }
+    public var rot: f3 { _mRot }
+    public var scale: f3 { _mScale }
     
     private var colorNeedsUpdate = true
     private var posNeedsUpdate = true
@@ -34,49 +39,54 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         mPosBuf = ShaderCore.device.makeBuffer(length: f3.memorySize)!
         mRotBuf = ShaderCore.device.makeBuffer(length: f3.memorySize)!
         mScaleBuf = ShaderCore.device.makeBuffer(length: f3.memorySize)!
+        
+        colorPointer = colBuf.contents().bindMemory(to: f4.self, capacity: 1)
+        posPointer = mPosBuf.contents().bindMemory(to: f3.self, capacity: 1)
+        rotPointer = mRotBuf.contents().bindMemory(to: f3.self, capacity: 1)
+        scalePointer = mScaleBuf.contents().bindMemory(to: f3.self, capacity: 1)
     }
     
     public func setColor(_ value: f4) {
-        _color[0] = value
+        _color = value
         colorNeedsUpdate = true
     }
     
     public func setPos(_ value: f3) {
-        _mPos[0] = value
+        _mPos = value
         posNeedsUpdate = true
     }
     
     public func setRot(_ value: f3) {
-        _mRot[0] = value
+        _mRot = value
         rotNeedsUpdate = true
     }
     
     public func setScale(_ value: f3) {
-        _mScale[0] = value
+        _mScale = value
         scaleNeedsUpdate = true
     }
     
-    private func setBuffer() {
+    private func setBuffer(encoder: MTLRenderCommandEncoder) {
         if colorNeedsUpdate {
-            colBuf.contents().copyMemory(from: _color, byteCount: f4.memorySize)
+            colorPointer.pointee = color
             colorNeedsUpdate = false
         }
         if posNeedsUpdate {
-            mPosBuf.contents().copyMemory(from: _mPos, byteCount: f3.memorySize)
+            posPointer.pointee = pos
             posNeedsUpdate = false
         }
         if rotNeedsUpdate {
-            mRotBuf.contents().copyMemory(from: _mRot, byteCount: f3.memorySize)
+            rotPointer.pointee = rot
             rotNeedsUpdate = false
         }
         if scaleNeedsUpdate {
-            mScaleBuf.contents().copyMemory(from: _mScale, byteCount: f3.memorySize)
+            scalePointer.pointee = scale
             scaleNeedsUpdate = false
         }
     }
     
     public func draw(_ encoder: MTLRenderCommandEncoder) {
-        setBuffer()
+        setBuffer(encoder: encoder)
         encoder.setVertexBuffer(Info.buffer, offset: 0, index: 0)
         encoder.setVertexBuffer(colBuf, offset: 0, index: 1)
         encoder.setVertexBuffer(mPosBuf, offset: 0, index: 2)
