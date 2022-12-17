@@ -23,7 +23,11 @@ public enum BlendMode {
         case .add:
             return AddRenderer<P, C, D>()
         case .alphaBlend:
-            return TransparentRenderer<P, C, D>()
+            if ShaderCore.device.supportsFamily(.apple4) {
+                return TransparentRenderer<P, C, D>()
+            } else {
+                return NormalBlendRenderer<P, C, D>()
+            }
         }
     }
 }
