@@ -40,4 +40,4 @@ public struct BoxInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class Box: Primitive<BoxInfo> {}
+public typealias Box = Primitive<BoxInfo>

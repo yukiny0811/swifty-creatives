@@ -24,4 +24,4 @@ public struct TriangleInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangle
 }
 
-public class Triangle: Primitive<TriangleInfo> {}
+public typealias Triangle = Primitive<TriangleInfo>
