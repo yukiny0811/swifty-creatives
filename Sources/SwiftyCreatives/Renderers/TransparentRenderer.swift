@@ -31,9 +31,6 @@ class TransparentRenderer<
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     
-    var projectionBuf: MTLBuffer
-    var viewBuf: MTLBuffer
-    
     override init() {
         
         // MARK: - functions
@@ -76,9 +73,6 @@ class TransparentRenderer<
         
         self.drawProcess = DrawProcess.init()
         
-        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
-        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
-        
         camera = MainCamera()
         
         super.init()
@@ -110,8 +104,6 @@ class TransparentRenderer<
         renderPassDescriptor.tileHeight = optimalTileSize.height
         renderPassDescriptor.imageblockSampleLength = resolveState.imageblockSampleLength
         
-        
-        
         // MARK: - render encoder
         let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         
@@ -123,10 +115,8 @@ class TransparentRenderer<
         
         // MARK: - set buffer
         
-        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
-        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
-        renderEncoder.setVertexBuffer(projectionBuf, offset: 0, index: 5)
-        renderEncoder.setVertexBuffer(viewBuf, offset: 0, index: 6)
+        renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
+        renderEncoder.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 6)
         
         // MARK: - draw primitive
         drawProcess.update()

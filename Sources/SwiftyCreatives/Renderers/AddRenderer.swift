@@ -18,9 +18,6 @@ public class AddRenderer<
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     let renderPipelineState: MTLRenderPipelineState
-    
-    var projectionBuf: MTLBuffer
-    var viewBuf: MTLBuffer
 
     public override init() {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -42,9 +39,6 @@ public class AddRenderer<
         self.drawProcess = DrawProcess.init()
         
         camera = MainCamera()
-        
-        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
-        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
         
         super.init()
         
@@ -76,10 +70,8 @@ public class AddRenderer<
         
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
-        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
-        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
-        renderCommandEncoder?.setVertexBuffer(projectionBuf, offset: 0, index: 5)
-        renderCommandEncoder?.setVertexBuffer(viewBuf, offset: 0, index: 6)
+        renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
+        renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 6)
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
 
