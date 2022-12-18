@@ -26,4 +26,4 @@ public struct RectInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class Rect: Primitive<RectInfo> {}
+public typealias Rect = Primitive<RectInfo>
