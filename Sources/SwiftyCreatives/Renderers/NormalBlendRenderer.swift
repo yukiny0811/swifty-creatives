@@ -20,9 +20,6 @@ public class NormalBlendRenderer<
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
     
-    var projectionBuf: MTLBuffer
-    var viewBuf: MTLBuffer
-
     public override init() {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
@@ -44,9 +41,6 @@ public class NormalBlendRenderer<
         camera = MainCamera()
         let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
         self.depthStencilState = ShaderCore.device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
-        
-        projectionBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
-        viewBuf = ShaderCore.device.makeBuffer(length: MemoryLayout<f4x4>.stride)!
         
         super.init()
         
@@ -80,11 +74,9 @@ public class NormalBlendRenderer<
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
-        projectionBuf.contents().copyMemory(from: camera.perspectiveMatrix, byteCount: Uniform_ProjectMatrix.memorySize)
-        viewBuf.contents().copyMemory(from: camera.mainMatrix, byteCount: Uniform_ViewMatrix.memorySize)
-        renderCommandEncoder?.setVertexBuffer(projectionBuf, offset: 0, index: 5)
-        renderCommandEncoder?.setVertexBuffer(viewBuf, offset: 0, index: 6)
-
+        renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
+        renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 6)
+        
         renderCommandEncoder?.setViewport(
             MTLViewport(
                 originX: 0,
