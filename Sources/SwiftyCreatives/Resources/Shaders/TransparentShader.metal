@@ -24,7 +24,8 @@ vertex RasterizerData vertexTransform(Vertex vIn [[ stage_in ]],
                                       const device FrameUniforms_ModelRot& uniformModelRot [[ buffer(3) ]],
                                       const device FrameUniforms_ModelScale& uniformModelScale [[ buffer(4) ]],
                                       const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(5) ]],
-                                      const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(6) ]]) {
+                                      const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(6) ]],
+                                      const device FrameUniforms_HasTexture& hasTexture [[ buffer(7) ]]) {
 
     float4x4 modelTransMatrix = float4x4(float4(1.0, 0.0, 0.0, uniformModelPos.value.x),
                                          float4(0.0, 1.0, 0.0, uniformModelPos.value.y),
@@ -62,6 +63,10 @@ vertex RasterizerData vertexTransform(Vertex vIn [[ stage_in ]],
     RasterizerData out;
     float4 position = float4(vIn.position, 1.0);
     out.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * position;
+    if (hasTexture.value) {
+        out.uv.x = vIn.position.x > 0 ? 1 : 0;
+        out.uv.y = vIn.position.y > 0 ? 0 : 1;
+    }
     out.color = uniformColor.value;
     return out;
 }
@@ -127,12 +132,16 @@ inline void InsertFragment(OITDataT oitData, half4 color, half depth, half trans
 
 template <typename OITDataT>
 void OITFragmentFunction(RasterizerData in,
-                         OITDataT oitData) {
+                         OITDataT oitData,
+                         FrameUniforms_HasTexture hasTexture,
+                         texture2d<half> tex) {
     const float depth = in.position.z / in.position.w;
     half4 fragmentColor = half4(in.color);
     
-//    fragmentColor.rgb *= (1 - fragmentColor.a);
-    fragmentColor.rgb *= fragmentColor.a;
+    if (hasTexture.value) {
+        constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
+        fragmentColor = tex.sample(textureSampler, float2(in.uv.x*tex.get_width(), in.uv.y*tex.get_height()));
+    }
     
     InsertFragment(oitData, fragmentColor, depth, 1 - fragmentColor.a);
 }
@@ -163,8 +172,10 @@ half4 OITResolve(OITData<NUM_LAYERS> pixelData) {
 
 fragment FragOut<4>
 OITFragmentFunction_4Layer(RasterizerData in [[ stage_in ]],
-                           OITImageblock<4> oitImageblock [[ imageblock_data ]]) {
-    OITFragmentFunction(in, &oitImageblock.oitData);
+                           OITImageblock<4> oitImageblock [[ imageblock_data ]],
+                           const device FrameUniforms_HasTexture& hasTexture [[ buffer(7) ]],
+                           texture2d<half> tex [[ texture(0) ]]) {
+    OITFragmentFunction(in, &oitImageblock.oitData, hasTexture, tex);
     FragOut<4> Out;
     Out.aoitImageBlock = oitImageblock;
     return Out;

@@ -32,9 +32,14 @@ struct FrameUniforms_ModelScale {
     float3 value;
 };
 
+struct FrameUniforms_HasTexture {
+    bool value;
+};
+
 struct RasterizerData {
     float4 position [[ position ]];
     float4 color;
+    float2 uv;
 };
 
 struct Vertex {

@@ -22,6 +22,7 @@ public struct RectInfo: PrimitiveInfo {
         VertexPoint.D,
         VertexPoint.C
     ]
+    public static var hasTexture: [Bool] = [false]
 }
 
-public typealias Rect = Primitive<RectInfo>
+public class Rect: Primitive<RectInfo> {}
