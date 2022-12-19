@@ -6,13 +6,15 @@
 //
 
 import Metal
+import CoreImage
 
 public final class ShaderCore {
     public static let device: MTLDevice = MTLCreateSystemDefaultDevice()!
-    public static var library: MTLLibrary = {
+    public static let library: MTLLibrary = {
         return try! ShaderCore.device.makeDefaultLibrary(bundle: Bundle.module)
     }()
-    public static var commandQueue: MTLCommandQueue = {
+    public static let commandQueue: MTLCommandQueue = {
         return ShaderCore.device.makeCommandQueue()!
     }()
+    public static let context: CIContext = CIContext(mtlDevice: device)
 }

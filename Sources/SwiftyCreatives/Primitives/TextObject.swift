@@ -2,12 +2,13 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2022/12/19.
+//  Created by Yuki Kuwashima on 2022/12/20.
 //
 
 import MetalKit
+import CoreImage.CIFilterBuiltins
 
-public struct ImgInfo: PrimitiveInfo {
+public struct TextObjectInfo: PrimitiveInfo {
     private final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
@@ -25,17 +26,48 @@ public struct ImgInfo: PrimitiveInfo {
     public static var hasTexture: [Bool] = [true]
 }
 
-public class Img: Primitive<ImgInfo> {
+public class TextObject: Primitive<TextObjectInfo> {
     private var texture: MTLTexture?
-    public func load(image: CGImage) {
+    
+    #if os(macOS)
+    public typealias FontAlias = NSFont
+    public typealias ColorAlias = NSColor
+    #elseif os(iOS)
+    public typealias FontAlias = UIFont
+    public typealias ColorAlias = UIColor
+    #endif
+    
+    public func setText(_ text: String, font: FontAlias, color: ColorAlias) {
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: color,
+            .paragraphStyle: paragraphStyle
+        ]
+        
+        let attributedText = NSAttributedString(string: text, attributes: attributes)
+        
+        let filter = CIFilter(
+            name: "CIAttributedTextImageGenerator",
+            parameters: [
+                "inputText": attributedText,
+                "inputScaleFactor": 3.0
+            ]
+        )!
+            
+        let outputImage = filter.outputImage!
         let loader = MTKTextureLoader(device: ShaderCore.device)
-        let tex = try? loader.newTexture(cgImage: image)
+        let tex = try? loader.newTexture(cgImage: ShaderCore.context.createCGImage(outputImage, from: outputImage.extent)!)
         self.texture = tex
-        let longer: Float = Float(max(image.width, image.height))
+        
+        let longer: Float = Float(max(outputImage.extent.width, outputImage.extent.height))
         self.setScale(
             f3(
-                Float(image.width) / longer,
-                Float(image.height) / longer,
+                Float(outputImage.extent.width) / longer,
+                Float(outputImage.extent.height) / longer,
                 1
             )
         )

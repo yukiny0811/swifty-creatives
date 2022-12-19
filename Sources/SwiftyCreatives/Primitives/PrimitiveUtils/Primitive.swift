@@ -47,4 +47,9 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         encoder.setFragmentBytes(Info.hasTexture, length: MemoryLayout<Bool>.stride, index: 7)
         encoder.drawPrimitives(type: Info.primitiveType, vertexStart: 0, vertexCount: Info.vertexCount)
     }
+    
+    // util functions
+    public func multiplyScale(_ value: Float) {
+        _mScale[0] *= value
+    }
 }
