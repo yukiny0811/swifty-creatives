@@ -15,7 +15,9 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
                                             const device FrameUniforms_ModelRot& uniformModelRot [[ buffer(3) ]],
                                             const device FrameUniforms_ModelScale& uniformModelScale [[ buffer(4) ]],
                                             const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(5) ]],
-                                            const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(6) ]]) {
+                                            const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(6) ]],
+                                            const device FrameUniforms_HasTexture& hasTexture [[ buffer(7) ]]
+                                     ) {
             
     RasterizerData rd;
     
@@ -53,10 +55,23 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
     float4x4 modelMatrix = transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
     
     rd.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * float4(vIn.position, 1.0);
+    
+    if (hasTexture.value) {
+        rd.uv.x = vIn.position.x > 0 ? 1 : 0;
+        rd.uv.y = vIn.position.y > 0 ? 0 : 1;
+    }
     rd.color = uniformColor.value;
     return rd;
 }
 
-fragment half4 normal_fragment (RasterizerData rd [[stage_in]]) {
+fragment half4 normal_fragment (RasterizerData rd [[stage_in]],
+                                const device FrameUniforms_HasTexture& hasTexture [[ buffer(7) ]],
+                                texture2d<half> tex [[ texture(0) ]]) {
+    
+    if (hasTexture.value) {
+        constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
+        const half4 colorSample = tex.sample(textureSampler, float2(rd.uv.x*tex.get_width(), rd.uv.y*tex.get_height()));
+        return colorSample;
+    }
     return half4(rd.color.x, rd.color.y, rd.color.z, 1);
 }

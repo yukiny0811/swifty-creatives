@@ -20,6 +20,7 @@ public struct TriangleInfo: PrimitiveInfo {
         VertexPoint.B,
         VertexPoint.C
     ]
+    public static let hasTexture: [Bool] = [false]
 }
 
-public typealias Triangle = Primitive<TriangleInfo>
+public class Triangle: Primitive<TriangleInfo> {}

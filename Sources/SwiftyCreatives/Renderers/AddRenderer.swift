@@ -72,6 +72,7 @@ public class AddRenderer<
         
         renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
         renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 6)
+        renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
 

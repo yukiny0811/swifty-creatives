@@ -36,6 +36,7 @@ public struct BoxInfo: PrimitiveInfo {
         VertexPoint.R,
         VertexPoint.Q
     ]
+    public static var hasTexture: [Bool] = [false]
 }
 
-public typealias Box = Primitive<BoxInfo>
+public class Box: Primitive<BoxInfo> {}

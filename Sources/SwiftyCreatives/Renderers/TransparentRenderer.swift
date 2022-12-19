@@ -117,6 +117,7 @@ class TransparentRenderer<
         
         renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
         renderEncoder.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 6)
+        renderEncoder.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
         
         // MARK: - draw primitive
         drawProcess.update()
