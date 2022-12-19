@@ -19,25 +19,23 @@ public struct BoxInfo: PrimitiveInfo {
         static let T: f3 = f3(x:  1.0, y:  -1.0, z:  -1.0)
     }
     public static let vertexCount: Int = 14
-    public static let buffer: MTLBuffer = ShaderCore.device.makeBuffer(
-        bytes: [
-            VertexPoint.T,
-            VertexPoint.S,
-            VertexPoint.C,
-            VertexPoint.B,
-            VertexPoint.A,
-            VertexPoint.S,
-            VertexPoint.Q,
-            VertexPoint.T,
-            VertexPoint.R,
-            VertexPoint.C,
-            VertexPoint.D,
-            VertexPoint.A,
-            VertexPoint.R,
-            VertexPoint.Q
-        ], length: f3.memorySize * vertexCount
-    )!
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
+    public static let bytes: [f3] = [
+        VertexPoint.T,
+        VertexPoint.S,
+        VertexPoint.C,
+        VertexPoint.B,
+        VertexPoint.A,
+        VertexPoint.S,
+        VertexPoint.Q,
+        VertexPoint.T,
+        VertexPoint.R,
+        VertexPoint.C,
+        VertexPoint.D,
+        VertexPoint.A,
+        VertexPoint.R,
+        VertexPoint.Q
+    ]
 }
 
 public typealias Box = Primitive<BoxInfo>
