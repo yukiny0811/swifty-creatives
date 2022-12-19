@@ -15,15 +15,13 @@ public struct RectInfo: PrimitiveInfo {
         static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
     }
     public static let vertexCount: Int = 4
-    public static let buffer: MTLBuffer = ShaderCore.device.makeBuffer(
-        bytes: [
-            VertexPoint.A,
-            VertexPoint.B,
-            VertexPoint.D,
-            VertexPoint.C
-        ], length: f3.memorySize * vertexCount
-    )!
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
+    public static var bytes: [f3] = [
+        VertexPoint.A,
+        VertexPoint.B,
+        VertexPoint.D,
+        VertexPoint.C
+    ]
 }
 
 public typealias Rect = Primitive<RectInfo>

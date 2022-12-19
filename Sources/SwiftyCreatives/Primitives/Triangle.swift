@@ -14,14 +14,12 @@ public struct TriangleInfo: PrimitiveInfo {
         static let C: f3 = f3(x: cos(Float.pi * 11.0 / 6.0), y: sin(Float.pi * 11.0 / 6.0), z: 0.0)
     }
     public static let vertexCount: Int = 3
-    public static let buffer: MTLBuffer = ShaderCore.device.makeBuffer(
-        bytes: [
-            VertexPoint.A,
-            VertexPoint.B,
-            VertexPoint.C
-        ], length: f3.memorySize * vertexCount
-    )!
     public static let primitiveType: MTLPrimitiveType = .triangle
+    public static var bytes: [f3] = [
+        VertexPoint.A,
+        VertexPoint.B,
+        VertexPoint.C
+    ]
 }
 
 public typealias Triangle = Primitive<TriangleInfo>

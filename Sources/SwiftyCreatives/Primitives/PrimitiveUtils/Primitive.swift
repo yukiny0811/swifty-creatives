@@ -19,35 +19,26 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     public var rot: f3 { _mRot[0] }
     public var scale: f3 { _mScale[0] }
     
-    private var colorNeedsUpdate = true
-    private var posNeedsUpdate = true
-    private var rotNeedsUpdate = true
-    private var scaleNeedsUpdate = true
-    
     required public init() {}
     
     public func setColor(_ value: f4) {
         _color[0] = value
-        colorNeedsUpdate = true
     }
     
     public func setPos(_ value: f3) {
         _mPos[0] = value
-        posNeedsUpdate = true
     }
     
     public func setRot(_ value: f3) {
         _mRot[0] = value
-        rotNeedsUpdate = true
     }
     
     public func setScale(_ value: f3) {
         _mScale[0] = value
-        scaleNeedsUpdate = true
     }
     
     public func draw(_ encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBuffer(Info.buffer, offset: 0, index: 0)
+        encoder.setVertexBytes(Info.bytes, length: Info.vertexCount * f3.memorySize, index: 0)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: 1)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 2)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 3)
