@@ -61,8 +61,9 @@ final class MySketch: SketchBase {
         }
     }
     func update() {
+        let elapsedSin = sin(elapsed)
         for b in boxes {
-            b.setColor(f4(sin(elapsed), b.color.y, b.color.z, b.color.w))
+            b.setColor(f4(elapsedSin, b.color.y, b.color.z, b.color.w))
         }
         elapsed += 0.01
     }
