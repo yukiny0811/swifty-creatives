@@ -19,54 +19,50 @@ public protocol SketchBase: AnyObject {
     init()
     
     // MARK: functions
-    func setup()
-    func update()
+    func setup(camera: some MainCameraBase)
+    func update(camera: some MainCameraBase)
     func draw(encoder: MTLRenderCommandEncoder)
     
-    func cameraProcess(camera: MainCamera<some CameraConfigBase>)
-    
     #if os(macOS)
-    func mouseDown(with event: NSEvent)
-    func mouseDragged(with event: NSEvent)
-    func mouseUp(with event: NSEvent)
-    func mouseEntered(with event: NSEvent)
-    func mouseExited(with event: NSEvent)
-    func keyDown(with event: NSEvent)
-    func keyUp(with event: NSEvent)
-    func viewWillStartLiveResize()
-    func resize(withOldSuperviewSize oldSize: NSSize)
-    func viewDidEndLiveResize()
+    func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
+    func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
+    func mouseUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
+    func mouseEntered(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
+    func mouseExited(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
+    func keyDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
+    func keyUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
+    func viewWillStartLiveResize(camera: some MainCameraBase, viewFrame: CGRect)
+    func resize(withOldSuperviewSize oldSize: NSSize, camera: some MainCameraBase, viewFrame: CGRect)
+    func viewDidEndLiveResize(camera: some MainCameraBase, viewFrame: CGRect)
     #endif
 
     #if os(iOS)
-    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
-    func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
-    func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?)
-    func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?)
+    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect)
+    func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect)
+    func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect)
+    func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect)
     #endif
 }
 
 public extension SketchBase {
     
-    func cameraProcess(camera: MainCamera<some CameraConfigBase>) {}
-    
     #if os(macOS)
-    func mouseDown(with event: NSEvent) {}
-    func mouseDragged(with event: NSEvent) {}
-    func mouseUp(with event: NSEvent) {}
-    func mouseEntered(with event: NSEvent) {}
-    func mouseExited(with event: NSEvent) {}
-    func keyDown(with event: NSEvent) {}
-    func keyUp(with event: NSEvent) {}
-    func viewWillStartLiveResize() {}
-    func resize(withOldSuperviewSize oldSize: NSSize) {}
-    func viewDidEndLiveResize() {}
+    func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func mouseUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func mouseEntered(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func mouseExited(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func keyDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func keyUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func viewWillStartLiveResize(camera: some MainCameraBase, viewFrame: CGRect) {}
+    func resize(withOldSuperviewSize oldSize: NSSize, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func viewDidEndLiveResize(camera: some MainCameraBase, viewFrame: CGRect) {}
     #endif
     
     #if os(iOS)
-    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {}
+    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {}
+    func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {}
     #endif
 }

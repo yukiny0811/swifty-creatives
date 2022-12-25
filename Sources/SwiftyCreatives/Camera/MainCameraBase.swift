@@ -5,7 +5,7 @@
 //  Created by Yuki Kuwashima on 2022/12/15.
 //
 
-protocol MainCameraBase {
+public protocol MainCameraBase {
     var mainMatrix: [f4x4] { get set }
     var perspectiveMatrix: [f4x4] { get set }
     func translate(_ x: Float, _ y: Float, _ z: Float)
@@ -13,4 +13,5 @@ protocol MainCameraBase {
     func rotateAroundY(_ rad: Float)
     func rotateAroundZ(_ rad: Float)
     func setFrame(width: Float, height: Float)
+    func screenToWorldDirection(x: Float, y: Float, width: Float, height: Float) -> (origin: f3, direction: f3)
 }

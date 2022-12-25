@@ -19,19 +19,33 @@ public class MainCamera<
     var matrixY: GLKMatrix4
     var matrixT: GLKMatrix4
     
-    var mainMatrix: [f4x4] = [f4x4(0)]
-    var perspectiveMatrix: [f4x4] = [f4x4(0)]
+    public var mainMatrix: [f4x4] = [f4x4(0)]
+    public var perspectiveMatrix: [f4x4] = [f4x4(0)]
     
     public init() {
         matrixX = GLKMatrix4Identity
         matrixY = GLKMatrix4Identity
-        matrixT = GLKMatrix4Translate(GLKMatrix4Identity, 0, 0, -30)
+        matrixT = GLKMatrix4Translate(GLKMatrix4Identity, 0, 0, -20)
+        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        updateMatrix()
+    }
+    
+    public func setTranslate(_ x: Float, _ y: Float, _ z: Float) {
+        matrixT = GLKMatrix4Translate(GLKMatrix4Identity, x, y, z)
         matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
         updateMatrix()
     }
     
     public func translate(_ x: Float, _ y: Float, _ z: Float) {
-        matrix = GLKMatrix4Translate(matrix, x, y, z)
+        matrixT = GLKMatrix4Translate(matrixT, x, y, z)
+        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        updateMatrix()
+    }
+    
+    public func setRotation(_ x: Float, _ y: Float, _ z: Float) {
+        matrixX = GLKMatrix4RotateX(GLKMatrix4Identity, x)
+        matrixY = GLKMatrix4RotateY(GLKMatrix4Identity, y)
+        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
         updateMatrix()
     }
     
@@ -71,6 +85,37 @@ public class MainCamera<
             self.frameHeight = height
             updatePMatrix()
         }
+    }
+    
+    /// view points (not normalized)
+    public func screenToWorldDirection(x: Float, y: Float, width: Float, height: Float) -> (origin: f3, direction: f3) {
+
+        var x = x - width/2
+        var y = -(y - height/2)
+
+        x /= width
+        y /= height
+
+        x *= 2
+        y *= 2
+
+        let clipCoordinate = f4(x, y, 0, 1)
+
+        let projInv = simd_inverse(self.perspectiveMatrix[0])
+        let viewInv = simd_inverse(self.mainMatrix[0])
+
+        var cameraDirection = projInv * clipCoordinate
+        cameraDirection.z = -1
+        cameraDirection.w = 0
+
+        let temp = viewInv * cameraDirection
+        let worldDirection = normalize(f3(temp.x, temp.y, temp.z))
+
+        let cameraOrigin = f4(0, 0, 0, 1)
+        let temp2 = viewInv * cameraOrigin
+        let worldOrigin = f3(temp2.x, temp2.y, temp2.z)
+        
+        return (worldOrigin, worldDirection)
     }
 }
 

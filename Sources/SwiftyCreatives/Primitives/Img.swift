@@ -29,7 +29,7 @@ public class Img: Primitive<ImgInfo> {
     private var texture: MTLTexture?
     public func load(image: CGImage) {
         let loader = MTKTextureLoader(device: ShaderCore.device)
-        let tex = try? loader.newTexture(cgImage: image)
+        let tex = try! loader.newTexture(cgImage: image)
         self.texture = tex
         let longer: Float = Float(max(image.width, image.height))
         self.setScale(
