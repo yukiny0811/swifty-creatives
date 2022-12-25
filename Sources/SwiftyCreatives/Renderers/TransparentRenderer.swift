@@ -77,7 +77,7 @@ class TransparentRenderer<
         
         super.init()
         
-        self.drawProcess.setup()
+        self.drawProcess.setup(camera: camera)
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -85,7 +85,6 @@ class TransparentRenderer<
     }
     func draw(in view: MTKView) {
         
-        drawProcess.cameraProcess(camera: camera)
         view.drawableSize = CGSize(
             width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
             height: view.frame.size.height * CGFloat(DrawConfig.contentScaleFactor)
@@ -120,7 +119,7 @@ class TransparentRenderer<
         renderEncoder.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
         
         // MARK: - draw primitive
-        drawProcess.update()
+        drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderEncoder)
         
         renderEncoder.setViewport(

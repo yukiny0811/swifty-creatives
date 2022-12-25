@@ -53,30 +53,47 @@ final class MySketch: SketchBase {
     var boxes: [Box] = []
     var elapsed: Float = 0.0
 
-    func setup() {
+    func setup(camera: some MainCameraBase) {
         for _ in 0...100 {
             let box = Box()
             box.setColor(f4.randomPoint(0...1))
-            box.setPos(f3.randomPoint(-10...10))
-            box.setScale(f3.one * Float.random(in: 0.3...3))
+            box.setPos(f3.randomPoint(-7...7))
+            box.setScale(f3.one * Float.random(in: 0.3...2))
             boxes.append(box)
         }
     }
 
-    func update() {
+    func update(camera: some MainCameraBase) {
+        camera.rotateAroundY(0.01)
+        elapsed += 0.01
         for b in boxes {
             b.setColor(f4(sin(elapsed), b.color.y, b.color.z, b.color.w))
         }
-        elapsed += 0.01
-    }
-
-    func cameraProcess(camera: MainCamera<some CameraConfigBase>) {
-        camera.rotateAroundY(0.01)
     }
 
     func draw(encoder: MTLRenderCommandEncoder) {
         for b in boxes {
             b.draw(encoder)
         }
+    }
+    
+    func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+        
+        let location = CGPoint(
+            x: event.locationInWindow.x - viewFrame.origin.x,
+            y: event.window!.frame.height - event.locationInWindow.y - viewFrame.origin.y
+        )
+        
+        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
+        let origin = processed.origin
+        let direction = processed.direction
+        
+        let finalPos = origin + direction * 20
+        
+        let box = Box()
+        box.setColor(f4(1, 1, 1, 1))
+        box.setPos(finalPos)
+        box.setScale(f3.one * 0.2)
+        boxes.append(box)
     }
 }

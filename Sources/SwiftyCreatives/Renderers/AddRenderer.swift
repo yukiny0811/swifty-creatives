@@ -42,7 +42,7 @@ public class AddRenderer<
         
         super.init()
         
-        self.drawProcess.setup()
+        self.drawProcess.setup(camera: camera)
         
         
     }
@@ -54,7 +54,6 @@ public class AddRenderer<
     }
 
     public func draw(in view: MTKView) {
-        drawProcess.cameraProcess(camera: camera)
         view.drawableSize = CGSize(
             width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
             height: view.frame.size.height * CGFloat(DrawConfig.contentScaleFactor)
@@ -87,7 +86,7 @@ public class AddRenderer<
             )
         )
         
-        drawProcess.update()
+        drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
         
         renderCommandEncoder?.endEncoding()

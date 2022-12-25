@@ -44,7 +44,7 @@ public class NormalBlendRenderer<
         
         super.init()
         
-        self.drawProcess.setup()
+        self.drawProcess.setup(camera: camera)
         
     }
 
@@ -55,7 +55,6 @@ public class NormalBlendRenderer<
     }
 
     public func draw(in view: MTKView) {
-        drawProcess.cameraProcess(camera: camera)
         view.drawableSize = CGSize(
             width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
             height: view.frame.size.height * CGFloat(DrawConfig.contentScaleFactor)
@@ -89,7 +88,7 @@ public class NormalBlendRenderer<
             )
         )
         
-        drawProcess.update()
+        drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
         
         renderCommandEncoder?.endEncoding()
