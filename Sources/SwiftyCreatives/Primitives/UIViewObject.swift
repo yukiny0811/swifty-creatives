@@ -151,7 +151,6 @@ public class UIViewObject: Primitive<UIViewObjectInfo> {
             x: (CGFloat(coord.x)+1.0) / 2,
             y: 1.0 - (CGFloat(coord.y)+1.0) / 2
         )
-        print(viewCoord)
         let result = self.viewObj!.hitTest(CGPoint(
             x: viewCoord.x * self.viewObj!.bounds.width,
             y: viewCoord.y * self.viewObj!.bounds.height

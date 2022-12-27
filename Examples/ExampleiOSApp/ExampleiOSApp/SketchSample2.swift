@@ -18,6 +18,7 @@ final class SketchSample2: SketchBase {
     func setup(camera: some MainCameraBase) {
         
         let view: TestView = TestView.fromNib()
+        view.layer.cornerRadius = 36
         view.onHit = {
             self.rFinal += Float.pi / 2
         }
