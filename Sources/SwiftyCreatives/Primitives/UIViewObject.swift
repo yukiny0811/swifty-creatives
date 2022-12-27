@@ -2,13 +2,16 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2022/12/19.
+//  Created by Yuki Kuwashima on 2022/12/27.
 //
+
+#if os(iOS)
 
 import MetalKit
 import GLKit
+import UIKit
 
-public struct ImgInfo: PrimitiveInfo {
+public struct UIViewObjectInfo: PrimitiveInfo {
     private final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
@@ -26,9 +29,17 @@ public struct ImgInfo: PrimitiveInfo {
     public static var hasTexture: [Bool] = [true]
 }
 
-public class Img: Primitive<ImgInfo> {
+public class UIViewObject: Primitive<UIViewObjectInfo> {
     private var texture: MTLTexture?
-    public func load(image: CGImage) {
+    
+    private var viewObj: UIView?
+    
+    public func load(view: UIView) {
+        
+        self.viewObj = view
+        
+        let image = view.convertToImage().cgImage!
+        
         let loader = MTKTextureLoader(device: ShaderCore.device)
         let tex = try! loader.newTexture(cgImage: image)
         self.texture = tex
@@ -131,4 +142,25 @@ public class Img: Primitive<ImgInfo> {
         
         return inversedPointF2
     }
+    
+    public func buttonTest(origin: f3, direction: f3) {
+        guard let coord = hitTestGetNormalizedCoord(origin: origin, direction: direction) else {
+            return
+        }
+        let viewCoord = CGPoint(
+            x: (CGFloat(coord.x)+1.0) / 2,
+            y: 1.0 - (CGFloat(coord.y)+1.0) / 2
+        )
+        print(viewCoord)
+        let result = self.viewObj!.hitTest(CGPoint(
+            x: viewCoord.x * self.viewObj!.bounds.width,
+            y: viewCoord.y * self.viewObj!.bounds.height
+        ), with: nil)
+        guard let button = result as? UIButton else {
+            return
+        }
+        button.sendActions(for: .touchUpInside)
+    }
 }
+
+#endif
