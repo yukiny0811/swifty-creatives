@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		563B3481295A2AE400AD9EEF /* TestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 563B3480295A2AE400AD9EEF /* TestView.xib */; };
+		563B3483295A86E500AD9EEF /* SketchSample2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563B3482295A86E500AD9EEF /* SketchSample2.swift */; };
+		563B3485295A878D00AD9EEF /* SketchSample1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 563B3484295A878D00AD9EEF /* SketchSample1.swift */; };
 		56C53FEB294A689500962DD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56C53FEA294A689500962DD6 /* Assets.xcassets */; };
 		56C53FEE294A689500962DD6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56C53FED294A689500962DD6 /* Preview Assets.xcassets */; };
 		56C53FF8294A68AA00962DD6 /* SwiftyCreatives in Frameworks */ = {isa = PBXBuildFile; productRef = 56C53FF7294A68AA00962DD6 /* SwiftyCreatives */; };
@@ -14,6 +17,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		563B3480295A2AE400AD9EEF /* TestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestView.xib; sourceTree = "<group>"; };
+		563B3482295A86E500AD9EEF /* SketchSample2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchSample2.swift; sourceTree = "<group>"; };
+		563B3484295A878D00AD9EEF /* SketchSample1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchSample1.swift; sourceTree = "<group>"; };
 		56C53FE3294A689400962DD6 /* ExampleiOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleiOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56C53FEA294A689500962DD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56C53FED294A689500962DD6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -55,6 +61,9 @@
 			isa = PBXGroup;
 			children = (
 				56C53FF9294A695300962DD6 /* ExampleiOSApp.swift */,
+				563B3484295A878D00AD9EEF /* SketchSample1.swift */,
+				563B3482295A86E500AD9EEF /* SketchSample2.swift */,
+				563B3480295A2AE400AD9EEF /* TestView.xib */,
 				56C53FEA294A689500962DD6 /* Assets.xcassets */,
 				56C53FEC294A689500962DD6 /* Preview Content */,
 			);
@@ -146,6 +155,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				563B3481295A2AE400AD9EEF /* TestView.xib in Resources */,
 				56C53FEE294A689500962DD6 /* Preview Assets.xcassets in Resources */,
 				56C53FEB294A689500962DD6 /* Assets.xcassets in Resources */,
 			);
@@ -158,6 +168,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				563B3485295A878D00AD9EEF /* SketchSample1.swift in Sources */,
+				563B3483295A86E500AD9EEF /* SketchSample2.swift in Sources */,
 				56C53FFA294A695300962DD6 /* ExampleiOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
