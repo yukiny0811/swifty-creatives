@@ -7,7 +7,7 @@
 
 import MetalKit
 
-public class TouchableMTKView: MTKView {
+public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
     
     var renderer: any RendererBase
     
@@ -42,8 +42,10 @@ public class TouchableMTKView: MTKView {
         renderer.drawProcess.mouseDown(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func mouseDragged(with event: NSEvent) {
-        renderer.camera.rotateAroundX(Float(event.deltaY) * 0.01)
-        renderer.camera.rotateAroundY(Float(event.deltaX) * 0.01)
+        if CameraConfig.enableEasyMove {
+            renderer.camera.rotateAroundX(Float(event.deltaY) * 0.01)
+            renderer.camera.rotateAroundY(Float(event.deltaX) * 0.01)
+        }
         renderer.drawProcess.mouseDragged(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func mouseUp(with event: NSEvent) {
@@ -77,10 +79,12 @@ public class TouchableMTKView: MTKView {
         renderer.drawProcess.touchesBegan(touches, with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first!
-        let diff = touch.location(in: self) - touch.previousLocation(in: self)
-        renderer.camera.rotateAroundX(Float(diff.y) * 0.01)
-        renderer.camera.rotateAroundY(Float(diff.x) * 0.01)
+        if CameraConfig.enableEasyMove {
+            let touch = touches.first!
+            let diff = touch.location(in: self) - touch.previousLocation(in: self)
+            renderer.camera.rotateAroundX(Float(diff.y) * 0.01)
+            renderer.camera.rotateAroundY(Float(diff.x) * 0.01)
+        }
         renderer.drawProcess.touchesMoved(touches, with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

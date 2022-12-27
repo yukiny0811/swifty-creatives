@@ -21,4 +21,6 @@ public protocol CameraConfigBase {
     /// set this number small to allow the camera to move more freely.
     /// 0.0...1.0
     static var polarSpacing: Float { get }
+    
+    static var enableEasyMove: Bool { get }
 }

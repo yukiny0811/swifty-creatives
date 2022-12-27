@@ -10,4 +10,5 @@ public final class MainCameraConfig: CameraConfigBase {
     public static var near: Float = 0.01
     public static var far: Float = 100.0
     public static var polarSpacing: Float = 0.97
+    public static var enableEasyMove: Bool = true
 }

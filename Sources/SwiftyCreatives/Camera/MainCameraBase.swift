@@ -14,4 +14,6 @@ public protocol MainCameraBase {
     func rotateAroundZ(_ rad: Float)
     func setFrame(width: Float, height: Float)
     func screenToWorldDirection(x: Float, y: Float, width: Float, height: Float) -> (origin: f3, direction: f3)
+    func setTranslate(_ x: Float, _ y: Float, _ z: Float)
+    func setRotation(_ x: Float, _ y: Float, _ z: Float)
 }

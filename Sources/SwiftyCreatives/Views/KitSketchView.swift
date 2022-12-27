@@ -17,7 +17,7 @@ public class KitSketchView<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: TouchableMTKView {
+>: TouchableMTKView<CameraConfig> {
     
     var _renderer: any RendererBase
     
