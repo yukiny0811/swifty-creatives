@@ -21,11 +21,11 @@ public class KitSketchView<
     
     var _renderer: any RendererBase
     
-    public init() {
+    public init(_ sketch: SketchBase) {
         _renderer = DrawConfig.blendMode.getRenderer(
-            p: DrawProcess.self,
             c: CameraConfig.self,
-            d: DrawConfig.self
+            d: DrawConfig.self,
+            sketch: sketch
         )
         super.init(renderer: _renderer)
     }

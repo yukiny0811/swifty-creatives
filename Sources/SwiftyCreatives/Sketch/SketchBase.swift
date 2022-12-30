@@ -15,11 +15,8 @@ import UIKit
 
 public protocol SketchBase: AnyObject {
     
-    // MARK: initializer
-    init()
-    
     // MARK: functions
-    func setup(camera: some MainCameraBase)
+    func setupCamera(camera: some MainCameraBase)
     func update(camera: some MainCameraBase)
     func draw(encoder: MTLRenderCommandEncoder)
     

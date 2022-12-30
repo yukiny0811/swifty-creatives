@@ -15,7 +15,6 @@
 import MetalKit
     
 class TransparentRenderer<
-    DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: NSObject, MTKViewDelegate, RendererBase {
@@ -31,7 +30,7 @@ class TransparentRenderer<
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     
-    override init() {
+    public init(sketch: SketchBase) {
         
         // MARK: - functions
         let constantValue = MTLFunctionConstantValues()
@@ -71,13 +70,13 @@ class TransparentRenderer<
         depthState = ShaderCore.device.makeDepthStencilState(descriptor: depthStateDesc)!
         
         
-        self.drawProcess = DrawProcess.init()
+        self.drawProcess = sketch
         
         camera = MainCamera()
         
         super.init()
         
-        self.drawProcess.setup(camera: camera)
+        self.drawProcess.setupCamera(camera: camera)
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {

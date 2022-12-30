@@ -10,13 +10,7 @@ import UIKit
 
 final class SketchSample2: SketchBase {
     
-    var viewObj = UIViewObject()
-    
-    var r: Float = 0.0
-    var rFinal: Float = 0.0
-    
-    func setup(camera: some MainCameraBase) {
-        
+    init() {
         let view: TestView = TestView.fromNib()
         view.layer.cornerRadius = 36
         view.onHit = {
@@ -24,8 +18,14 @@ final class SketchSample2: SketchBase {
         }
         viewObj.load(view: view)
         viewObj.multiplyScale(6)
-        
     }
+    
+    var viewObj = UIViewObject()
+    
+    var r: Float = 0.0
+    var rFinal: Float = 0.0
+    
+    func setupCamera(camera: some MainCameraBase) {}
     
     func update(camera: some MainCameraBase) {
         if r < rFinal {

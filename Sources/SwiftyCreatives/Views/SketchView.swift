@@ -15,22 +15,22 @@ import UIKit
 #endif
 
 public struct SketchView<
-    DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: ViewRepresentable {
     
-    var renderer: any RendererBase {
-        DrawConfig.blendMode.getRenderer(
-            p: DrawProcess.self,
+    let renderer: any RendererBase
+    
+    let drawProcess: SketchBase
+    
+    public init(_ sketch: SketchBase) {
+        self.drawProcess = sketch
+        self.renderer = DrawConfig.blendMode.getRenderer(
             c: CameraConfig.self,
-            d: DrawConfig.self
+            d: DrawConfig.self,
+            sketch: self.drawProcess
         )
     }
-    
-    public init() {}
-    
-    public init(cameraConfig: CameraConfig.Type = MainCameraConfig.self, drawConfig: DrawConfig.Type = MainDrawConfig.self) {}
     
     #if os(macOS)
     public func makeNSView(context: Context) -> MTKView {

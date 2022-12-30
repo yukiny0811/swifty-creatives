@@ -8,7 +8,6 @@
 import MetalKit
 
 public class NormalBlendRenderer<
-    DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: NSObject, MTKViewDelegate, RendererBase {
@@ -20,7 +19,7 @@ public class NormalBlendRenderer<
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
     
-    public override init() {
+    public init(sketch: SketchBase) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
         renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
@@ -36,7 +35,7 @@ public class NormalBlendRenderer<
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
-        self.drawProcess = DrawProcess.init()
+        self.drawProcess = sketch
         
         camera = MainCamera()
         let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
@@ -44,7 +43,7 @@ public class NormalBlendRenderer<
         
         super.init()
         
-        self.drawProcess.setup(camera: camera)
+        self.drawProcess.setupCamera(camera: camera)
         
     }
 
