@@ -14,7 +14,7 @@ final class SketchSample1: SketchBase {
     var boxes: [Box] = []
     var elapsed: Float = 0.0
     
-    func setup(camera: some MainCameraBase) {
+    init() {
         for _ in 0...100 {
             let box = Box()
             box.setColor(f4.randomPoint(0...1))
@@ -23,6 +23,8 @@ final class SketchSample1: SketchBase {
             boxes.append(box)
         }
     }
+    
+    func setupCamera(camera: some MainCameraBase) {}
     
     func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)

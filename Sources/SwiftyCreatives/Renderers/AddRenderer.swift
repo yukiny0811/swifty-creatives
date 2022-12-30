@@ -8,7 +8,6 @@
 import MetalKit
 
 public class AddRenderer<
-    DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: NSObject, MTKViewDelegate, RendererBase {
@@ -19,7 +18,7 @@ public class AddRenderer<
     var camera: MainCamera<CameraConfig>
     let renderPipelineState: MTLRenderPipelineState
 
-    public override init() {
+    public init(sketch: SketchBase) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
         renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
@@ -36,13 +35,13 @@ public class AddRenderer<
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
         
-        self.drawProcess = DrawProcess.init()
+        self.drawProcess = sketch
         
         camera = MainCamera()
         
         super.init()
         
-        self.drawProcess.setup(camera: camera)
+        self.drawProcess.setupCamera(camera: camera)
         
         
     }

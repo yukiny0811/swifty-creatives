@@ -15,12 +15,12 @@ struct ExampleiOSApp: App {
             ZStack {
                 VStack {
                     HStack {
-                        SketchView<SketchSample1, MainCameraConfig, MainDrawConfig>()
-                        SketchView<SketchSample1, MainCameraConfig, MyDrawConfigNormal>()
+                        SketchView<MainCameraConfig, MainDrawConfig>(SketchSample1())
+                        SketchView<MainCameraConfig, MyDrawConfigNormal>(SketchSample1())
                     }
                     HStack {
-                        SketchView<SketchSample2, MainCameraConfig, MyDrawConfigAdd>()
-                        SketchView<SketchSample2, MainCameraConfig, MyDrawConfigAlpha>()
+                        SketchView<MainCameraConfig, MyDrawConfigAdd>(SketchSample2())
+                        SketchView<MainCameraConfig, MyDrawConfigAlpha>(SketchSample2())
                     }
                 }
             }

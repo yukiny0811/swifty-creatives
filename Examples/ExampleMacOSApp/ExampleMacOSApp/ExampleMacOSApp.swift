@@ -17,14 +17,14 @@ struct ExampleMacOSApp: App {
                     .font(.largeTitle)
                 VStack {
                     HStack {
-                        SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
-                        SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
-                        SketchView<MySketch, MainCameraConfig, MainDrawConfig>()
+                        SketchView<MainCameraConfig, MainDrawConfig>(MySketch())
+                        SketchView<MainCameraConfig, MainDrawConfig>(MySketch())
+                        SketchView<MainCameraConfig, MainDrawConfig>(MySketch())
                     }
                     HStack {
-                        SketchView<MySketch, MainCameraConfig, MyDrawConfigNormal>()
-                        SketchView<MySketch, MainCameraConfig, MyDrawConfigAdd>()
-                        SketchView<MySketch, MainCameraConfig, MyDrawConfigAlpha>()
+                        SketchView<MainCameraConfig, MyDrawConfigNormal>(MySketch())
+                        SketchView<MainCameraConfig, MyDrawConfigAdd>(MySketch())
+                        SketchView<MainCameraConfig, MyDrawConfigAlpha>(MySketch())
                     }
                 }
             }
@@ -52,8 +52,8 @@ final class MySketch: SketchBase {
 
     var boxes: [Box] = []
     var elapsed: Float = 0.0
-
-    func setup(camera: some MainCameraBase) {
+    
+    init() {
         for _ in 0...100 {
             let box = Box()
             box.setColor(f4.randomPoint(0...1))
@@ -62,6 +62,8 @@ final class MySketch: SketchBase {
             boxes.append(box)
         }
     }
+
+    func setupCamera(camera: some MainCameraBase) {}
 
     func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)

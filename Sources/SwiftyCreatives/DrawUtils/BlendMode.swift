@@ -13,24 +13,23 @@ public enum BlendMode {
     case alphaBlend
     
     func getRenderer<
-        P: SketchBase,
         C: CameraConfigBase,
         D: DrawConfigBase
-    >(p: P.Type, c: C.Type, d: D.Type) -> any RendererBase {
+    >(c: C.Type, d: D.Type, sketch: SketchBase) -> any RendererBase {
         switch self {
         case .normalBlend:
-            return NormalBlendRenderer<P, C, D>()
+            return NormalBlendRenderer<C, D>(sketch: sketch)
         case .add:
             if ShaderCore.device.supportsFamily(.apple3) {
-                return AddRenderer<P, C, D>()
+                return AddRenderer<C, D>(sketch: sketch)
             } else {
-                return NormalBlendRenderer<P, C, D>()
+                return NormalBlendRenderer<C, D>(sketch: sketch)
             }
         case .alphaBlend:
             if ShaderCore.device.supportsFamily(.apple4) {
-                return TransparentRenderer<P, C, D>()
+                return TransparentRenderer<C, D>(sketch: sketch)
             } else {
-                return NormalBlendRenderer<P, C, D>()
+                return NormalBlendRenderer<C, D>(sketch: sketch)
             }
         }
     }
