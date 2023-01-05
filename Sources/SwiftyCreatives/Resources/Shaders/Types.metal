@@ -32,14 +32,42 @@ struct FrameUniforms_HasTexture {
     bool value;
 };
 
+struct FrameUniforms_CameraPos {
+    float3 value;
+};
+
+struct FrameUniforms_IsActiveToLight {
+    bool value;
+};
+
 struct RasterizerData {
     float4 position [[ position ]];
     float4 color;
     float2 uv;
+    float3 worldPosition;
+    float3 surfaceNormal;
+    float3 toCameraVector;
 };
 
 struct Vertex {
     float3 position [[ attribute(0) ]];
     float4 color [[ attribute(1) ]];
     float2 uv [[ attribute(2) ]];
+    float3 normal [[ attribute(3) ]];
+};
+
+struct Light {
+    float3 position;
+    float3 color;
+    float brightness;
+    float ambientIntensity;
+    float diffuseIntensity;
+    float specularIntensity;
+};
+
+struct Material {
+    float3 ambient;
+    float3 diffuse;
+    float3 specular;
+    float shininess;
 };

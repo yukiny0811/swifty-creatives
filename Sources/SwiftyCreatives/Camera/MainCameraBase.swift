@@ -6,6 +6,7 @@
 //
 
 public protocol MainCameraBase {
+    
     var mainMatrix: [f4x4] { get set }
     var perspectiveMatrix: [f4x4] { get set }
     func translate(_ x: Float, _ y: Float, _ z: Float)
@@ -16,4 +17,5 @@ public protocol MainCameraBase {
     func screenToWorldDirection(x: Float, y: Float, width: Float, height: Float) -> (origin: f3, direction: f3)
     func setTranslate(_ x: Float, _ y: Float, _ z: Float)
     func setRotation(_ x: Float, _ y: Float, _ z: Float)
+    func getCameraPos() -> f3
 }

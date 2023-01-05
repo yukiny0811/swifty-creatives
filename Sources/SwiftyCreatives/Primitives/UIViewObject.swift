@@ -18,9 +18,7 @@ public struct UIViewObjectInfo: PrimitiveInfo {
         static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
         static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
     }
-    public static let vertexCount: Int = 4
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
-    public static let hasTexture: [Bool] = [true]
 }
 
 public class UIViewObject: Primitive<UIViewObjectInfo> {
@@ -30,11 +28,12 @@ public class UIViewObject: Primitive<UIViewObjectInfo> {
     
     public required init() {
         super.init()
+        hasTexture = [true]
         bytes = [
-            Vertex(position: UIViewObjectInfo.VertexPoint.A, color: f4.zero, uv: f2(0, 0)),
-            Vertex(position: UIViewObjectInfo.VertexPoint.B, color: f4.zero, uv: f2(0, 1)),
-            Vertex(position: UIViewObjectInfo.VertexPoint.D, color: f4.zero, uv: f2(1, 0)),
-            Vertex(position: UIViewObjectInfo.VertexPoint.C, color: f4.zero, uv: f2(1, 1))
+            Vertex(position: ImgInfo.VertexPoint.A, color: f4.zero, uv: f2(0, 0), normal: f3(0, 0, 1)),
+            Vertex(position: ImgInfo.VertexPoint.B, color: f4.zero, uv: f2(0, 1), normal: f3(0, 0, 1)),
+            Vertex(position: ImgInfo.VertexPoint.D, color: f4.zero, uv: f2(1, 0), normal: f3(0, 0, 1)),
+            Vertex(position: ImgInfo.VertexPoint.C, color: f4.zero, uv: f2(1, 1), normal: f3(0, 0, 1))
         ]
     }
     
@@ -57,22 +56,15 @@ public class UIViewObject: Primitive<UIViewObjectInfo> {
         )
     }
     override public func draw(_ encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBytes(self.bytes, length: UIViewObjectInfo.vertexCount * Vertex.memorySize, index: 0)
+        encoder.setVertexBytes(self.bytes, length: self.bytes.count * Vertex.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setFragmentBytes(UIViewObjectInfo.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
+        encoder.setFragmentBytes(_material, length: Material.memorySize, index: 1)
+        encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
+        encoder.setFragmentBytes(self.isActiveToLight, length: MemoryLayout<Bool>.stride, index: 7)
         encoder.setFragmentTexture(self.texture, index: 0)
-        encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertexCount)
-    }
-    
-    private func mockModel() -> GLKMatrix4 {
-        let rotX = GLKMatrix4RotateX(GLKMatrix4Identity, self.rot.x)
-        let rotY = GLKMatrix4RotateY(GLKMatrix4Identity, self.rot.y)
-        let rotZ = GLKMatrix4RotateZ(GLKMatrix4Identity, self.rot.z)
-        let trans = GLKMatrix4Translate(GLKMatrix4Identity, self.pos.x, self.pos.y, self.pos.z)
-        let model = GLKMatrix4Multiply(GLKMatrix4Multiply(GLKMatrix4Multiply(trans, rotZ), rotY), rotX)
-        return model
+        encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: self.bytes.count)
     }
     
     public func hitTestGetPos(origin: f3, direction: f3) -> f3? {

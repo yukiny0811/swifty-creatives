@@ -74,6 +74,9 @@ public class NormalBlendRenderer<
         
         renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 4)
         renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
+        
+        let cameraPosBuffer = ShaderCore.device.makeBuffer(bytes: [camera.getCameraPos()], length: f3.memorySize)
+        renderCommandEncoder?.setVertexBuffer(cameraPosBuffer, offset: 0, index: 6)
         renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
         
         renderCommandEncoder?.setViewport(
@@ -87,6 +90,7 @@ public class NormalBlendRenderer<
             )
         )
         
+        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
         

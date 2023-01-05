@@ -87,6 +87,14 @@ public class MainCamera<
         }
     }
     
+    public func getCameraPos() -> f3 {
+        let viewInv = simd_inverse(self.mainMatrix[0])
+        let cameraOrigin = f4(0, 0, 0, 1)
+        let temp2 = viewInv * cameraOrigin
+        let worldOrigin = f3(temp2.x, temp2.y, temp2.z)
+        return worldOrigin
+    }
+    
     /// view points (not normalized)
     public func screenToWorldDirection(x: Float, y: Float, width: Float, height: Float) -> (origin: f3, direction: f3) {
 

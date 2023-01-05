@@ -8,7 +8,5 @@
 import Metal
 
 public protocol PrimitiveInfo {
-    static var vertexCount: Int { get }
     static var primitiveType: MTLPrimitiveType { get }
-    static var hasTexture: [Bool] { get }
 }

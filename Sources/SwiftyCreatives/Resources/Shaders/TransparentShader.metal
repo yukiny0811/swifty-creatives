@@ -13,7 +13,7 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <metal_stdlib>
-#include "Types.metal"
+#include "Functions.metal"
 using namespace metal;
 
 // MARK: vertexTransform
@@ -23,48 +23,27 @@ vertex RasterizerData vertexTransform(Vertex vIn [[ stage_in ]],
                                       const device FrameUniforms_ModelRot& uniformModelRot [[ buffer(2) ]],
                                       const device FrameUniforms_ModelScale& uniformModelScale [[ buffer(3) ]],
                                       const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(4) ]],
-                                      const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(5) ]]
+                                      const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(5) ]],
+                                      const device FrameUniforms_CameraPos& uniformCameraPos [[ buffer(6) ]]
                                       ) {
 
-    float4x4 modelTransMatrix = float4x4(float4(1.0, 0.0, 0.0, uniformModelPos.value.x),
-                                         float4(0.0, 1.0, 0.0, uniformModelPos.value.y),
-                                         float4(0.0, 0.0, 1.0, uniformModelPos.value.z),
-                                         float4(0.0, 0.0, 0.0, 1.0));
-
-    const float cosX = cos(uniformModelRot.value.x);
-    const float sinX = sin(uniformModelRot.value.x);
-    float4x4 modelRotateXMatrix = float4x4(float4(1.0, 0.0, 0.0, 0.0),
-                                           float4(0.0, cosX, -sinX, 0.0),
-                                           float4(0.0, sinX, cosX, 0.0),
-                                           float4(0.0, 0.0, 0.0, 1.0));
-
-    const float cosY = cos(uniformModelRot.value.y);
-    const float sinY = sin(uniformModelRot.value.y);
-    float4x4 modelRotateYMatrix = float4x4(float4(cosY, 0.0, sinY, 0.0),
-                                           float4(0.0, 1.0, 0.0, 0.0),
-                                           float4(-sinY, 0.0, cosY, 0.0),
-                                           float4(0.0, 0.0, 0.0, 1.0));
-
-    const float cosZ = cos(uniformModelRot.value.z);
-    const float sinZ = sin(uniformModelRot.value.z);
-    float4x4 modelRotateZMatrix = float4x4(float4(cosZ, -sinZ, 0.0, 0.0),
-                                           float4(sinZ, cosZ, 0.0, 0.0),
-                                           float4(0.0, 0.0, 1.0, 0.0),
-                                           float4(0.0, 0.0, 0.0, 1.0));
-                                                
-    float4x4 modelScaleMatrix = float4x4(float4(uniformModelScale.value.x, 0.0, 0.0, 0.0),
-                                         float4(0.0, uniformModelScale.value.y, 0.0, 0.0),
-                                         float4(0.0, 0.0, uniformModelScale.value.z, 0.0),
-                                         float4(0.0, 0.0, 0.0, 1.0));
+    float4x4 modelMatrix = createModelMatrix(
+                                             vIn,
+                                             uniformModelPos,
+                                             uniformModelRot,
+                                             uniformModelScale,
+                                             uniformProjectionMatrix,
+                                             uniformViewMatrix
+                                             );
     
-    float4x4 modelMatrix = transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
-    
-    RasterizerData out;
-    float4 position = float4(vIn.position, 1.0);
-    out.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * position;
-    out.color = vIn.color;
-    out.uv = vIn.uv;
-    return out;
+    RasterizerData rd;
+    rd.worldPosition = (modelMatrix * float4(vIn.position, 1.0)).xyz;
+    rd.surfaceNormal = (modelMatrix * float4(vIn.normal, 1.0)).xyz;
+    rd.toCameraVector = uniformCameraPos.value - rd.worldPosition;
+    rd.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * float4(vIn.position, 1.0);
+    rd.color = vIn.color;
+    rd.uv = vIn.uv;
+    return rd;
 }
 
 // MARK: transparency
@@ -129,14 +108,24 @@ inline void InsertFragment(OITDataT oitData, half4 color, half depth, half trans
 template <typename OITDataT>
 void OITFragmentFunction(RasterizerData in,
                          OITDataT oitData,
+                         const device Material &material,
+                         const device int &lightCount,
+                         const device Light *lights,
                          FrameUniforms_HasTexture uniformHasTexture,
+                         const device FrameUniforms_IsActiveToLight &isActiveToLight,
                          texture2d<half> tex) {
     const float depth = in.position.z / in.position.w;
+    
     half4 fragmentColor = half4(in.color);
     
     if (uniformHasTexture.value) {
         constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
         fragmentColor = tex.sample(textureSampler, float2(in.uv.x*tex.get_width(), in.uv.y*tex.get_height()));
+    }
+    
+    if (isActiveToLight.value) {
+        float3 phongIntensity = calculatePhongIntensity(in, material, lightCount, lights);
+        fragmentColor = half4(float4(fragmentColor) * float4(phongIntensity, 1));
     }
     
     InsertFragment(oitData, fragmentColor, depth, 1 - fragmentColor.a);
@@ -169,9 +158,13 @@ half4 OITResolve(OITData<NUM_LAYERS> pixelData) {
 fragment FragOut<4>
 OITFragmentFunction_4Layer(RasterizerData in [[ stage_in ]],
                            OITImageblock<4> oitImageblock [[ imageblock_data ]],
+                           const device Material &material [[ buffer(1) ]],
+                           const device int &lightCount [[ buffer(2) ]],
+                           const device Light *lights [[ buffer(3) ]],
                            const device FrameUniforms_HasTexture& uniformHasTexture [[ buffer(6) ]],
+                           const device FrameUniforms_IsActiveToLight &isActiveToLight [[ buffer(7) ]],
                            texture2d<half> tex [[ texture(0) ]]) {
-    OITFragmentFunction(in, &oitImageblock.oitData, uniformHasTexture, tex);
+    OITFragmentFunction(in, &oitImageblock.oitData, material, lightCount, lights, uniformHasTexture, isActiveToLight, tex);
     FragOut<4> Out;
     Out.aoitImageBlock = oitImageblock;
     return Out;

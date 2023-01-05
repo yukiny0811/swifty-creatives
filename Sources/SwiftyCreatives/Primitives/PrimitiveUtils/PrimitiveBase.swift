@@ -22,6 +22,7 @@ public protocol PrimitiveBase: AnyObject {
     func setPos(_ value: f3)
     func setRot(_ value: f3)
     func setScale(_ value: f3)
+    func setMaterial(_ material: Material)
     
     func draw(_ encoder: MTLRenderCommandEncoder)
 }

@@ -18,6 +18,9 @@ public protocol SketchBase: AnyObject {
     // MARK: functions
     func setupCamera(camera: some MainCameraBase)
     func update(camera: some MainCameraBase)
+    
+    func updateAndDrawLight(encoder: MTLRenderCommandEncoder)
+    
     func draw(encoder: MTLRenderCommandEncoder)
     
     #if os(macOS)
@@ -42,6 +45,8 @@ public protocol SketchBase: AnyObject {
 }
 
 public extension SketchBase {
+    
+    func updateAndDrawLight(encoder: MTLRenderCommandEncoder) {}
     
     #if os(macOS)
     func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
