@@ -9,6 +9,8 @@ import Metal
 
 open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
+    open var bytes: [Vertex] = []
+    
     internal var _color: [f4] = [f4.zero]
     internal var _mPos: [f3] = [f3.zero]
     internal var _mRot: [f3] = [f3.zero]
@@ -23,6 +25,9 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
     public func setColor(_ value: f4) {
         _color[0] = value
+        for i in 0..<self.bytes.count {
+            bytes[i].color = value
+        }
     }
     
     public func setPos(_ value: f3) {
@@ -38,13 +43,11 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     }
     
     public func draw(_ encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBytes(Info.bytes, length: Info.vertexCount * f3.memorySize, index: 0)
-        encoder.setVertexBytes(_color, length: f4.memorySize, index: 1)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 2)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 3)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 4)
-        encoder.setVertexBytes(Info.hasTexture, length: MemoryLayout<Bool>.stride, index: 7)
-        encoder.setFragmentBytes(Info.hasTexture, length: MemoryLayout<Bool>.stride, index: 7)
+        encoder.setVertexBytes(self.bytes, length: Info.vertexCount * Vertex.memorySize, index: 0)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
+        encoder.setFragmentBytes(Info.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
         encoder.drawPrimitives(type: Info.primitiveType, vertexStart: 0, vertexCount: Info.vertexCount)
     }
     

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2022/12/16.
 //
@@ -10,13 +10,11 @@
 using namespace metal;
 
 vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
-                                            const device FrameUniforms_Color& uniformColor [[ buffer(1) ]],
-                                            const device FrameUniforms_ModelPos& uniformModelPos [[ buffer(2) ]],
-                                            const device FrameUniforms_ModelRot& uniformModelRot [[ buffer(3) ]],
-                                            const device FrameUniforms_ModelScale& uniformModelScale [[ buffer(4) ]],
-                                            const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(5) ]],
-                                            const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(6) ]],
-                                            const device FrameUniforms_HasTexture& hasTexture [[ buffer(7) ]]
+                                            const device FrameUniforms_ModelPos& uniformModelPos [[ buffer(1) ]],
+                                            const device FrameUniforms_ModelRot& uniformModelRot [[ buffer(2) ]],
+                                            const device FrameUniforms_ModelScale& uniformModelScale [[ buffer(3) ]],
+                                            const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(4) ]],
+                                            const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(5) ]]
                                      ) {
             
     RasterizerData rd;
@@ -55,20 +53,16 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
     float4x4 modelMatrix = transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
     
     rd.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * float4(vIn.position, 1.0);
-    
-    if (hasTexture.value) {
-        rd.uv.x = vIn.position.x > 0 ? 1 : 0;
-        rd.uv.y = vIn.position.y > 0 ? 0 : 1;
-    }
-    rd.color = uniformColor.value;
+    rd.color = vIn.color;
+    rd.uv = vIn.uv;
     return rd;
 }
 
 fragment half4 normal_fragment (RasterizerData rd [[stage_in]],
-                                const device FrameUniforms_HasTexture& hasTexture [[ buffer(7) ]],
+                                const device FrameUniforms_HasTexture& uniformHasTexture [[ buffer(6) ]],
                                 texture2d<half> tex [[ texture(0) ]]) {
     
-    if (hasTexture.value) {
+    if (uniformHasTexture.value) {
         constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
         const half4 colorSample = tex.sample(textureSampler, float2(rd.uv.x*tex.get_width(), rd.uv.y*tex.get_height()));
         return colorSample;

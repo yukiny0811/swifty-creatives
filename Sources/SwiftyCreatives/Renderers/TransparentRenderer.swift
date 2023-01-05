@@ -113,8 +113,8 @@ class TransparentRenderer<
         
         // MARK: - set buffer
         
-        renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
-        renderEncoder.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 6)
+        renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 4)
+        renderEncoder.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
         renderEncoder.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
         
         // MARK: - draw primitive
@@ -140,5 +140,7 @@ class TransparentRenderer<
         // MARK: - commit buffer
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
+        
+        commandBuffer.waitUntilCompleted()
     }
 }

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2022/12/16.
 //
@@ -72,8 +72,8 @@ public class NormalBlendRenderer<
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
-        renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
-        renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 6)
+        renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 4)
+        renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
         renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
         
         renderCommandEncoder?.setViewport(

@@ -12,27 +12,31 @@ import GLKit
 import UIKit
 
 public struct UIViewObjectInfo: PrimitiveInfo {
-    private final class VertexPoint {
+    public final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
         static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
         static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
     }
-    public static let bytes: [f3] = [
-        VertexPoint.A,
-        VertexPoint.B,
-        VertexPoint.D,
-        VertexPoint.C
-    ]
     public static let vertexCount: Int = 4
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
-    public static var hasTexture: [Bool] = [true]
+    public static let hasTexture: [Bool] = [true]
 }
 
 public class UIViewObject: Primitive<UIViewObjectInfo> {
     private var texture: MTLTexture?
     
     private var viewObj: UIView?
+    
+    public required init() {
+        super.init()
+        bytes = [
+            Vertex(position: UIViewObjectInfo.VertexPoint.A, color: f4.zero, uv: f2(0, 0)),
+            Vertex(position: UIViewObjectInfo.VertexPoint.B, color: f4.zero, uv: f2(0, 1)),
+            Vertex(position: UIViewObjectInfo.VertexPoint.D, color: f4.zero, uv: f2(1, 0)),
+            Vertex(position: UIViewObjectInfo.VertexPoint.C, color: f4.zero, uv: f2(1, 1))
+        ]
+    }
     
     public func load(view: UIView) {
         
@@ -53,15 +57,13 @@ public class UIViewObject: Primitive<UIViewObjectInfo> {
         )
     }
     override public func draw(_ encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBytes(ImgInfo.bytes, length: ImgInfo.vertexCount * f3.memorySize, index: 0)
-        encoder.setVertexBytes(_color, length: f4.memorySize, index: 1)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 2)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 3)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 4)
-        encoder.setVertexBytes(ImgInfo.hasTexture, length: MemoryLayout<Bool>.stride, index: 7)
-        encoder.setFragmentBytes(ImgInfo.hasTexture, length: MemoryLayout<Bool>.stride, index: 7)
+        encoder.setVertexBytes(self.bytes, length: UIViewObjectInfo.vertexCount * Vertex.memorySize, index: 0)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
+        encoder.setFragmentBytes(UIViewObjectInfo.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
         encoder.setFragmentTexture(self.texture, index: 0)
-        encoder.drawPrimitives(type: ImgInfo.primitiveType, vertexStart: 0, vertexCount: ImgInfo.vertexCount)
+        encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertexCount)
     }
     
     private func mockModel() -> GLKMatrix4 {
