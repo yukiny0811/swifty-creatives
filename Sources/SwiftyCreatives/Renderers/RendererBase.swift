@@ -30,7 +30,11 @@ extension RendererBase {
         vertexDescriptor.attributes[2].offset = 32
         vertexDescriptor.attributes[2].bufferIndex = 0
         
-        vertexDescriptor.layouts[0].stride = 48
+        vertexDescriptor.attributes[3].format = .float3
+        vertexDescriptor.attributes[3].offset = 48
+        vertexDescriptor.attributes[3].bufferIndex = 0
+        
+        vertexDescriptor.layouts[0].stride = 64
         vertexDescriptor.layouts[0].stepRate = 1
         vertexDescriptor.layouts[0].stepFunction = .perVertex
         

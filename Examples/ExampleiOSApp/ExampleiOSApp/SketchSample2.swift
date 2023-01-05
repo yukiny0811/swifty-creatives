@@ -8,9 +8,10 @@
 import SwiftyCreatives
 import UIKit
 
-final class SketchSample2: SketchBase {
+final class SketchSample2: Sketch {
     
-    init() {
+    override init() {
+        super.init()
         let view: TestView = TestView.fromNib()
         view.layer.cornerRadius = 36
         view.onHit = {
@@ -25,20 +26,20 @@ final class SketchSample2: SketchBase {
     var r: Float = 0.0
     var rFinal: Float = 0.0
     
-    func setupCamera(camera: some MainCameraBase) {}
+    override func setupCamera(camera: some MainCameraBase) {}
     
-    func update(camera: some MainCameraBase) {
+    override func update(camera: some MainCameraBase) {
         if r < rFinal {
             r += 0.06
             viewObj.setRot(f3(0, 0, r))
         }
     }
     
-    func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: MTLRenderCommandEncoder) {
         viewObj.draw(encoder)
     }
     
-    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {
         
         let touch = touches.first!
         let location = touch.location(in: UIView(frame: viewFrame))

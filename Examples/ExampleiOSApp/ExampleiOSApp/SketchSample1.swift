@@ -9,12 +9,13 @@ import SwiftyCreatives
 import CoreGraphics
 import UIKit
 
-final class SketchSample1: SketchBase {
+final class SketchSample1: Sketch {
     
     var boxes: [Box] = []
     var elapsed: Float = 0.0
     
-    init() {
+    override init() {
+        super.init()
         for _ in 0...100 {
             let box = Box()
             box.setColor(f4.randomPoint(0...1))
@@ -24,9 +25,9 @@ final class SketchSample1: SketchBase {
         }
     }
     
-    func setupCamera(camera: some MainCameraBase) {}
+    override func setupCamera(camera: some MainCameraBase) {}
     
-    func update(camera: some MainCameraBase) {
+    override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)
         elapsed += 0.01
         
@@ -36,13 +37,13 @@ final class SketchSample1: SketchBase {
         }
     }
     
-    func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: MTLRenderCommandEncoder) {
         for b in boxes {
             b.draw(encoder)
         }
     }
     
-    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {
         let touch = touches.first!
         let location = touch.location(in: UIView(frame: viewFrame))
         

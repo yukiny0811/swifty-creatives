@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2022/12/16.
 //
@@ -18,9 +18,7 @@ public struct BoxInfo: PrimitiveInfo {
         static let S: f3 = f3(x: -1.0, y:  -1.0, z:  -1.0)
         static let T: f3 = f3(x:  1.0, y:  -1.0, z:  -1.0)
     }
-    public static let vertexCount: Int = 14
-    public static let primitiveType: MTLPrimitiveType = .triangleStrip
-    public static let hasTexture: [Bool] = [false]
+    public static let primitiveType: MTLPrimitiveType = .triangle
 }
 
 public class Box: Primitive<BoxInfo> {
@@ -28,20 +26,47 @@ public class Box: Primitive<BoxInfo> {
     public required init() {
         super.init()
         bytes = [
-            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.B, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.D, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero),
-            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero)
+            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
+            Vertex(position: BoxInfo.VertexPoint.B, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
+            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
+            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
+            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
+            Vertex(position: BoxInfo.VertexPoint.D, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
+            
+            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero, normal: f3(0, 0, -1)),
+            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero, normal: f3(0, 0, -1)),
+            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero, normal: f3(0, 0, -1)),
+            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero, normal: f3(0, 0, -1)),
+            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero, normal: f3(0, 0, -1)),
+            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero, normal: f3(0, 0, -1)),
+            
+            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero, normal: f3(-1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero, normal: f3(-1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.B, color: f4.zero, uv: f2.zero, normal: f3(-1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero, normal: f3(-1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.B, color: f4.zero, uv: f2.zero, normal: f3(-1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero, normal: f3(-1, 0, 0)),
+            
+            Vertex(position: BoxInfo.VertexPoint.D, color: f4.zero, uv: f2.zero, normal: f3(1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero, normal: f3(1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero, normal: f3(1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.D, color: f4.zero, uv: f2.zero, normal: f3(1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero, normal: f3(1, 0, 0)),
+            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero, normal: f3(1, 0, 0)),
+            
+            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero, normal: f3(0, 1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero, normal: f3(0, 1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.D, color: f4.zero, uv: f2.zero, normal: f3(0, 1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero, normal: f3(0, 1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.D, color: f4.zero, uv: f2.zero, normal: f3(0, 1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero, normal: f3(0, 1, 0)),
+            
+            Vertex(position: BoxInfo.VertexPoint.B, color: f4.zero, uv: f2.zero, normal: f3(0, -1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero, normal: f3(0, -1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero, normal: f3(0, -1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.B, color: f4.zero, uv: f2.zero, normal: f3(0, -1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero, normal: f3(0, -1, 0)),
+            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero, normal: f3(0, -1, 0))
         ]
     }
 }

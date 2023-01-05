@@ -15,9 +15,7 @@ public struct RectInfo: PrimitiveInfo {
         static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
         static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
     }
-    public static let vertexCount: Int = 4
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
-    public static let hasTexture: [Bool] = [false]
 }
 
 public class Rect: Primitive<RectInfo> {
@@ -25,20 +23,11 @@ public class Rect: Primitive<RectInfo> {
     public required init() {
         super.init()
         bytes = [
-            Vertex(position: RectInfo.VertexPoint.A, color: f4.zero, uv: f2.zero),
-            Vertex(position: RectInfo.VertexPoint.B, color: f4.zero, uv: f2.zero),
-            Vertex(position: RectInfo.VertexPoint.D, color: f4.zero, uv: f2.zero),
-            Vertex(position: RectInfo.VertexPoint.C, color: f4.zero, uv: f2.zero)
+            Vertex(position: ImgInfo.VertexPoint.A, color: f4.zero, uv: f2(0, 0), normal: f3(0, 0, 1)),
+            Vertex(position: ImgInfo.VertexPoint.B, color: f4.zero, uv: f2(0, 1), normal: f3(0, 0, 1)),
+            Vertex(position: ImgInfo.VertexPoint.D, color: f4.zero, uv: f2(1, 0), normal: f3(0, 0, 1)),
+            Vertex(position: ImgInfo.VertexPoint.C, color: f4.zero, uv: f2(1, 1), normal: f3(0, 0, 1))
         ]
-    }
-    
-    private func mockModel() -> GLKMatrix4 {
-        let rotX = GLKMatrix4RotateX(GLKMatrix4Identity, self.rot.x)
-        let rotY = GLKMatrix4RotateY(GLKMatrix4Identity, self.rot.y)
-        let rotZ = GLKMatrix4RotateZ(GLKMatrix4Identity, self.rot.z)
-        let trans = GLKMatrix4Translate(GLKMatrix4Identity, self.pos.x, self.pos.y, self.pos.z)
-        let model = GLKMatrix4Multiply(GLKMatrix4Multiply(GLKMatrix4Multiply(trans, rotZ), rotY), rotX)
-        return model
     }
     
     public func hitTestGetPos(origin: f3, direction: f3) -> f3? {

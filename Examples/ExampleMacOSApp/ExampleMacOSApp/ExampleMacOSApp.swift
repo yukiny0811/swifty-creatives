@@ -48,12 +48,13 @@ final class MyDrawConfigAlpha: DrawConfigBase {
     static var blendMode: SwiftyCreatives.BlendMode = .alphaBlend
 }
 
-final class MySketch: SketchBase {
+final class MySketch: Sketch {
 
     var boxes: [Box] = []
     var elapsed: Float = 0.0
     
-    init() {
+    override init() {
+        super.init()
         for _ in 0...100 {
             let box = Box()
             box.setColor(f4.randomPoint(0...1))
@@ -63,9 +64,9 @@ final class MySketch: SketchBase {
         }
     }
 
-    func setupCamera(camera: some MainCameraBase) {}
+    override func setupCamera(camera: some MainCameraBase) {}
 
-    func update(camera: some MainCameraBase) {
+    override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)
         elapsed += 0.01
         for b in boxes {
@@ -73,13 +74,13 @@ final class MySketch: SketchBase {
         }
     }
 
-    func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: MTLRenderCommandEncoder) {
         for b in boxes {
             b.draw(encoder)
         }
     }
     
-    func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
         
         let location = CGPoint(
             x: event.locationInWindow.x - viewFrame.origin.x,
