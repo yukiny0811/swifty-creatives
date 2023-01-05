@@ -6,6 +6,7 @@
 //
 
 import MetalKit
+import simd
 
 protocol RendererBase: MTKViewDelegate {
     associatedtype Camera: MainCameraBase
@@ -21,7 +22,15 @@ extension RendererBase {
         vertexDescriptor.attributes[0].offset = 0
         vertexDescriptor.attributes[0].bufferIndex = 0
         
-        vertexDescriptor.layouts[0].stride = f3.memorySize
+        vertexDescriptor.attributes[1].format = .float4
+        vertexDescriptor.attributes[1].offset = 16
+        vertexDescriptor.attributes[1].bufferIndex = 0
+        
+        vertexDescriptor.attributes[2].format = .float2
+        vertexDescriptor.attributes[2].offset = 32
+        vertexDescriptor.attributes[2].bufferIndex = 0
+        
+        vertexDescriptor.layouts[0].stride = 48
         vertexDescriptor.layouts[0].stepRate = 1
         vertexDescriptor.layouts[0].stepFunction = .perVertex
         

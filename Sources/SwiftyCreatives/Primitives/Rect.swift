@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2022/12/16.
 //
@@ -9,7 +9,7 @@ import Metal
 import GLKit
 
 public struct RectInfo: PrimitiveInfo {
-    private final class VertexPoint {
+    public final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
         static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
@@ -17,16 +17,20 @@ public struct RectInfo: PrimitiveInfo {
     }
     public static let vertexCount: Int = 4
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
-    public static var bytes: [f3] = [
-        VertexPoint.A,
-        VertexPoint.B,
-        VertexPoint.D,
-        VertexPoint.C
-    ]
-    public static var hasTexture: [Bool] = [false]
+    public static let hasTexture: [Bool] = [false]
 }
 
 public class Rect: Primitive<RectInfo> {
+    
+    public required init() {
+        super.init()
+        bytes = [
+            Vertex(position: RectInfo.VertexPoint.A, color: f4.zero, uv: f2.zero),
+            Vertex(position: RectInfo.VertexPoint.B, color: f4.zero, uv: f2.zero),
+            Vertex(position: RectInfo.VertexPoint.D, color: f4.zero, uv: f2.zero),
+            Vertex(position: RectInfo.VertexPoint.C, color: f4.zero, uv: f2.zero)
+        ]
+    }
     
     private func mockModel() -> GLKMatrix4 {
         let rotX = GLKMatrix4RotateX(GLKMatrix4Identity, self.rot.x)

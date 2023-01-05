@@ -16,10 +16,6 @@ struct FrameUniforms_ViewMatrix {
     float4x4 value;
 };
 
-struct FrameUniforms_Color {
-    float4 value;
-};
-
 struct FrameUniforms_ModelPos {
     float3 value;
 };
@@ -44,4 +40,6 @@ struct RasterizerData {
 
 struct Vertex {
     float3 position [[ attribute(0) ]];
+    float4 color [[ attribute(1) ]];
+    float2 uv [[ attribute(2) ]];
 };

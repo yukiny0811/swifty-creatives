@@ -8,7 +8,7 @@
 import Metal
 
 public struct BoxInfo: PrimitiveInfo {
-    private final class VertexPoint {
+    public final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   1.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   1.0)
         static let C: f3 = f3(x:  1.0, y:  -1.0, z:   1.0)
@@ -20,23 +20,28 @@ public struct BoxInfo: PrimitiveInfo {
     }
     public static let vertexCount: Int = 14
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
-    public static let bytes: [f3] = [
-        VertexPoint.T,
-        VertexPoint.S,
-        VertexPoint.C,
-        VertexPoint.B,
-        VertexPoint.A,
-        VertexPoint.S,
-        VertexPoint.Q,
-        VertexPoint.T,
-        VertexPoint.R,
-        VertexPoint.C,
-        VertexPoint.D,
-        VertexPoint.A,
-        VertexPoint.R,
-        VertexPoint.Q
-    ]
-    public static var hasTexture: [Bool] = [false]
+    public static let hasTexture: [Bool] = [false]
 }
 
-public class Box: Primitive<BoxInfo> {}
+public class Box: Primitive<BoxInfo> {
+    
+    public required init() {
+        super.init()
+        bytes = [
+            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.B, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.S, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.T, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.C, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.D, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.A, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.R, color: f4.zero, uv: f2.zero),
+            Vertex(position: BoxInfo.VertexPoint.Q, color: f4.zero, uv: f2.zero)
+        ]
+    }
+}
