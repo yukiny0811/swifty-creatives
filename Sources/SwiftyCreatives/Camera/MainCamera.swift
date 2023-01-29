@@ -70,13 +70,19 @@ public class MainCamera<
         mainMatrix[0] = matrix.toSimd()
     }
     public func updatePMatrix() {
-        let pmat = GLKMatrix4MakePerspective(
-            GLKMathDegreesToRadians(Config.fov),
-            frameWidth / frameHeight,
-            Config.near,
-            Config.far
-        )
-        perspectiveMatrix[0] = pmat.toSimd()
+        if Config.isPerspective {
+            let pmat = GLKMatrix4MakePerspective(
+                GLKMathDegreesToRadians(Config.fov),
+                frameWidth / frameHeight,
+                Config.near,
+                Config.far
+            )
+            perspectiveMatrix[0] = pmat.toSimd()
+        } else {
+            let pmat = GLKMatrix4MakeOrtho(-self.frameWidth/2, self.frameWidth/2, -self.frameHeight/2, self.frameHeight/2, Config.near, Config.far)
+            
+            perspectiveMatrix[0] = pmat.toSimd()
+        }
     }
     
     public func setFrame(width: Float, height: Float) {

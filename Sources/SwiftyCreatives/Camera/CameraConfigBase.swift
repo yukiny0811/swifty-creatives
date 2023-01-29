@@ -23,4 +23,6 @@ public protocol CameraConfigBase {
     static var polarSpacing: Float { get }
     
     static var enableEasyMove: Bool { get }
+    
+    static var isPerspective: Bool { get }
 }

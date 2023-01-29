@@ -10,8 +10,6 @@ import GLKit
 
 open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
-    open var bytes: [Vertex] = []
-    
     open var hasTexture: [Bool] = [false]
     open var isActiveToLight: [Bool] = [false]
     
@@ -30,9 +28,6 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
     public func setColor(_ value: f4) {
         _color[0] = value
-        for i in 0..<self.bytes.count {
-            bytes[i].color = value
-        }
     }
     
     public func setPos(_ value: f3) {
@@ -53,13 +48,16 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
     public func draw(_ encoder: MTLRenderCommandEncoder) {
         encoder.setFragmentBytes(_material, length: Material.memorySize, index: 1)
-        encoder.setVertexBytes(self.bytes, length: self.bytes.count * Vertex.memorySize, index: 0)
+        encoder.setVertexBytes(Info.vertices, length: Info.vertices.count * f3.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
+        encoder.setVertexBytes(Info.uvs, length: Info.uvs.count * f2.memorySize, index: 11)
+        encoder.setVertexBytes(Info.normals, length: Info.normals.count * f3.memorySize, index: 12)
         encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
         encoder.setFragmentBytes(self.isActiveToLight, length: MemoryLayout<Bool>.stride, index: 7)
-        encoder.drawPrimitives(type: Info.primitiveType, vertexStart: 0, vertexCount: self.bytes.count)
+        encoder.drawPrimitives(type: Info.primitiveType, vertexStart: 0, vertexCount: Info.vertices.count)
     }
     
     // util functions

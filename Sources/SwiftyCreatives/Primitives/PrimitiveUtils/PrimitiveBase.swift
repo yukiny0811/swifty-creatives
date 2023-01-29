@@ -14,8 +14,6 @@ public protocol PrimitiveBase: AnyObject {
     var rot: f3 { get }
     var scale: f3 { get }
     
-    var bytes: [Vertex] { get set }
-    
     init()
     
     func setColor(_ value: f4)

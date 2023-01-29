@@ -15,7 +15,8 @@ vertex RasterizerData add_vertex (const Vertex vIn [[ stage_in ]],
                                   const device FrameUniforms_ModelScale& uniformModelScale [[ buffer(3) ]],
                                   const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(4) ]],
                                   const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(5) ]],
-                                  const device FrameUniforms_CameraPos& uniformCameraPos [[ buffer(6) ]]
+                                  const device FrameUniforms_CameraPos& uniformCameraPos [[ buffer(6) ]],
+                                  const device float4& color [[ buffer(10) ]]
                                   ) {
             
     float4x4 modelMatrix = createModelMatrix(
@@ -32,7 +33,7 @@ vertex RasterizerData add_vertex (const Vertex vIn [[ stage_in ]],
     rd.surfaceNormal = (modelMatrix * float4(vIn.normal, 1.0)).xyz;
     rd.toCameraVector = uniformCameraPos.value - rd.worldPosition;
     rd.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * float4(vIn.position, 1.0);
-    rd.color = vIn.color;
+    rd.color = color;
     rd.uv = vIn.uv;
     return rd;
 }
