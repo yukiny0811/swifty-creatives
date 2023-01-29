@@ -105,6 +105,8 @@ class TransparentRenderer<
         // MARK: - render encoder
         let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         
+        Self.setDefaultBuffers(encoder: renderEncoder)
+        
         renderEncoder.setRenderPipelineState(clearTileState)
         renderEncoder.dispatchThreadsPerTile(optimalTileSize)
         renderEncoder.setCullMode(.none)

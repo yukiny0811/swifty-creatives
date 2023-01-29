@@ -9,6 +9,27 @@ import Metal
 import GLKit
 
 public struct RectInfo: PrimitiveInfo {
+    public static var vertices: [f3] = [
+        Self.VertexPoint.A,
+        Self.VertexPoint.B,
+        Self.VertexPoint.D,
+        Self.VertexPoint.C
+    ]
+    
+    public static var uvs: [f2] = [
+        f2(0, 0),
+        f2(0, 1),
+        f2(1, 0),
+        f2(1, 1)
+    ]
+    
+    public static var normals: [f3] = [
+        f3(0, 0, 1),
+        f3(0, 0, 1),
+        f3(0, 0, 1),
+        f3(0, 0, 1)
+    ]
+    
     public final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
@@ -22,12 +43,6 @@ public class Rect: Primitive<RectInfo> {
     
     public required init() {
         super.init()
-        bytes = [
-            Vertex(position: ImgInfo.VertexPoint.A, color: f4.zero, uv: f2(0, 0), normal: f3(0, 0, 1)),
-            Vertex(position: ImgInfo.VertexPoint.B, color: f4.zero, uv: f2(0, 1), normal: f3(0, 0, 1)),
-            Vertex(position: ImgInfo.VertexPoint.D, color: f4.zero, uv: f2(1, 0), normal: f3(0, 0, 1)),
-            Vertex(position: ImgInfo.VertexPoint.C, color: f4.zero, uv: f2(1, 1), normal: f3(0, 0, 1))
-        ]
     }
     
     public func hitTestGetPos(origin: f3, direction: f3) -> f3? {

@@ -14,15 +14,28 @@ public struct TriangleInfo: PrimitiveInfo {
         static let C: f3 = f3(x: cos(Float.pi * 11.0 / 6.0), y: sin(Float.pi * 11.0 / 6.0), z: 0.0)
     }
     public static let primitiveType: MTLPrimitiveType = .triangle
+    
+    public static var vertices: [f3] = [
+        Self.VertexPoint.A,
+        Self.VertexPoint.B,
+        Self.VertexPoint.C
+    ]
+    
+    public static var uvs: [f2] = [
+        f2(0, 0),
+        f2(0, 0),
+        f2(0, 0)
+    ]
+    
+    public static var normals: [f3] = [
+        f3(0, 0, 1),
+        f3(0, 0, 1),
+        f3(0, 0, 1)
+    ]
 }
 
 public class Triangle: Primitive<TriangleInfo> {
     public required init() {
         super.init()
-        bytes = [
-            Vertex(position: TriangleInfo.VertexPoint.A, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
-            Vertex(position: TriangleInfo.VertexPoint.B, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1)),
-            Vertex(position: TriangleInfo.VertexPoint.C, color: f4.zero, uv: f2.zero, normal: f3(0, 0, 1))
-        ]
     }
 }

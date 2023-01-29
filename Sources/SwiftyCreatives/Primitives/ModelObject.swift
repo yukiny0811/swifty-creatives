@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2023/01/05.
 //
@@ -10,6 +10,12 @@ import ModelIO
 
 
 public struct ModelObjectInfo: PrimitiveInfo {
+    public static var vertices: [f3] = []
+    
+    public static var uvs: [f2] = []
+    
+    public static var normals: [f3] = []
+    
     public static let vertexCount: Int = 0
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
     public static let hasTexture: [Bool] = [true]
@@ -26,14 +32,15 @@ public class ModelObject: Primitive<ModelObjectInfo> {
 
         let vertexDescriptor = MDLVertexDescriptor()
         vertexDescriptor.layouts = [
-            MDLVertexBufferLayout(stride: 64)
+            MDLVertexBufferLayout(stride: 16),
+            MDLVertexBufferLayout(stride: 8),
+            MDLVertexBufferLayout(stride: 16)
         ]
 
         vertexDescriptor.attributes = [
             MDLVertexAttribute(name: MDLVertexAttributePosition, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeColor, format: MDLVertexFormat.float4, offset: 16, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 32, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 48, bufferIndex: 0)
+            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 0, bufferIndex: 1),
+            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 2)
         ]
 
         let asset = MDLAsset(
@@ -78,14 +85,15 @@ public class ModelObject: Primitive<ModelObjectInfo> {
 
         let vertexDescriptor = MDLVertexDescriptor()
         vertexDescriptor.layouts = [
-            MDLVertexBufferLayout(stride: 64)
+            MDLVertexBufferLayout(stride: 16),
+            MDLVertexBufferLayout(stride: 8),
+            MDLVertexBufferLayout(stride: 16)
         ]
 
         vertexDescriptor.attributes = [
             MDLVertexAttribute(name: MDLVertexAttributePosition, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeColor, format: MDLVertexFormat.float4, offset: 16, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 32, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 48, bufferIndex: 0)
+            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 0, bufferIndex: 1),
+            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 2)
         ]
 
         let asset = MDLAsset(
@@ -130,15 +138,24 @@ public class ModelObject: Primitive<ModelObjectInfo> {
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
-        encoder.setFragmentBytes(self.isActiveToLight, length: MemoryLayout<Bool>.stride, index: 7)
-        encoder.setFragmentBytes(self._material, length: Material.memorySize, index: 1)
+        encoder.setFragmentBytes([true], length: MemoryLayout<Bool>.stride, index: 6)
         
         for mesh in meshes {
-            for b in mesh.vertexBuffers {
-                encoder.setVertexBuffer(b.buffer, offset: b.offset, index: 0)
+            
+            for b in 0..<mesh.vertexBuffers.count {
+                switch b {
+                case 0:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: 0)
+                case 1:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: 11)
+                case 2:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: 12)
+                default:
+                    break
+                }
             }
             for s in mesh.submeshes {
+                
                 encoder.setFragmentTexture(texture, index: 0)
                 encoder.drawIndexedPrimitives(type: s.primitiveType, indexCount: s.indexCount, indexType: s.indexType, indexBuffer: s.indexBuffer.buffer, indexBufferOffset: s.indexBuffer.offset)
             }

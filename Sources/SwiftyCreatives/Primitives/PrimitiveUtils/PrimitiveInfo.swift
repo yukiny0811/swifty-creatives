@@ -9,4 +9,7 @@ import Metal
 
 public protocol PrimitiveInfo {
     static var primitiveType: MTLPrimitiveType { get }
+    static var vertices: [f3] { get }
+    static var uvs: [f2] { get }
+    static var normals: [f3] { get }
 }

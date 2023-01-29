@@ -18,13 +18,6 @@ struct ExampleMacOSApp: App {
                 VStack {
                     HStack {
                         SketchView<MainCameraConfig, MainDrawConfig>(MySketch())
-                        SketchView<MainCameraConfig, MainDrawConfig>(MySketch())
-                        SketchView<MainCameraConfig, MainDrawConfig>(MySketch())
-                    }
-                    HStack {
-                        SketchView<MainCameraConfig, MyDrawConfigNormal>(MySketch())
-                        SketchView<MainCameraConfig, MyDrawConfigAdd>(MySketch())
-                        SketchView<MainCameraConfig, MyDrawConfigAlpha>(MySketch())
                     }
                 }
             }
@@ -49,54 +42,77 @@ final class MyDrawConfigAlpha: DrawConfigBase {
 }
 
 final class MySketch: Sketch {
-
-    var boxes: [Box] = []
-    var elapsed: Float = 0.0
     
+    var boxes: [Box] = []
+    
+    var circle = Circ()
+
     override init() {
         super.init()
-        for _ in 0...100 {
-            let box = Box()
-            box.setColor(f4.randomPoint(0...1))
-            box.setPos(f3.randomPoint(-7...7))
-            box.setScale(f3.one * Float.random(in: 0.3...2))
-            boxes.append(box)
-        }
+//        for i in 0..<100 {
+//            let box = Box()
+//            box.setPos(f3.randomPoint(-100...100))
+//            box.setColor(f4.randomPoint(0...1))
+//            box.setScale(f3.randomPoint(10...100))
+//            boxes.append(box)
+//        }
+        
+        circle.setPos(f3.zero)
+        circle.setScale(f3.one * 10)
+        circle.setColor(f4.randomPoint(0...1))
     }
 
-    override func setupCamera(camera: some MainCameraBase) {}
-
-    override func update(camera: some MainCameraBase) {
-        camera.rotateAroundY(0.01)
-        elapsed += 0.01
-        for b in boxes {
-            b.setColor(f4(sin(elapsed), b.color.y, b.color.z, b.color.w))
-        }
+    override func setupCamera(camera: some MainCameraBase) {
+//        camera.setTranslate(0, 0, -20)
     }
+
+    override func update(camera: some MainCameraBase) {}
 
     override func draw(encoder: MTLRenderCommandEncoder) {
-        for b in boxes {
-            b.draw(encoder)
-        }
-    }
-    
-    override func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+
+//        for b in boxes {
+//            b.draw(encoder)
+//        }
         
-        let location = CGPoint(
-            x: event.locationInWindow.x - viewFrame.origin.x,
-            y: event.window!.frame.height - event.locationInWindow.y - viewFrame.origin.y
-        )
-        
-        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
-        let origin = processed.origin
-        let direction = processed.direction
-        
-        let finalPos = origin + direction * 20
-        
-        let box = Box()
-        box.setColor(f4(1, 1, 1, 1))
-        box.setPos(finalPos)
-        box.setScale(f3.one * 0.2)
-        boxes.append(box)
+        circle.draw(encoder)
     }
 }
+
+
+//final class MySketch: Sketch {
+//
+//    var text = TextObject()
+//    var img = Img()
+//    var model = ModelObject()
+//
+//    override init() {
+//        super.init()
+//        text.setText("hello", font: NSFont.systemFont(ofSize: 120), color: NSColor(red: 1, green: 1, blue: 0, alpha: 1))
+//        text.multiplyScale(10)
+//
+//        img.load(image: NSImage(named: "kkkkk")!.cgImage(forProposedRect: nil, context: nil, hints: nil)!)
+//        img.multiplyScale(10)
+//        img.setPos(f3(0, 0, 3))
+//        img.setColor(f4.one)
+//
+//        model.loadModel(name: "depse", extensionName: "obj")
+//        model.multiplyScale(5)
+//    }
+//
+//    override func setupCamera(camera: some MainCameraBase) {}
+//
+//    override func update(camera: some MainCameraBase) {}
+//
+//    override func draw(encoder: MTLRenderCommandEncoder) {
+//
+//        text.draw(0, 0, 0, encoder)
+//
+//        img.draw(encoder)
+//        model.draw(encoder)
+//
+//        color(1, 1, 0, 1, encoder: encoder)
+//        box(0, 0, 3, 3, 4, 1, encoder: encoder)
+//        color(1, 0, 1, 0.5, encoder: encoder)
+//        rect(0, 0, 0, 7, 8, encoder: encoder)
+//    }
+//}

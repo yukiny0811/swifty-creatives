@@ -9,6 +9,27 @@ import MetalKit
 import GLKit
 
 public struct ImgInfo: PrimitiveInfo {
+    public static var vertices: [f3] = [
+        Self.VertexPoint.A,
+        Self.VertexPoint.B,
+        Self.VertexPoint.D,
+        Self.VertexPoint.C
+    ]
+    
+    public static var uvs: [f2] = [
+        f2(0, 0),
+        f2(0, 1),
+        f2(1, 0),
+        f2(1, 1)
+    ]
+    
+    public static var normals: [f3] = [
+        f3(0, 0, 1),
+        f3(0, 0, 1),
+        f3(0, 0, 1),
+        f3(0, 0, 1)
+    ]
+    
     public final class VertexPoint {
         static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
         static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
@@ -23,12 +44,6 @@ public class Img: Primitive<ImgInfo> {
     public required init() {
         super.init()
         hasTexture = [true]
-        bytes = [
-            Vertex(position: ImgInfo.VertexPoint.A, color: f4.zero, uv: f2(0, 0), normal: f3(0, 0, 1)),
-            Vertex(position: ImgInfo.VertexPoint.B, color: f4.zero, uv: f2(0, 1), normal: f3(0, 0, 1)),
-            Vertex(position: ImgInfo.VertexPoint.D, color: f4.zero, uv: f2(1, 0), normal: f3(0, 0, 1)),
-            Vertex(position: ImgInfo.VertexPoint.C, color: f4.zero, uv: f2(1, 1), normal: f3(0, 0, 1))
-        ]
     }
     
     private var texture: MTLTexture?
@@ -46,15 +61,16 @@ public class Img: Primitive<ImgInfo> {
         )
     }
     override public func draw(_ encoder: MTLRenderCommandEncoder) {
-        encoder.setVertexBytes(self.bytes, length: self.bytes.count * Vertex.memorySize, index: 0)
+        encoder.setVertexBytes(ImgInfo.vertices, length: ImgInfo.vertices.count * f3.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setFragmentBytes(_material, length: Material.memorySize, index: 1)
-        encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
-        encoder.setFragmentBytes(self.isActiveToLight, length: MemoryLayout<Bool>.stride, index: 7)
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
+        encoder.setVertexBytes(ImgInfo.uvs, length: ImgInfo.uvs.count * f2.memorySize, index: 11)
+        encoder.setVertexBytes(ImgInfo.normals, length: ImgInfo.normals.count * f3.memorySize, index: 12)
+        encoder.setFragmentBytes([true], length: MemoryLayout<Bool>.stride, index: 6)
         encoder.setFragmentTexture(self.texture, index: 0)
-        encoder.drawPrimitives(type: ImgInfo.primitiveType, vertexStart: 0, vertexCount: self.bytes.count)
+        encoder.drawPrimitives(type: ImgInfo.primitiveType, vertexStart: 0, vertexCount: ImgInfo.vertices.count)
     }
     
     public func hitTestGetPos(origin: f3, direction: f3) -> f3? {

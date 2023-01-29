@@ -69,6 +69,8 @@ public class NormalBlendRenderer<
         
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
+        Self.setDefaultBuffers(encoder: renderCommandEncoder!)
+        
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder?.setDepthStencilState(depthStencilState)
         

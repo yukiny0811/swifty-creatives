@@ -51,9 +51,8 @@ struct RasterizerData {
 
 struct Vertex {
     float3 position [[ attribute(0) ]];
-    float4 color [[ attribute(1) ]];
-    float2 uv [[ attribute(2) ]];
-    float3 normal [[ attribute(3) ]];
+    float2 uv [[ attribute(1) ]];
+    float3 normal [[ attribute(2) ]];
 };
 
 struct Light {

@@ -22,21 +22,25 @@ extension RendererBase {
         vertexDescriptor.attributes[0].offset = 0
         vertexDescriptor.attributes[0].bufferIndex = 0
         
-        vertexDescriptor.attributes[1].format = .float4
-        vertexDescriptor.attributes[1].offset = 16
-        vertexDescriptor.attributes[1].bufferIndex = 0
+        vertexDescriptor.attributes[1].format = .float2
+        vertexDescriptor.attributes[1].offset = 0
+        vertexDescriptor.attributes[1].bufferIndex = 11
         
-        vertexDescriptor.attributes[2].format = .float2
-        vertexDescriptor.attributes[2].offset = 32
-        vertexDescriptor.attributes[2].bufferIndex = 0
+        vertexDescriptor.attributes[2].format = .float3
+        vertexDescriptor.attributes[2].offset = 0
+        vertexDescriptor.attributes[2].bufferIndex = 12
         
-        vertexDescriptor.attributes[3].format = .float3
-        vertexDescriptor.attributes[3].offset = 48
-        vertexDescriptor.attributes[3].bufferIndex = 0
-        
-        vertexDescriptor.layouts[0].stride = 64
+        vertexDescriptor.layouts[0].stride = 16
         vertexDescriptor.layouts[0].stepRate = 1
         vertexDescriptor.layouts[0].stepFunction = .perVertex
+        
+        vertexDescriptor.layouts[11].stride = 8
+        vertexDescriptor.layouts[11].stepRate = 1
+        vertexDescriptor.layouts[11].stepFunction = .perVertex
+        
+        vertexDescriptor.layouts[12].stride = 16
+        vertexDescriptor.layouts[12].stepRate = 1
+        vertexDescriptor.layouts[12].stepFunction = .perVertex
         
         return vertexDescriptor
     }
@@ -45,5 +49,20 @@ extension RendererBase {
         depthStateDesc.depthCompareFunction = compareFunc
         depthStateDesc.isDepthWriteEnabled = writeDepth
         return depthStateDesc
+    }
+    
+    static func setDefaultBuffers(encoder: MTLRenderCommandEncoder) {
+        encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 0)
+        encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 1)
+        encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 2)
+        encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 3)
+        
+        encoder.setVertexBytes([f4.zero], length: f4.memorySize, index: 10)
+        encoder.setVertexBytes([f2.zero], length: f2.memorySize, index: 11)
+        encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 12)
+        
+        encoder.setFragmentBytes([Material(ambient: f3.zero, diffuse: f3.zero, specular: f3.zero, shininess: 0)], length: Material.memorySize, index: 1)
+        encoder.setFragmentBytes([false], length: MemoryLayout<Bool>.stride, index: 6)
+        encoder.setFragmentBytes([false], length: MemoryLayout<Bool>.stride, index: 7)
     }
 }
