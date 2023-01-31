@@ -6,7 +6,7 @@
 //
 
 import Metal
-import GLKit
+import simd
 
 open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
@@ -65,12 +65,12 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         _mScale[0] *= value
     }
     
-    public func mockModel() -> GLKMatrix4 {
-        let rotX = GLKMatrix4RotateX(GLKMatrix4Identity, self.rot.x)
-        let rotY = GLKMatrix4RotateY(GLKMatrix4Identity, self.rot.y)
-        let rotZ = GLKMatrix4RotateZ(GLKMatrix4Identity, self.rot.z)
-        let trans = GLKMatrix4Translate(GLKMatrix4Identity, self.pos.x, self.pos.y, self.pos.z)
-        let model = GLKMatrix4Multiply(GLKMatrix4Multiply(GLKMatrix4Multiply(trans, rotZ), rotY), rotX)
+    public func mockModel() -> f4x4 {
+        let rotX = f4x4.createRotation(angle: self.rot.x, axis: f3(1, 0, 0))
+        let rotY = f4x4.createRotation(angle: self.rot.y, axis: f3(0, 1, 0))
+        let rotZ = f4x4.createRotation(angle: self.rot.z, axis: f3(0, 0, 1))
+        let trans = f4x4.createTransform(self.pos.x, self.pos.y, self.pos.z)
+        let model = trans * rotZ * rotY * rotX
         return model
     }
 }
