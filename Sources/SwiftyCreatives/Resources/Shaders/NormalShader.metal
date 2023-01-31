@@ -51,9 +51,9 @@ fragment half4 normal_fragment (RasterizerData rd [[stage_in]],
     if (uniformHasTexture.value) {
         constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
         resultColor = tex.sample(textureSampler, float2(rd.uv.x*tex.get_width(), rd.uv.y*tex.get_height()));
-//        if (resultColor.a > 0.1) {
-//            resultColor.a = rd.color.a;
-//        }
+        if (resultColor.a > 0.1) {
+            resultColor.a = rd.color.a;
+        }
     } else {
         resultColor = half4(rd.color.x, rd.color.y, rd.color.z, rd.color.a);
     }
