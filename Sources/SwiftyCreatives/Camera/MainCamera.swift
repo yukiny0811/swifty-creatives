@@ -23,46 +23,46 @@ public class MainCamera<
     public var perspectiveMatrix: [f4x4] = [f4x4(0)]
     
     public init() {
-        matrixX = GLKMatrix4Identity
-        matrixY = GLKMatrix4Identity
-        matrixT = GLKMatrix4Translate(GLKMatrix4Identity, 0, 0, -20)
-        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        matrixX = f4x4.createIdentity().toGLKMatrix4()
+        matrixY = f4x4.createIdentity().toGLKMatrix4()
+        matrixT = f4x4.createTransform(0, 0, -20).toGLKMatrix4()
+        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
         updateMatrix()
     }
     
     public func setTranslate(_ x: Float, _ y: Float, _ z: Float) {
-        matrixT = GLKMatrix4Translate(GLKMatrix4Identity, x, y, z)
-        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        matrixT = f4x4.createTransform(x, y, z).toGLKMatrix4()
+        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
         updateMatrix()
     }
     
     public func translate(_ x: Float, _ y: Float, _ z: Float) {
-        matrixT = GLKMatrix4Translate(matrixT, x, y, z)
-        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        matrixT = (matrixT.toSimd() * f4x4.createTransform(x, y, z)).toGLKMatrix4()
+        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
         updateMatrix()
     }
     
     public func setRotation(_ x: Float, _ y: Float, _ z: Float) {
-        matrixX = GLKMatrix4RotateX(GLKMatrix4Identity, x)
-        matrixY = GLKMatrix4RotateY(GLKMatrix4Identity, y)
-        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        matrixX = f4x4.createRotation(angle: x, axis: f3(1, 0, 0)).toGLKMatrix4()
+        matrixY = f4x4.createRotation(angle: y, axis: f3(0, 1, 0)).toGLKMatrix4()
+        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
         updateMatrix()
     }
     
     public func rotateAroundX(_ rad: Float) {
         if rad >= 0.0 && matrixX.m.6 >= Config.polarSpacing { return }
         if rad <= 0.0 && matrixX.m.6 <= -Config.polarSpacing { return }
-        matrixX = GLKMatrix4RotateX(matrixX, rad)
-        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        matrixX = (matrixX.toSimd() * f4x4.createRotation(angle: rad, axis: f3(1, 0, 0))).toGLKMatrix4()
+        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
         updateMatrix()
     }
     public func rotateAroundY(_ rad: Float) {
-        matrixY = GLKMatrix4RotateY(matrixY, rad)
-        matrix = GLKMatrix4Multiply(GLKMatrix4Multiply(matrixT, matrixX), matrixY)
+        matrixY = (matrixY.toSimd() * f4x4.createRotation(angle: rad, axis: f3(0, 1, 0))).toGLKMatrix4()
+        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
         updateMatrix()
     }
     public func rotateAroundZ(_ rad: Float) {
-        matrix = GLKMatrix4RotateZ(matrix, rad)
+        matrix = (matrix.toSimd() * f4x4.createRotation(angle: rad, axis: f3(0, 0, 1))).toGLKMatrix4()
         updateMatrix()
     }
     
@@ -71,17 +71,9 @@ public class MainCamera<
     }
     public func updatePMatrix() {
         if Config.isPerspective {
-            let pmat = GLKMatrix4MakePerspective(
-                GLKMathDegreesToRadians(Config.fov),
-                frameWidth / frameHeight,
-                Config.near,
-                Config.far
-            )
-            perspectiveMatrix[0] = pmat.toSimd()
+            perspectiveMatrix[0] = f4x4.createPerspective(fov: Float.degreesToRadians(Config.fov), aspect: frameWidth / frameHeight, near: Config.near, far: Config.far)
         } else {
-            let pmat = GLKMatrix4MakeOrtho(-self.frameWidth/2, self.frameWidth/2, -self.frameHeight/2, self.frameHeight/2, Config.near, Config.far)
-            
-            perspectiveMatrix[0] = pmat.toSimd()
+            perspectiveMatrix[0] = f4x4.createOrthographic(-self.frameWidth/2, self.frameWidth/2, -self.frameHeight/2, self.frameHeight/2, Config.near, Config.far)
         }
     }
     
