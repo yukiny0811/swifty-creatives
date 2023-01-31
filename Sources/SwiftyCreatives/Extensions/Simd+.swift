@@ -75,21 +75,3 @@ public extension f4x4 {
         )
     }
 }
-
-import GLKit
-public extension f4x4 {
-    func toGLKMatrix4() -> GLKMatrix4 {
-//        return GLKMatrix4(m: (
-//            self.columns.0.x, self.columns.1.x, self.columns.2.x, self.columns.3.x,
-//            self.columns.0.y, self.columns.1.y, self.columns.2.y, self.columns.3.y,
-//            self.columns.0.z, self.columns.1.z, self.columns.2.z, self.columns.3.z,
-//            self.columns.0.w, self.columns.1.w, self.columns.2.w, self.columns.3.w
-//        ))
-        return GLKMatrix4(m: (
-            self.columns.0.x, self.columns.0.y, self.columns.0.z, self.columns.0.w,
-            self.columns.1.x, self.columns.1.y, self.columns.1.z, self.columns.1.w,
-            self.columns.2.x, self.columns.2.y, self.columns.2.z, self.columns.2.w,
-            self.columns.3.x, self.columns.3.y, self.columns.3.z, self.columns.3.w
-        ))
-    }
-}
