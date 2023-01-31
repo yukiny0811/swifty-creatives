@@ -44,7 +44,7 @@ public struct UIViewObjectInfo: PrimitiveInfo {
 public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
     private var texture: MTLTexture?
     
-    private var viewObj: UIView?
+    public var viewObj: UIView?
     
     public required init() {
         super.init()
