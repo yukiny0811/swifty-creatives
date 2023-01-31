@@ -124,9 +124,9 @@ void OITFragmentFunction(RasterizerData in,
         fragmentColor = tex.sample(textureSampler, float2(in.uv.x*tex.get_width(), in.uv.y*tex.get_height()));
     }
     
-    if (fragmentColor.a > 0.1) {
-        fragmentColor.a = half(in.color.a);
-    }
+//    if (fragmentColor.a > 0.1) {
+//        fragmentColor.a = half(in.color.a);
+//    }
     
     if (isActiveToLight.value) {
         float3 phongIntensity = calculatePhongIntensity(in, material, lightCount, lights);
