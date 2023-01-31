@@ -5,7 +5,7 @@
 //  Created by Yuki Kuwashima on 2022/12/09.
 //
 
-import GLKit
+import simd
 
 public class MainCamera<
     Config: CameraConfigBase
@@ -14,60 +14,62 @@ public class MainCamera<
     var frameWidth: Float = 0
     var frameHeight: Float = 0
     
-    var matrix: GLKMatrix4
-    var matrixX: GLKMatrix4
-    var matrixY: GLKMatrix4
-    var matrixT: GLKMatrix4
+    var matrix: f4x4
+    var matrixX: f4x4
+    var matrixY: f4x4
+    var matrixT: f4x4
     
     public var mainMatrix: [f4x4] = [f4x4(0)]
     public var perspectiveMatrix: [f4x4] = [f4x4(0)]
     
     public init() {
-        matrixX = f4x4.createIdentity().toGLKMatrix4()
-        matrixY = f4x4.createIdentity().toGLKMatrix4()
-        matrixT = f4x4.createTransform(0, 0, -20).toGLKMatrix4()
-        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
+        matrixX = f4x4.createIdentity()
+        matrixY = f4x4.createIdentity()
+        matrixT = f4x4.createTransform(0, 0, -20)
+        matrix = matrixT * matrixX * matrixY
         updateMatrix()
     }
     
     public func setTranslate(_ x: Float, _ y: Float, _ z: Float) {
-        matrixT = f4x4.createTransform(x, y, z).toGLKMatrix4()
-        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
+        matrixT = f4x4.createTransform(x, y, z)
+        matrix = matrixT * matrixX * matrixY
         updateMatrix()
     }
     
     public func translate(_ x: Float, _ y: Float, _ z: Float) {
-        matrixT = (matrixT.toSimd() * f4x4.createTransform(x, y, z)).toGLKMatrix4()
-        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
+        matrixT = matrixT * f4x4.createTransform(x, y, z)
+        matrix = matrixT * matrixX * matrixY
         updateMatrix()
     }
     
     public func setRotation(_ x: Float, _ y: Float, _ z: Float) {
-        matrixX = f4x4.createRotation(angle: x, axis: f3(1, 0, 0)).toGLKMatrix4()
-        matrixY = f4x4.createRotation(angle: y, axis: f3(0, 1, 0)).toGLKMatrix4()
-        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
+        matrixX = f4x4.createRotation(angle: x, axis: f3(1, 0, 0))
+        matrixY = f4x4.createRotation(angle: y, axis: f3(0, 1, 0))
+        matrix = matrixT * matrixX * matrixY
         updateMatrix()
     }
     
     public func rotateAroundX(_ rad: Float) {
-        if rad >= 0.0 && matrixX.m.6 >= Config.polarSpacing { return }
-        if rad <= 0.0 && matrixX.m.6 <= -Config.polarSpacing { return }
-        matrixX = (matrixX.toSimd() * f4x4.createRotation(angle: rad, axis: f3(1, 0, 0))).toGLKMatrix4()
-        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
+        if Config.enableEasyMove {
+            let mockMatrixX = matrixX * f4x4.createRotation(angle: rad, axis: f3(1, 0, 0))
+            if mockMatrixX.columns.2.z <= Config.polarSpacing { return }
+        }
+        matrixX = matrixX * f4x4.createRotation(angle: rad, axis: f3(1, 0, 0))
+        matrix = matrixT * matrixX * matrixY
         updateMatrix()
     }
     public func rotateAroundY(_ rad: Float) {
-        matrixY = (matrixY.toSimd() * f4x4.createRotation(angle: rad, axis: f3(0, 1, 0))).toGLKMatrix4()
-        matrix = (matrixT.toSimd() * matrixX.toSimd() * matrixY.toSimd()).toGLKMatrix4()
+        matrixY = matrixY * f4x4.createRotation(angle: rad, axis: f3(0, 1, 0))
+        matrix = matrixT * matrixX * matrixY
         updateMatrix()
     }
     public func rotateAroundZ(_ rad: Float) {
-        matrix = (matrix.toSimd() * f4x4.createRotation(angle: rad, axis: f3(0, 0, 1))).toGLKMatrix4()
+        matrix = matrix * f4x4.createRotation(angle: rad, axis: f3(0, 0, 1))
         updateMatrix()
     }
     
     public func updateMatrix() {
-        mainMatrix[0] = matrix.toSimd()
+        mainMatrix[0] = matrix
     }
     public func updatePMatrix() {
         if Config.isPerspective {
