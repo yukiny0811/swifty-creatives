@@ -15,7 +15,7 @@ public class HitTestablePrimitive<Info: PrimitiveInfo>: Primitive<Info> {
         let a = model * f4(0, 0, 1, 1)
 
         let A = origin
-        let B = origin + direction * 3000
+        let B = origin + direction * 12
         let n = simd_normalize(f3(a.x, a.y, a.z) - self.pos)
         let P = self.pos
 
