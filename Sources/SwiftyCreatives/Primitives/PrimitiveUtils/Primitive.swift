@@ -26,24 +26,34 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
     required public init() {}
     
-    public func setColor(_ value: f4) {
+    @discardableResult
+    public func setColor(_ value: f4) -> Self {
         _color[0] = value
+        return self
     }
     
-    public func setPos(_ value: f3) {
+    @discardableResult
+    public func setPos(_ value: f3) -> Self {
         _mPos[0] = value
+        return self
     }
     
-    public func setRot(_ value: f3) {
+    @discardableResult
+    public func setRot(_ value: f3) -> Self {
         _mRot[0] = value
+        return self
     }
     
-    public func setScale(_ value: f3) {
+    @discardableResult
+    public func setScale(_ value: f3) -> Self {
         _mScale[0] = value
+        return self
     }
     
-    public func setMaterial(_ material: Material) {
+    @discardableResult
+    public func setMaterial(_ material: Material) -> Self {
         _material[0] = material
+        return self
     }
     
     public func draw(_ encoder: MTLRenderCommandEncoder) {
@@ -61,8 +71,10 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     }
     
     // util functions
-    public func multiplyScale(_ value: Float) {
+    @discardableResult
+    public func multiplyScale(_ value: Float) -> Self {
         _mScale[0] *= value
+        return self
     }
     
     public func mockModel() -> f4x4 {

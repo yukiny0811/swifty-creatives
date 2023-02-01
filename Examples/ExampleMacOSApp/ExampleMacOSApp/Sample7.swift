@@ -18,12 +18,13 @@ final class Sample7: Sketch {
     override init() {
         for _ in 0...8 {
             let box = Box()
-            box.setColor(f4.randomPoint(0...1))
-            box.setScale(f3.one * Float.random(in: 0.1...0.5))
+                .setColor(f4.randomPoint(0...1))
+                .setScale(f3.one * Float.random(in: 0.1...0.5))
             boxes.append(box)
         }
-        text.setText("Loading...", font: NSFont.systemFont(ofSize: 120), color: .white)
-        text.multiplyScale(7)
+        text
+            .setText("Loading...", font: NSFont.systemFont(ofSize: 120), color: .white)
+            .multiplyScale(7)
         
     }
     override func update(camera: some MainCameraBase) {
@@ -31,8 +32,9 @@ final class Sample7: Sketch {
         for i in 0..<boxes.count {
             let elapsedSin = sin(elapsed * Float(i+1))
             let elapsedCos = cos(elapsed * Float(i+1))
-            boxes[i].setPos(f3(elapsedCos * 5, elapsedSin * 5, 0))
-            boxes[i].setColor(f4(elapsedSin, boxes[i].color.y, boxes[i].color.z, 1))
+            boxes[i]
+                .setPos(f3(elapsedCos * 5, elapsedSin * 5, 0))
+                .setColor(f4(elapsedSin, boxes[i].color.y, boxes[i].color.z, 1))
         }
         elapsed += 0.01
     }
