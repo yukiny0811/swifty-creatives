@@ -44,7 +44,7 @@ public struct UIViewObjectInfo: PrimitiveInfo {
 public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
     private var texture: MTLTexture?
     
-    private var viewObj: UIView?
+    public var viewObj: UIView?
     
     public required init() {
         super.init()
@@ -76,6 +76,7 @@ public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
         encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
         
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
         encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: 11)
         encoder.setVertexBytes(UIViewObjectInfo.normals, length: UIViewObjectInfo.normals.count * f3.memorySize, index: 12)
         
