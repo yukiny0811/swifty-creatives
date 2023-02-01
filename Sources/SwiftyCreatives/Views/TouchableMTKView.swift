@@ -76,7 +76,7 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
     
     #if os(iOS)
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        renderer.drawProcess.touchesBegan(touches, with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.touchesBegan(touches, with: event, camera: renderer.camera, view: self)
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if CameraConfig.enableEasyMove {
@@ -85,13 +85,13 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
             renderer.camera.rotateAroundX(Float(diff.y) * 0.01)
             renderer.camera.rotateAroundY(Float(diff.x) * 0.01)
         }
-        renderer.drawProcess.touchesMoved(touches, with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.touchesMoved(touches, with: event, camera: renderer.camera, view: self)
     }
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        renderer.drawProcess.touchesEnded(touches, with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.touchesEnded(touches, with: event, camera: renderer.camera, view: self)
     }
     public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        renderer.drawProcess.touchesCancelled(touches, with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.touchesCancelled(touches, with: event, camera: renderer.camera, view: self)
     }
     #endif
 }
