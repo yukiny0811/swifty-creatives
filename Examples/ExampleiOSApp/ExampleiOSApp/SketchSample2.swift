@@ -39,12 +39,12 @@ final class SketchSample2: Sketch {
         viewObj.draw(encoder)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {
         
         let touch = touches.first!
-        let location = touch.location(in: UIView(frame: viewFrame))
+        let location = touch.location(in: view)
         
-        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
+        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))
         let origin = processed.origin
         let direction = processed.direction
         
