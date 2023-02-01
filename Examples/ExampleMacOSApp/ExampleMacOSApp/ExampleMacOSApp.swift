@@ -14,12 +14,12 @@ struct ExampleMacOSApp: App {
         WindowGroup {
             ZStack {
                 SketchView<MainCameraConfig, MainDrawConfig>(Sample1())
-                SketchView<MainCameraConfig, MainDrawConfig>(Sample2())
-                SketchView<MainCameraConfig, MainDrawConfig>(Sample3())
-                SketchView<MainCameraConfig, MainDrawConfig>(Sample4())
-                SketchView<MainCameraConfig, MainDrawConfig>(Sample5())
-                SketchView<MainCameraConfig, MainDrawConfig>(Sample6())
-                SketchView<MainCameraConfig, MainDrawConfig>(Sample7())
+//                SketchView<MainCameraConfig, MainDrawConfig>(Sample2())
+//                SketchView<MainCameraConfig, MainDrawConfig>(Sample3())
+//                SketchView<MainCameraConfig, MainDrawConfig>(Sample4())
+//                SketchView<MainCameraConfig, MainDrawConfig>(Sample5())
+//                SketchView<MainCameraConfig, MainDrawConfig>(Sample6())
+//                SketchView<MainCameraConfig, MainDrawConfig>(Sample7())
             }
             .background(.black)
         }
