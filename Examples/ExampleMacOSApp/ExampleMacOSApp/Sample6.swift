@@ -14,9 +14,9 @@ final class Sample6: Sketch {
         super.init()
         for _ in 0..<100 {
             let box = Box()
-            box.setPos(f3.randomPoint(-7...7))
-            box.setColor(f4.randomPoint(0...1))
-            box.setScale(f3.randomPoint(1...2))
+                .setPos(f3.randomPoint(-7...7))
+                .setColor(f4.randomPoint(0...1))
+                .setScale(f3.randomPoint(1...2))
             objects.append(box)
         }
     }

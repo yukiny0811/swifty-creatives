@@ -55,7 +55,8 @@ public class TextObject: Primitive<TextObjectInfo> {
     public typealias ColorAlias = UIColor
 #endif
     
-    public func setText(_ text: String, font: FontAlias, color: ColorAlias) {
+    @discardableResult
+    public func setText(_ text: String, font: FontAlias, color: ColorAlias) -> Self {
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -88,7 +89,7 @@ public class TextObject: Primitive<TextObjectInfo> {
             Float(outputImage.extent.height) / longer,
             1
         ))
-        
+        return self 
     }
     public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: 0)
