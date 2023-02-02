@@ -10,6 +10,38 @@ Using Metal directly for rendering.
 
 ![ExampleMacOSApp 2022年-12月-16日 18 08 41](https://user-images.githubusercontent.com/28947703/208063423-3ad00c20-1d1c-48b8-8996-2d43e1365fe4.gif)
 
+## Features
+- Geometry
+    - 2D
+        - Rectangle
+        - Circle
+        - Triangle
+    - 3D
+        - Box
+        - 3D Model
+    - Others
+        - Image
+        - Text
+        - UIViewObject(3d view with interactive button)
+- Camera
+    - Perspective
+    - Orthographic
+- Blend Mode
+    - normal
+    - add
+    - alpha
+- Lighting
+    - Phong's reflection model
+- Functions
+    - set color
+    - set position
+    - set rotation
+    - set scale
+    - push / pop matrix
+- View
+    - can be used as UIView / NSView
+    - can be used as SwiftUI View
+
 |||
 |-|-|
 |![QuickTime Player - Simulator Screen Recording - iPhone 14 Pro - 2023-02-02 at 00 18 08 mp4 2023年-02月-02日 0 20 50](https://user-images.githubusercontent.com/28947703/216084097-e4a9ec33-40dd-43bd-bc7a-a74b71e8caac.gif)|![QuickTime Player - Simulator Screen Recording - iPhone 14 Pro - 2023-02-02 at 00 21 57 mp4 2023年-02月-02日 0 22 17](https://user-images.githubusercontent.com/28947703/216084415-34797d43-9d42-402e-b305-53eb232e2641.gif)|
@@ -25,24 +57,15 @@ import Metal
 import SwiftyCreatives
 
 final class SampleSketch: Sketch {
-    var objects: [Box] = []
-    override init() {
-        super.init()
-        for _ in 0..<100 {
-            let box = Box()
-            box
-                .setPos(f3.randomPoint(-7...7))
-                .setColor(f4.randomPoint(0...1))
-                .setScale(f3.randomPoint(1...2))
-            objects.append(box)
-        }
-    }
-    override func update(camera: some MainCameraBase) {
-        camera.rotateAroundY(0.01)
-    }
     override func draw(encoder: MTLRenderCommandEncoder) {
-        for o in objects {
-            o.draw(encoder)
+        let count = 20
+        for i in 0...count {
+            color(1, Float(i) / 20, 0, 1, encoder: encoder)
+            pushMatrix(encoder: encoder)
+            rotateY(Float.pi * 2 / Float(count) * Float(i), encoder: encoder)
+            translate(10, 0, 0, encoder: encoder)
+            box(0, 0, 0, 1, 1, 1, encoder: encoder)
+            popMatrix(encoder: encoder)
         }
     }
 }
@@ -55,3 +78,6 @@ ZStack {
 }
 .background(.black)
 ```
+
+<img width="863" alt="スクリーンショット 2023-02-03 7 51 34" src="https://user-images.githubusercontent.com/28947703/216469226-3f32ccee-c045-48c3-8fc0-0044ef7da891.png">
+
