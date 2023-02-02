@@ -16,7 +16,8 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
                                             const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix [[ buffer(4) ]],
                                             const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(5) ]],
                                             const device FrameUniforms_CameraPos& uniformCameraPos [[ buffer(6) ]],
-                                            const device float4& color [[ buffer(10) ]]
+                                            const device float4& color [[ buffer(10) ]],
+                                            const device FrameUniforms_CustomMatrix& uniformCustomMatrix [[ buffer(15) ]]
                                      ) {
     
     float4x4 modelMatrix = createModelMatrix(
@@ -25,7 +26,8 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
                                              uniformModelRot,
                                              uniformModelScale,
                                              uniformProjectionMatrix,
-                                             uniformViewMatrix
+                                             uniformViewMatrix,
+                                             uniformCustomMatrix
                                              );
             
     RasterizerData rd;

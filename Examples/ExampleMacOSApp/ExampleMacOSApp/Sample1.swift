@@ -9,18 +9,15 @@ import Metal
 import SwiftyCreatives
 
 final class Sample1: Sketch {
-    var circle = Circ()
-    override init() {
-        super.init()
-        circle
-            .setPos(f3.zero)
-            .setScale(f3.one * 5)
-            .setColor(f4.randomPoint(0...1))
-    }
-    override func update(camera: some MainCameraBase) {
-        camera.rotateAroundY(0.01)
-    }
     override func draw(encoder: MTLRenderCommandEncoder) {
-        circle.draw(encoder)
+        let count = 20
+        for i in 0...count {
+            color(1, Float(i) / 20, 0, 1, encoder: encoder)
+            pushMatrix(encoder: encoder)
+            rotateY(Float.pi * 2 / Float(count) * Float(i), encoder: encoder)
+            translate(10, 0, 0, encoder: encoder)
+            box(0, 0, 0, 1, 1, 1, encoder: encoder)
+            popMatrix(encoder: encoder)
+        }
     }
 }

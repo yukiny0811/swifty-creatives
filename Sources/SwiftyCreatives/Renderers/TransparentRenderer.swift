@@ -123,6 +123,7 @@ class TransparentRenderer<
         renderEncoder.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
         
         // MARK: - draw primitive
+        drawProcess.beforeDraw(encoder: renderEncoder)
         drawProcess.updateAndDrawLight(encoder: renderEncoder)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderEncoder)

@@ -62,7 +62,7 @@ public struct CircleInfo: PrimitiveInfo {
         f3(0, 0, 1), f3(0, 0, 1), f3(0, 0, 1), f3(0, 0, 1), f3(0, 0, 1),
         f3(0, 0, 1), f3(0, 0, 1), f3(0, 0, 1), f3(0, 0, 1), f3(0, 0, 1)
     ]
-    public static let primitiveType: MTLPrimitiveType = .triangleStrip
+    public static let primitiveType: MTLPrimitiveType = .triangle
     
     public static let indexBuffer: MTLBuffer = ShaderCore.device.makeBuffer(bytes: Array<UInt16>([
     0, 1, 2,

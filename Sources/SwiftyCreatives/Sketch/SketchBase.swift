@@ -23,6 +23,8 @@ public protocol SketchBase: AnyObject {
     
     func draw(encoder: MTLRenderCommandEncoder)
     
+    func beforeDraw(encoder: MTLRenderCommandEncoder)
+    
     #if os(macOS)
     func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
     func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
@@ -46,6 +48,7 @@ public protocol SketchBase: AnyObject {
 
 public extension SketchBase {
     
+    func beforeDraw(encoder: MTLRenderCommandEncoder) {}
     func updateAndDrawLight(encoder: MTLRenderCommandEncoder) {}
     
     #if os(macOS)
