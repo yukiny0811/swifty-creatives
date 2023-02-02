@@ -15,6 +15,8 @@ import UIKit
 
 open class Sketch: SketchBase {
     
+    var customMatrix: [f4x4] = [f4x4.createIdentity()]
+    
     public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0), color: f3.one, brightness: 1, ambientIntensity: 1, diffuseIntensity: 1, specularIntensity: 50)]
     
     public init() {}
@@ -23,6 +25,10 @@ open class Sketch: SketchBase {
     open func setupCamera(camera: some MainCameraBase) {}
     open func update(camera: some MainCameraBase) {}
     open func draw(encoder: MTLRenderCommandEncoder) {}
+    
+    public func beforeDraw(encoder: MTLRenderCommandEncoder) {
+        self.customMatrix = [f4x4.createIdentity()]
+    }
     
     open func updateAndDrawLight(encoder: MTLRenderCommandEncoder) {
         encoder.setFragmentBytes([LIGHTS.count], length: MemoryLayout<Int>.stride, index: 2)

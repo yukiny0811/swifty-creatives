@@ -61,6 +61,8 @@ extension RendererBase {
         encoder.setVertexBytes([f2.zero], length: f2.memorySize, index: 11)
         encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 12)
         
+        encoder.setVertexBytes([f4x4.createIdentity()], length: f4x4.memorySize, index: 15)
+        
         encoder.setFragmentBytes([Material(ambient: f3.zero, diffuse: f3.zero, specular: f3.zero, shininess: 0)], length: Material.memorySize, index: 1)
         encoder.setFragmentBytes([false], length: MemoryLayout<Bool>.stride, index: 6)
         encoder.setFragmentBytes([false], length: MemoryLayout<Bool>.stride, index: 7)

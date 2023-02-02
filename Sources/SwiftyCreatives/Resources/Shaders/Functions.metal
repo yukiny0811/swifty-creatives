@@ -51,7 +51,8 @@ inline float4x4 createModelMatrix(
     const device FrameUniforms_ModelRot& uniformModelRot ,
     const device FrameUniforms_ModelScale& uniformModelScale,
     const device FrameUniforms_ProjectionMatrix& uniformProjectionMatrix,
-    const device FrameUniforms_ViewMatrix& uniformViewMatrix
+    const device FrameUniforms_ViewMatrix& uniformViewMatrix,
+    const device FrameUniforms_CustomMatrix& uniformCustomMatrix
 ) {
     float4x4 modelTransMatrix = float4x4(float4(1.0, 0.0, 0.0, uniformModelPos.value.x),
                                          float4(0.0, 1.0, 0.0, uniformModelPos.value.y),
@@ -84,7 +85,7 @@ inline float4x4 createModelMatrix(
                                          float4(0.0, 0.0, uniformModelScale.value.z, 0.0),
                                          float4(0.0, 0.0, 0.0, 1.0));
     
-    float4x4 modelMatrix = transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
+    float4x4 modelMatrix = uniformCustomMatrix.value * transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
     
     return modelMatrix;
 }

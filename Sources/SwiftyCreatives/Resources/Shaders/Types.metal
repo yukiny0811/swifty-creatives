@@ -40,6 +40,10 @@ struct FrameUniforms_IsActiveToLight {
     bool value;
 };
 
+struct FrameUniforms_CustomMatrix {
+    float4x4 value;
+};
+
 struct RasterizerData {
     float4 position [[ position ]];
     float4 color;
