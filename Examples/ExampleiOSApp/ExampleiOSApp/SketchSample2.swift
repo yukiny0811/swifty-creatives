@@ -10,6 +10,10 @@ import UIKit
 
 final class SketchSample2: Sketch {
     
+    var viewObj = UIViewObject()
+    var r: Float = 0.0
+    var rFinal: Float = 0.0
+    
     override init() {
         super.init()
         let view: TestView = TestView.fromNib()
@@ -20,13 +24,6 @@ final class SketchSample2: Sketch {
         viewObj.load(view: view)
         viewObj.multiplyScale(6)
     }
-    
-    var viewObj = UIViewObject()
-    
-    var r: Float = 0.0
-    var rFinal: Float = 0.0
-    
-    override func setupCamera(camera: some MainCameraBase) {}
     
     override func update(camera: some MainCameraBase) {
         if r < rFinal {
@@ -39,15 +36,12 @@ final class SketchSample2: Sketch {
         viewObj.draw(encoder)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {
-        
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {
         let touch = touches.first!
-        let location = touch.location(in: UIView(frame: viewFrame))
-        
-        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
+        let location = touch.location(in: view)
+        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))
         let origin = processed.origin
         let direction = processed.direction
-        
         viewObj.buttonTest(origin: origin, direction: direction)
     }
 }

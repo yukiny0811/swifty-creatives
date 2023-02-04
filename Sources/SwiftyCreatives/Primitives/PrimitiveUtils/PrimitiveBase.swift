@@ -16,11 +16,11 @@ public protocol PrimitiveBase: AnyObject {
     
     init()
     
-    func setColor(_ value: f4)
-    func setPos(_ value: f3)
-    func setRot(_ value: f3)
-    func setScale(_ value: f3)
-    func setMaterial(_ material: Material)
+    func setColor(_ value: f4) -> Self
+    func setPos(_ value: f3) -> Self
+    func setRot(_ value: f3) -> Self
+    func setScale(_ value: f3) -> Self
+    func setMaterial(_ material: Material) -> Self
     
     func draw(_ encoder: MTLRenderCommandEncoder)
 }

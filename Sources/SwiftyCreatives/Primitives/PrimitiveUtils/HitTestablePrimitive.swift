@@ -8,14 +8,14 @@
 import simd
 
 public class HitTestablePrimitive<Info: PrimitiveInfo>: Primitive<Info> {
-    private func calculateHitTest(origin: f3, direction: f3) -> (x: f3, scaledPoint: f3, inversedX: f3)? {
+    private func calculateHitTest(origin: f3, direction: f3, testDistance: Float) -> (x: f3, scaledPoint: f3, inversedX: f3)? {
         
         let model = mockModel()
 
         let a = model * f4(0, 0, 1, 1)
 
         let A = origin
-        let B = origin + direction * 12
+        let B = origin + direction * testDistance
         let n = simd_normalize(f3(a.x, a.y, a.z) - self.pos)
         let P = self.pos
 
@@ -43,16 +43,16 @@ public class HitTestablePrimitive<Info: PrimitiveInfo>: Primitive<Info> {
         return (x, scaledPoint, inversedX)
     }
     
-    public func hitTestGetPos(origin: f3, direction: f3) -> f3? {
-        if let result = calculateHitTest(origin: origin, direction: direction) {
+    public func hitTestGetPos(origin: f3, direction: f3, testDistance: Float = 3000) -> f3? {
+        if let result = calculateHitTest(origin: origin, direction: direction, testDistance: testDistance) {
             return result.x
         } else {
             return nil
         }
     }
     
-    public func hitTestGetNormalizedCoord(origin: f3, direction: f3) -> f2? {
-        if let result = calculateHitTest(origin: origin, direction: direction) {
+    public func hitTestGetNormalizedCoord(origin: f3, direction: f3, testDistance: Float = 3000) -> f2? {
+        if let result = calculateHitTest(origin: origin, direction: direction, testDistance: testDistance) {
             let inversedPointF2 = f2(result.inversedX.x / result.scaledPoint.x, result.inversedX.y / result.scaledPoint.y)
             return inversedPointF2
         } else {

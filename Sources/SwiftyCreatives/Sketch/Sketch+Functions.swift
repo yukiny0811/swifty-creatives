@@ -6,6 +6,7 @@
 //
 
 import Metal
+import simd
 
 public extension Sketch {
     
@@ -40,7 +41,7 @@ public extension Sketch {
         encoder.setVertexBytes(CircleInfo.uvs, length: CircleInfo.uvs.count * f2.memorySize, index: 11)
         encoder.setVertexBytes(CircleInfo.normals, length: CircleInfo.normals.count * f3.memorySize, index: 12)
         encoder.setFragmentBytes([false], length: MemoryLayout<Bool>.stride, index: 6)
-        encoder.drawPrimitives(type: CircleInfo.primitiveType, vertexStart: 0, vertexCount: CircleInfo.vertices.count)
+        encoder.drawIndexedPrimitives(type: CircleInfo.primitiveType, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
     }
     
     func triangle(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float, encoder: MTLRenderCommandEncoder) {
@@ -51,5 +52,45 @@ public extension Sketch {
         encoder.setVertexBytes(TriangleInfo.normals, length: TriangleInfo.normals.count * f3.memorySize, index: 12)
         encoder.setFragmentBytes([false], length: MemoryLayout<Bool>.stride, index: 6)
         encoder.drawPrimitives(type: TriangleInfo.primitiveType, vertexStart: 0, vertexCount: TriangleInfo.vertices.count)
+    }
+    
+    func translate(_ x: Float, _ y: Float, _ z: Float, encoder: MTLRenderCommandEncoder) {
+        let translateMatrix = f4x4.createTransform(x, y, z)
+        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * translateMatrix
+        encoder.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
+    }
+    
+    func rotateX(_ rad: Float, encoder: MTLRenderCommandEncoder) {
+        let rotateMatrix = f4x4.createRotation(angle: rad, axis: f3(1, 0, 0))
+        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * rotateMatrix
+        encoder.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
+    }
+    
+    func rotateY(_ rad: Float, encoder: MTLRenderCommandEncoder) {
+        let rotateMatrix = f4x4.createRotation(angle: rad, axis: f3(0, 1, 0))
+        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * rotateMatrix
+        encoder.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
+    }
+    
+    func rotateZ(_ rad: Float, encoder: MTLRenderCommandEncoder) {
+        let rotateMatrix = f4x4.createRotation(angle: rad, axis: f3(0, 0, 1))
+        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * rotateMatrix
+        encoder.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
+    }
+    
+    func rotate(_ rad: Float, axis: f3, encoder: MTLRenderCommandEncoder) {
+        let rotateMatrix = f4x4.createRotation(angle: rad, axis: axis)
+        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * rotateMatrix
+        encoder.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
+    }
+    
+    func pushMatrix(encoder: MTLRenderCommandEncoder) {
+        self.customMatrix.append(f4x4.createIdentity())
+        encoder.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
+    }
+    
+    func popMatrix(encoder: MTLRenderCommandEncoder) {
+        let _ = self.customMatrix.popLast()
+        encoder.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
     }
 }

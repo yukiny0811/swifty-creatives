@@ -25,12 +25,9 @@ final class SketchSample1: Sketch {
         }
     }
     
-    override func setupCamera(camera: some MainCameraBase) {}
-    
     override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)
         elapsed += 0.01
-        
         let elapsedSin = sin(elapsed)
         for b in boxes {
             b.setColor(f4(elapsedSin, b.color.y, b.color.z, b.color.w))
@@ -43,14 +40,12 @@ final class SketchSample1: Sketch {
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {
         let touch = touches.first!
-        let location = touch.location(in: UIView(frame: viewFrame))
-        
-        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
+        let location = touch.location(in: view)
+        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))
         let origin = processed.origin
         let direction = processed.direction
-        
         let finalPos = origin + direction * 20
         
         let box = Box()
