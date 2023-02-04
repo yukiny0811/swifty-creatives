@@ -92,6 +92,7 @@ public class NormalBlendRenderer<
             )
         )
         
+        drawProcess.beforeDraw(encoder: renderCommandEncoder!)
         drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)

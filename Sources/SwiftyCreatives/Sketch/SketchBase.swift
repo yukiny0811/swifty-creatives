@@ -23,6 +23,8 @@ public protocol SketchBase: AnyObject {
     func updateAndDrawLight(encoder: MTLRenderCommandEncoder)
     func onScroll(delta: CGPoint)
     
+    func beforeDraw(encoder: MTLRenderCommandEncoder)
+    
     #if os(macOS)
     func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
     func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)

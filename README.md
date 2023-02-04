@@ -5,10 +5,42 @@
 [![Platform Compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fyukiny0811%2Fswifty-creatives%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/yukiny0811/swifty-creatives)
 [![License](https://img.shields.io/github/license/yukiny0811/swifty-creatives)](https://github.com/yukiny0811/swifty-creatives/blob/main/LICENSE)
 
-__Creative coding library for Swift.__   
+__Creative coding framework for Swift.__   
 Using Metal directly for rendering.
 
 ![ExampleMacOSApp 2022年-12月-16日 18 08 41](https://user-images.githubusercontent.com/28947703/208063423-3ad00c20-1d1c-48b8-8996-2d43e1365fe4.gif)
+
+## Features
+- Geometry
+    - 2D
+        - Rectangle
+        - Circle
+        - Triangle
+    - 3D
+        - Box
+        - 3D Model
+    - Others
+        - Image
+        - Text
+        - UIViewObject(3d view with interactive button)
+- Camera
+    - Perspective
+    - Orthographic
+- Blend Mode
+    - normal
+    - add
+    - alpha
+- Lighting
+    - Phong's reflection model
+- Functions
+    - set color
+    - set position
+    - set rotation
+    - set scale
+    - push / pop matrix
+- View
+    - can be used as UIView / NSView
+    - can be used as SwiftUI View
 
 |||
 |-|-|
@@ -25,23 +57,15 @@ import Metal
 import SwiftyCreatives
 
 final class SampleSketch: Sketch {
-    var objects: [Box] = []
-    override init() {
-        super.init()
-        for _ in 0..<100 {
-            let box = Box()
-            box.setPos(f3.randomPoint(-7...7))
-            box.setColor(f4.randomPoint(0...1))
-            box.setScale(f3.randomPoint(1...2))
-            objects.append(box)
-        }
-    }
-    override func update(camera: some MainCameraBase) {
-        camera.rotateAroundY(0.01)
-    }
     override func draw(encoder: MTLRenderCommandEncoder) {
-        for o in objects {
-            o.draw(encoder)
+        let count = 20
+        for i in 0...count {
+            color(1, Float(i) / 20, 0, 1, encoder: encoder)
+            pushMatrix(encoder: encoder)
+            rotateY(Float.pi * 2 / Float(count) * Float(i), encoder: encoder)
+            translate(10, 0, 0, encoder: encoder)
+            box(0, 0, 0, 1, 1, 1, encoder: encoder)
+            popMatrix(encoder: encoder)
         }
     }
 }
@@ -54,3 +78,6 @@ ZStack {
 }
 .background(.black)
 ```
+
+<img width="863" alt="スクリーンショット 2023-02-03 7 51 34" src="https://user-images.githubusercontent.com/28947703/216469226-3f32ccee-c045-48c3-8fc0-0044ef7da891.png">
+
