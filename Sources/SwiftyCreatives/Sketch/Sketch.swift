@@ -35,8 +35,6 @@ open class Sketch: SketchBase {
         encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: 3)
     }
     
-    open func onScroll(delta: CGPoint) {}
-    
     #if os(macOS)
     open func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
     open func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
@@ -51,6 +49,7 @@ open class Sketch: SketchBase {
     #endif
     
     #if os(iOS)
+    open func onScroll(delta: CGPoint) {}
     open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {}
     open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {}
     open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {}

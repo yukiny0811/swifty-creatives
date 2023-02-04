@@ -21,8 +21,6 @@ public protocol SketchBase: AnyObject {
     func draw(encoder: MTLRenderCommandEncoder)
     
     func updateAndDrawLight(encoder: MTLRenderCommandEncoder)
-    func onScroll(delta: CGPoint)
-    
     func beforeDraw(encoder: MTLRenderCommandEncoder)
     
     #if os(macOS)
@@ -39,6 +37,7 @@ public protocol SketchBase: AnyObject {
     #endif
 
     #if os(iOS)
+    func onScroll(delta: CGPoint)
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView)
     func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView)
     func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView)
