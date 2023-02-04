@@ -13,8 +13,8 @@ struct ExampleiOSApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-//                SketchView<MainCameraConfig, MainDrawConfig>(SketchSample1())
-                SketchView<MainCameraConfig, MainDrawConfig>(SketchSample2())
+                SketchView<MainCameraConfig, MainDrawConfig>(SketchSample1())
+//                SketchView<MainCameraConfig, MainDrawConfig>(SketchSample2())
             }
             .background(.black)
         }
