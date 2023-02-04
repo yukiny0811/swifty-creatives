@@ -95,7 +95,7 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
     #if os(iOS)
     @objc func onScroll(recognizer: UIPanGestureRecognizer) {
         let delta = recognizer.translation(in: self)
-        renderer.drawProcess.onScroll(delta: delta)
+        renderer.drawProcess.onScroll(delta: delta, camera: renderer.camera, view: self)
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -37,7 +37,7 @@ public protocol SketchBase: AnyObject {
     #endif
 
     #if os(iOS)
-    func onScroll(delta: CGPoint)
+    func onScroll(delta: CGPoint, camera: some MainCameraBase, view: UIView)
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView)
     func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView)
     func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView)
