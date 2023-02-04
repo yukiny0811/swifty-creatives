@@ -100,7 +100,6 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         renderer.drawProcess.touchesBegan(touches, with: event, camera: renderer.camera, view: self)
-        
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if CameraConfig.enableEasyMove {

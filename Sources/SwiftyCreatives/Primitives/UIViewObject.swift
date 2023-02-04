@@ -75,6 +75,7 @@ public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
         encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
         
         encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
         encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: 11)
