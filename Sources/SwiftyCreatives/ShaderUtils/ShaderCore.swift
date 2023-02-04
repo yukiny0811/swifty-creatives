@@ -10,11 +10,7 @@ import CoreImage
 
 public final class ShaderCore {
     public static let device: MTLDevice = MTLCreateSystemDefaultDevice()!
-    public static let library: MTLLibrary = {
-        return try! ShaderCore.device.makeDefaultLibrary(bundle: Bundle.module)
-    }()
-    public static let commandQueue: MTLCommandQueue = {
-        return ShaderCore.device.makeCommandQueue()!
-    }()
+    public static let library: MTLLibrary = try! ShaderCore.device.makeDefaultLibrary(bundle: Bundle.module)
+    public static let commandQueue: MTLCommandQueue = ShaderCore.device.makeCommandQueue()!
     public static let context: CIContext = CIContext(mtlDevice: device)
 }
