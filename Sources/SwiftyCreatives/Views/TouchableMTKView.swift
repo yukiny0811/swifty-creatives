@@ -95,12 +95,10 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
     #if os(iOS)
     @objc func onScroll(recognizer: UIPanGestureRecognizer) {
         let delta = recognizer.translation(in: self)
-        renderer.drawProcess.onScroll(delta: delta)
+        renderer.drawProcess.onScroll(delta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
     }
-    
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         renderer.drawProcess.touchesBegan(touches, with: event, camera: renderer.camera, view: self)
-        
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if CameraConfig.enableEasyMove {
