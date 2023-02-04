@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Metal
 import SwiftyCreatives
 
 final class Sample7: Sketch {
@@ -39,7 +38,7 @@ final class Sample7: Sketch {
         elapsed += 0.01
     }
     
-    override func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: SCEncoder) {
         for b in boxes {
             b.draw(encoder)
         }

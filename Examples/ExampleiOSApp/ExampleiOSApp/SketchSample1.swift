@@ -6,7 +6,6 @@
 //
 
 import SwiftyCreatives
-import CoreGraphics
 import UIKit
 
 final class SketchSample1: Sketch {
@@ -34,7 +33,7 @@ final class SketchSample1: Sketch {
         }
     }
     
-    override func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: SCEncoder) {
         for b in boxes {
             b.draw(encoder)
         }

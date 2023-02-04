@@ -103,7 +103,7 @@ public class Circ: Primitive<CircleInfo> {
         super.init()
     }
     
-    public override func draw(_ encoder: MTLRenderCommandEncoder) {
+    public override func draw(_ encoder: SCEncoder) {
         encoder.setFragmentBytes(_material, length: Material.memorySize, index: 1)
         encoder.setVertexBytes(CircleInfo.vertices, length: CircleInfo.vertices.count * f3.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)

@@ -5,8 +5,6 @@
 //  Created by Yuki Kuwashima on 2022/12/08.
 //
 
-import Metal
-
 #if os(macOS)
 import AppKit
 #elseif os(iOS)
@@ -18,10 +16,10 @@ public protocol SketchBase: AnyObject {
     // MARK: functions
     func setupCamera(camera: some MainCameraBase)
     func update(camera: some MainCameraBase)
-    func draw(encoder: MTLRenderCommandEncoder)
+    func draw(encoder: SCEncoder)
     
-    func updateAndDrawLight(encoder: MTLRenderCommandEncoder)
-    func beforeDraw(encoder: MTLRenderCommandEncoder)
+    func updateAndDrawLight(encoder: SCEncoder)
+    func beforeDraw(encoder: SCEncoder)
     
     #if os(macOS)
     func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)

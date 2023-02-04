@@ -131,7 +131,7 @@ public class ModelObject: Primitive<ModelObjectInfo> {
             }
         }
     }
-    override public func draw(_ encoder: MTLRenderCommandEncoder) {
+    override public func draw(_ encoder: SCEncoder) {
         
         guard let meshes = self.mesh as? [MTKMesh] else { return }
         

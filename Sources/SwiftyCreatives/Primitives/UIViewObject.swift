@@ -69,7 +69,7 @@ public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
             )
         )
     }
-    override public func draw(_ encoder: MTLRenderCommandEncoder) {
+    override public func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)

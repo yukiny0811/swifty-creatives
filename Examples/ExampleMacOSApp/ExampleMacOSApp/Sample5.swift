@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Metal
 import SwiftyCreatives
 
 final class Sample5: Sketch {
@@ -20,7 +19,7 @@ final class Sample5: Sketch {
     override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)
     }
-    override func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: SCEncoder) {
         object.draw(0, 0, 0, encoder)
     }
 }
