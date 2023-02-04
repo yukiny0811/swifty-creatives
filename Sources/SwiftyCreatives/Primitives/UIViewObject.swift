@@ -85,8 +85,8 @@ public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
         encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertices.count)
     }
     
-    public func buttonTest(origin: f3, direction: f3) {
-        guard let coord = hitTestGetNormalizedCoord(origin: origin, direction: direction) else {
+    public func buttonTest(origin: f3, direction: f3, testDistance: Float = 3000) {
+        guard let coord = hitTestGetNormalizedCoord(origin: origin, direction: direction, testDistance: testDistance) else {
             return
         }
         let viewCoord = CGPoint(
