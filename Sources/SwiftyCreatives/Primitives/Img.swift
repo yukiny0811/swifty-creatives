@@ -59,7 +59,7 @@ public class Img: HitTestablePrimitive<ImgInfo> {
             )
         )
     }
-    override public func draw(_ encoder: MTLRenderCommandEncoder) {
+    override public func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(ImgInfo.vertices, length: ImgInfo.vertices.count * f3.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)

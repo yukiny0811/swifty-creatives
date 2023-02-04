@@ -5,11 +5,10 @@
 //  Created by Yuki Kuwashima on 2023/02/02.
 //
 
-import Metal
 import SwiftyCreatives
 
 final class Sample1: Sketch {
-    override func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: SCEncoder) {
         let count = 20
         for i in 0...count {
             color(1, Float(i) / 20, 0, 1, encoder: encoder)

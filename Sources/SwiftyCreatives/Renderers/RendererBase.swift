@@ -51,7 +51,7 @@ extension RendererBase {
         return depthStateDesc
     }
     
-    static func setDefaultBuffers(encoder: MTLRenderCommandEncoder) {
+    static func setDefaultBuffers(encoder: SCEncoder) {
         encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 0)
         encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 1)
         encoder.setVertexBytes([f3.zero], length: f3.memorySize, index: 2)

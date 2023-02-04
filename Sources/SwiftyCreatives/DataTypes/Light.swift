@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import simd
-import Metal
 
 public struct Light {
     public init(position: f3, color: f3, brightness: Float, ambientIntensity: Float, diffuseIntensity: Float, specularIntensity: Float) {

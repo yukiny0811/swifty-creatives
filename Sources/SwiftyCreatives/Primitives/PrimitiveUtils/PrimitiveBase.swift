@@ -5,8 +5,6 @@
 //  Created by Yuki Kuwashima on 2022/12/17.
 //
 
-import Metal
-
 public protocol PrimitiveBase: AnyObject {
     
     var color: f4 { get }
@@ -22,5 +20,5 @@ public protocol PrimitiveBase: AnyObject {
     func setScale(_ value: f3) -> Self
     func setMaterial(_ material: Material) -> Self
     
-    func draw(_ encoder: MTLRenderCommandEncoder)
+    func draw(_ encoder: SCEncoder)
 }

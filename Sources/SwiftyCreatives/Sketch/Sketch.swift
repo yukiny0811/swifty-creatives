@@ -5,8 +5,6 @@
 //  Created by Yuki Kuwashima on 2023/01/05.
 //
 
-import Metal
-
 #if os(macOS)
 import AppKit
 #elseif os(iOS)
@@ -24,13 +22,13 @@ open class Sketch: SketchBase {
     // MARK: functions
     open func setupCamera(camera: some MainCameraBase) {}
     open func update(camera: some MainCameraBase) {}
-    open func draw(encoder: MTLRenderCommandEncoder) {}
+    open func draw(encoder: SCEncoder) {}
     
-    public func beforeDraw(encoder: MTLRenderCommandEncoder) {
+    public func beforeDraw(encoder: SCEncoder) {
         self.customMatrix = [f4x4.createIdentity()]
     }
     
-    open func updateAndDrawLight(encoder: MTLRenderCommandEncoder) {
+    open func updateAndDrawLight(encoder: SCEncoder) {
         encoder.setFragmentBytes([LIGHTS.count], length: MemoryLayout<Int>.stride, index: 2)
         encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: 3)
     }

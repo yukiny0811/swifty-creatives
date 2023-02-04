@@ -5,7 +5,6 @@
 //  Created by Yuki Kuwashima on 2022/12/17.
 //
 
-import Metal
 import simd
 
 open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
@@ -56,7 +55,7 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         return self
     }
     
-    public func draw(_ encoder: MTLRenderCommandEncoder) {
+    public func draw(_ encoder: SCEncoder) {
         encoder.setFragmentBytes(_material, length: Material.memorySize, index: 1)
         encoder.setVertexBytes(Info.vertices, length: Info.vertices.count * f3.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)

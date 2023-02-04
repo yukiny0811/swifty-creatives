@@ -5,7 +5,6 @@
 //  Created by Yuki Kuwashima on 2023/02/02.
 //
 
-import Metal
 import SwiftyCreatives
 
 final class Sample4: Sketch {
@@ -20,7 +19,7 @@ final class Sample4: Sketch {
     override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)
     }
-    override func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: SCEncoder) {
         object.draw(encoder)
     }
 }

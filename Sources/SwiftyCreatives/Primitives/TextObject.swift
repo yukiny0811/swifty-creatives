@@ -91,7 +91,7 @@ public class TextObject: Primitive<TextObjectInfo> {
         ))
         return self 
     }
-    public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: MTLRenderCommandEncoder) {
+    public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: SCEncoder) {
         encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: 0)
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)

@@ -32,7 +32,7 @@ final class SketchSample2: Sketch {
         }
     }
     
-    override func draw(encoder: MTLRenderCommandEncoder) {
+    override func draw(encoder: SCEncoder) {
         viewObj.draw(encoder)
     }
     
