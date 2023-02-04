@@ -15,6 +15,8 @@ open class Sketch: SketchBase {
     
     var customMatrix: [f4x4] = [f4x4.createIdentity()]
     
+    private(set) var privateEncoder: SCEncoder?
+    
     public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0), color: f3.one, brightness: 1, ambientIntensity: 1, diffuseIntensity: 1, specularIntensity: 50)]
     
     public init() {}
@@ -26,6 +28,7 @@ open class Sketch: SketchBase {
     
     public func beforeDraw(encoder: SCEncoder) {
         self.customMatrix = [f4x4.createIdentity()]
+        self.privateEncoder = encoder
     }
     
     open func updateAndDrawLight(encoder: SCEncoder) {
