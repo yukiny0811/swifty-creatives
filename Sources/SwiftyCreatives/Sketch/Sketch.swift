@@ -15,6 +15,7 @@ import UIKit
 
 open class Sketch: SketchBase {
     
+    
     public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0), color: f3.one, brightness: 1, ambientIntensity: 1, diffuseIntensity: 1, specularIntensity: 50)]
     
     public init() {}
@@ -28,6 +29,8 @@ open class Sketch: SketchBase {
         encoder.setFragmentBytes([LIGHTS.count], length: MemoryLayout<Int>.stride, index: 2)
         encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: 3)
     }
+    
+    open func onScroll(delta: CGPoint) {}
     
     #if os(macOS)
     open func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}

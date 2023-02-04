@@ -31,10 +31,29 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
         #elseif os(iOS)
         self.layer.isOpaque = false
         #endif
+        
+        let scrollGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(onScroll))
+        scrollGestureRecognizer.allowedScrollTypesMask = .continuous
+        scrollGestureRecognizer.minimumNumberOfTouches = 2
+        scrollGestureRecognizer.maximumNumberOfTouches = 2
+        self.addGestureRecognizer(scrollGestureRecognizer)
     }
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        if let recognizers = self.gestureRecognizers {
+            for recognizer in recognizers {
+                self.removeGestureRecognizer(recognizer)
+            }
+        }
+    }
+    
+    @objc func onScroll(recognizer: UIPanGestureRecognizer) {
+        let delta = recognizer.translation(in: self)
+        renderer.drawProcess.onScroll(delta: delta)
     }
     
     #if os(macOS)
