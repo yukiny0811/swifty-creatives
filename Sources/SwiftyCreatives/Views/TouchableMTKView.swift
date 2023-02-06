@@ -56,6 +56,7 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
     }
     
     #if os(macOS)
+    override public var acceptsFirstResponder: Bool { return true }
     public override func mouseDown(with event: NSEvent) {
         renderer.drawProcess.mouseDown(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
