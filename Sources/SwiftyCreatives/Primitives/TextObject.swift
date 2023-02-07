@@ -7,6 +7,7 @@
 
 import MetalKit
 import CoreImage.CIFilterBuiltins
+import CoreGraphics
 
 public struct TextObjectInfo: PrimitiveInfo {
     public static var vertices: [f3] = [
@@ -55,6 +56,77 @@ public class TextObject: Primitive<TextObjectInfo> {
     public typealias ColorAlias = UIColor
 #endif
     
+    func createParagraphStyle() -> NSParagraphStyle {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        return paragraphStyle
+    }
+    
+    func createAttributedString(text: String, font: FontAlias, color: ColorAlias, paragraphStyle: NSParagraphStyle) -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: color,
+            .paragraphStyle: paragraphStyle
+        ]
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        return attributedString
+    }
+    
+    func createFramesetterFrame(framesetter: CTFramesetter, framePath: CGPath) -> CTFrame {
+        let frame = CTFramesetterCreateFrame(framesetter, CFRange(), framePath, nil)
+        return frame
+    }
+    
+    @discardableResult
+    public func setDetailedText(_ text: String, font: FontAlias, color: ColorAlias, resolution: CGSize, framePath: CGPath? = nil) -> Self {
+        
+        let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: MTLPixelFormat.rgba8Unorm,
+            width: Int(resolution.width),
+            height: Int(resolution.height),
+            mipmapped: false)
+        textureDescriptor.usage = [.shaderWrite, .shaderRead]
+        texture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)!
+        
+#if os(iOS)
+        UIGraphicsBeginImageContextWithOptions(resolution, false, 0)
+        guard let ctx = UIGraphicsGetCurrentContext() else { return self }
+        ctx.translateBy(x: 0, y: resolution.height)
+        ctx.scaleBy(x: 1, y: -1)
+#elseif os(macOS)
+        let gContext = NSGraphicsContext.init(bitmapImageRep: NSBitmapImageRep(ciImage: CIImage(mtlTexture: texture!)!))!
+        let ctx = gContext.cgContext
+#endif
+        let paragraphStyle = createParagraphStyle()
+        let attributedString = createAttributedString(text: text, font: font, color: color, paragraphStyle: paragraphStyle)
+        let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
+        if let framePath = framePath {
+            let framesetterFrame = createFramesetterFrame(framesetter: framesetter, framePath: framePath)
+            CTFrameDraw(framesetterFrame, ctx)
+        } else {
+            let defaultRect = CGRect(origin: .zero, size: resolution)
+            let rectPath = CGPath(rect: defaultRect, transform: nil)
+            let framesetterFrame = createFramesetterFrame(framesetter: framesetter, framePath: rectPath)
+            CTFrameDraw(framesetterFrame, ctx)
+        }
+        
+        #if os(iOS)
+        UIGraphicsEndImageContext()
+        #endif
+        
+        let im = ctx.makeImage()!
+        let tex = try! ShaderCore.textureLoader.newTexture(cgImage: im)
+        self.texture = tex
+        
+        let longer: Float = Float(max(im.width, im.height))
+        self.setScale(f3(
+            Float(im.width) / longer,
+            Float(im.height) / longer,
+            1
+        ))
+        return self
+    }
+    
     @discardableResult
     public func setText(_ text: String, font: FontAlias, color: ColorAlias) -> Self {
         
@@ -89,7 +161,7 @@ public class TextObject: Primitive<TextObjectInfo> {
             Float(outputImage.extent.height) / longer,
             1
         ))
-        return self 
+        return self
     }
     public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: SCEncoder) {
         encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: 0)

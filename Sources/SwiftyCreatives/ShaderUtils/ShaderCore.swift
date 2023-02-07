@@ -5,12 +5,12 @@
 //  Created by Yuki Kuwashima on 2022/12/08.
 //
 
-import Metal
-import CoreImage
+import MetalKit
 
-public final class ShaderCore {
+public enum ShaderCore {
     public static let device: MTLDevice = MTLCreateSystemDefaultDevice()!
     public static let library: MTLLibrary = try! ShaderCore.device.makeDefaultLibrary(bundle: Bundle.module)
     public static let commandQueue: MTLCommandQueue = ShaderCore.device.makeCommandQueue()!
     public static let context: CIContext = CIContext(mtlDevice: device)
+    public static let textureLoader: MTKTextureLoader = MTKTextureLoader(device: ShaderCore.device)
 }
