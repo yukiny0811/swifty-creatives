@@ -24,7 +24,8 @@ let package = Package(
         ),
         .testTarget(
             name: "SwiftyCreativesTests",
-            dependencies: ["SwiftyCreatives"]
+            dependencies: ["SwiftyCreatives"],
+            resources: [.process("Resources")]
         )
     ]
 )
