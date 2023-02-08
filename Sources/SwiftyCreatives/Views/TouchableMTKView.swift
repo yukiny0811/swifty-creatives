@@ -21,7 +21,7 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
         self.framebufferOnly = true
         self.preferredFramesPerSecond = 120
         self.autoResizeDrawable = true
-        self.clearColor = MTLClearColor()
+        self.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
         self.depthStencilPixelFormat = .depth32Float_stencil8
         self.sampleCount = 1
         self.clearDepth = 1.0
