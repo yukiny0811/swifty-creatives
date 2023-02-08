@@ -65,6 +65,13 @@ public class NormalBlendRenderer<
         guard let drawable = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
             return
         }
+        
+        if DrawConfig.clearOnUpdate {
+            renderPassDescriptor.colorAttachments[0].loadAction = .clear
+        } else {
+            renderPassDescriptor.colorAttachments[0].loadAction = .load
+        }
+        
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)

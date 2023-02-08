@@ -6,6 +6,7 @@
 //
 
 public final class MainDrawConfig: DrawConfigBase {
-    public static var contentScaleFactor: Int = 3
-    public static var blendMode: BlendMode = .alphaBlend
+    public static let contentScaleFactor: Int = 3
+    public static let blendMode: BlendMode = .alphaBlend
+    public static let clearOnUpdate: Bool = true
 }

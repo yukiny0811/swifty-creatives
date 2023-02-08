@@ -46,12 +46,11 @@ class TransparentRenderer<
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.vertexFunction = vertexFunction
-        pipelineStateDescriptor.sampleCount = 1
+        pipelineStateDescriptor.rasterSampleCount = 1
         pipelineStateDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
         pipelineStateDescriptor.stencilAttachmentPixelFormat = .depth32Float_stencil8
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
         pipelineStateDescriptor.colorAttachments[0].isBlendingEnabled = false
-//        pipelineStateDescriptor.colorAttachments[0].writeMask = .none //これはなんだ
         pipelineStateDescriptor.fragmentFunction = transparencyMethodFragmentFunction
         pipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
         
@@ -102,6 +101,12 @@ class TransparentRenderer<
         renderPassDescriptor.tileHeight = optimalTileSize.height
         renderPassDescriptor.imageblockSampleLength = resolveState.imageblockSampleLength
         
+        if DrawConfig.clearOnUpdate {
+            renderPassDescriptor.colorAttachments[0].loadAction = .clear
+        } else {
+            renderPassDescriptor.colorAttachments[0].loadAction = .load
+        }
+        
         // MARK: - render encoder
         let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         
@@ -147,7 +152,5 @@ class TransparentRenderer<
         // MARK: - commit buffer
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
-        
-        commandBuffer.waitUntilCompleted()
     }
 }
