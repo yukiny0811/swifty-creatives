@@ -12,7 +12,7 @@ let package = Package(
     products: [
         .library(
             name: "SwiftyCreatives",
-            targets: ["SwiftyCreatives"]
+            targets: ["SwiftyCreatives", "SwiftyCreativesTests"]
         )
     ],
     dependencies: [],
@@ -24,8 +24,7 @@ let package = Package(
         ),
         .testTarget(
             name: "SwiftyCreativesTests",
-            dependencies: ["SwiftyCreatives"],
-            resources: [.process("Resources")]
+            dependencies: ["SwiftyCreatives"]
         )
     ]
 )
