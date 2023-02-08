@@ -12,7 +12,7 @@ let package = Package(
     products: [
         .library(
             name: "SwiftyCreatives",
-            targets: ["SwiftyCreatives", "SwiftyCreativesTests"]
+            targets: ["SwiftyCreatives"]
         )
     ],
     dependencies: [],
