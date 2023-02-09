@@ -48,6 +48,8 @@ Using Metal directly for rendering.
 
 ![ExampleMacOSApp 2023年-02月-02日 0 23 56](https://user-images.githubusercontent.com/28947703/216084840-585d4f38-dfb3-48bf-8f16-f8bc92badbb5.gif)
 
+![QuickTime Player - 画面収録 2023-02-10 1 53 14 mov 2023年-02月-10日 2 55 14](https://user-images.githubusercontent.com/28947703/217897685-7a83bedf-5624-45e2-b566-9a05aab7c103.gif)
+
 
 ## Sample Code
 
