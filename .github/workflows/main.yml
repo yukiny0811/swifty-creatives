@@ -12,15 +12,15 @@ jobs:
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Build macOS
+        run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64"
       - name: Build iOS
         run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=iOS"
-      - name: Build macOS
-        run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS"
   test:
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Test macOS
+        run: xcodebuild -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64"
       - name: Test iOS
         run: xcodebuild -scheme SwiftyCreatives test -destination "name=iPhone 14 Pro"
-      - name: Test macOS
-        run: xcodebuild -scheme SwiftyCreatives test
