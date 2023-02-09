@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS
-        run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=x86_64"
+        run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS"
       - name: Build iOS
         run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=iOS"
   test:
