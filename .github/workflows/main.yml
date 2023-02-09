@@ -20,5 +20,7 @@ jobs:
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Test iOS
+        run: xcodebuild -scheme SwiftyCreatives test -destination "name=iPhone 14 Pro"
       - name: Test macOS
-        run: xcodebuild -scheme SwiftyCreatives test -destination "generic/platform=macOS"
+        run: xcodebuild -scheme SwiftyCreatives test
