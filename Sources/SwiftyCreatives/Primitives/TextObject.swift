@@ -173,7 +173,7 @@ public class TextObject: Primitive<TextObjectInfo> {
         encoder.setVertexBytes(TextObjectInfo.uvs, length: TextObjectInfo.uvs.count * f2.memorySize, index: 11)
         encoder.setVertexBytes(TextObjectInfo.normals, length: TextObjectInfo.normals.count * f3.memorySize, index: 12)
         
-        encoder.setFragmentBytes([true], length: MemoryLayout<Bool>.stride, index: 6)
+        encoder.setFragmentBytes([true], length: Bool.memorySize, index: 6)
         encoder.setFragmentTexture(self.texture, index: 0)
         encoder.drawPrimitives(type: TextObjectInfo.primitiveType, vertexStart: 0, vertexCount: TextObjectInfo.vertices.count)
         

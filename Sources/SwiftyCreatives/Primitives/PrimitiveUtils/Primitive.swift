@@ -64,8 +64,8 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
         encoder.setVertexBytes(Info.uvs, length: Info.uvs.count * f2.memorySize, index: 11)
         encoder.setVertexBytes(Info.normals, length: Info.normals.count * f3.memorySize, index: 12)
-        encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
-        encoder.setFragmentBytes(self.isActiveToLight, length: MemoryLayout<Bool>.stride, index: 7)
+        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: 6)
+        encoder.setFragmentBytes(self.isActiveToLight, length: Bool.memorySize, index: 7)
         encoder.drawPrimitives(type: Info.primitiveType, vertexStart: 0, vertexCount: Info.vertices.count)
     }
     

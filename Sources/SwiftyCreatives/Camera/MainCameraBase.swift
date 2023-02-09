@@ -6,7 +6,6 @@
 //
 
 public protocol MainCameraBase {
-    
     var mainMatrix: [f4x4] { get set }
     var perspectiveMatrix: [f4x4] { get set }
     func translate(_ x: Float, _ y: Float, _ z: Float)

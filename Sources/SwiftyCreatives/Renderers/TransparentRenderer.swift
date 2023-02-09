@@ -120,8 +120,8 @@ class TransparentRenderer<
         
         // MARK: - set buffer
         
-        renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: MemoryLayout<f4x4>.stride, index: 4)
-        renderEncoder.setVertexBytes(camera.mainMatrix, length: MemoryLayout<f4x4>.stride, index: 5)
+        renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: f4x4.memorySize, index: 4)
+        renderEncoder.setVertexBytes(camera.mainMatrix, length: f4x4.memorySize, index: 5)
         
         let cameraPosBuffer = ShaderCore.device.makeBuffer(bytes: [camera.getCameraPos()], length: f3.memorySize)
         renderEncoder.setVertexBuffer(cameraPosBuffer, offset: 0, index: 6)
