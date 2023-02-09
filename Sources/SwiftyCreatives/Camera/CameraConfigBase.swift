@@ -22,7 +22,10 @@ public protocol CameraConfigBase {
     /// 0.0...1.0
     static var polarSpacing: Float { get }
     
+    /// enable easy move
     static var enableEasyMove: Bool { get }
     
+    /// perspective or orthographic camera.
+    /// orthographic if false
     static var isPerspective: Bool { get }
 }

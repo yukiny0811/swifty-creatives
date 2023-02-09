@@ -112,8 +112,8 @@ public class Circ: Primitive<CircleInfo> {
         encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
         encoder.setVertexBytes(CircleInfo.uvs, length: CircleInfo.uvs.count * f2.memorySize, index: 11)
         encoder.setVertexBytes(CircleInfo.normals, length: CircleInfo.normals.count * f3.memorySize, index: 12)
-        encoder.setFragmentBytes(self.hasTexture, length: MemoryLayout<Bool>.stride, index: 6)
-        encoder.setFragmentBytes(self.isActiveToLight, length: MemoryLayout<Bool>.stride, index: 7)
+        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: 6)
+        encoder.setFragmentBytes(self.isActiveToLight, length: Bool.memorySize, index: 7)
 
         encoder.drawIndexedPrimitives(type: .triangle, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
         

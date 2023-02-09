@@ -138,7 +138,7 @@ public class ModelObject: Primitive<ModelObjectInfo> {
         encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
         encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setFragmentBytes([true], length: MemoryLayout<Bool>.stride, index: 6)
+        encoder.setFragmentBytes([true], length: Bool.memorySize, index: 6)
         
         for mesh in meshes {
             
