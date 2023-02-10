@@ -15,6 +15,7 @@
 		56694B11298AB8EE0022C24D /* Sample6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B10298AB8EE0022C24D /* Sample6.swift */; };
 		56694B13298AB9070022C24D /* Sample7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B12298AB9070022C24D /* Sample7.swift */; };
 		5675A0F8294B18A2005C25BD /* SwiftyCreatives in Frameworks */ = {isa = PBXBuildFile; productRef = 5675A0F7294B18A2005C25BD /* SwiftyCreatives */; };
+		569EBEAE2995583D0090F5AB /* Sample8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569EBEAD2995583D0090F5AB /* Sample8.swift */; };
 		56C53FC7294A645100962DD6 /* ExampleMacOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C53FC6294A645100962DD6 /* ExampleMacOSApp.swift */; };
 		56C53FCB294A645200962DD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56C53FCA294A645200962DD6 /* Assets.xcassets */; };
 		56C53FCE294A645200962DD6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56C53FCD294A645200962DD6 /* Preview Assets.xcassets */; };
@@ -29,6 +30,7 @@
 		56694B10298AB8EE0022C24D /* Sample6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample6.swift; sourceTree = "<group>"; };
 		56694B12298AB9070022C24D /* Sample7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample7.swift; sourceTree = "<group>"; };
 		5675A0F6294B187D005C25BD /* swifty-creatives */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swifty-creatives"; path = ../..; sourceTree = "<group>"; };
+		569EBEAD2995583D0090F5AB /* Sample8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample8.swift; sourceTree = "<group>"; };
 		56C53FC3294A645100962DD6 /* ExampleMacOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleMacOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56C53FC6294A645100962DD6 /* ExampleMacOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleMacOSApp.swift; sourceTree = "<group>"; };
 		56C53FCA294A645200962DD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				56694B0E298AB8D70022C24D /* Sample5.swift */,
 				56694B10298AB8EE0022C24D /* Sample6.swift */,
 				56694B12298AB9070022C24D /* Sample7.swift */,
+				569EBEAD2995583D0090F5AB /* Sample8.swift */,
 				56C53FCA294A645200962DD6 /* Assets.xcassets */,
 				56C53FCF294A645200962DD6 /* ExampleMacOSApp.entitlements */,
 				56C53FCC294A645200962DD6 /* Preview Content */,
@@ -182,6 +185,7 @@
 			files = (
 				56C53FC7294A645100962DD6 /* ExampleMacOSApp.swift in Sources */,
 				56694B13298AB9070022C24D /* Sample7.swift in Sources */,
+				569EBEAE2995583D0090F5AB /* Sample8.swift in Sources */,
 				56694B09298AB8840022C24D /* Sample3.swift in Sources */,
 				56694B11298AB8EE0022C24D /* Sample6.swift in Sources */,
 				56694B05298AB8100022C24D /* Sample1.swift in Sources */,
