@@ -1,12 +1,11 @@
 //
-//  File.swift
+//  DefaultOrthoConfig.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2023/01/30.
 //
 
-import Foundation
-
+/// Default camera config for orthographic projection.
 public class DefaultOrthoConfig: CameraConfigBase {
     public static let fov: Float = 85
     public static let near: Float = -300

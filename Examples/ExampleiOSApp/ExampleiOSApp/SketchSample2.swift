@@ -16,7 +16,7 @@ final class SketchSample2: Sketch {
     
     override init() {
         super.init()
-        let view: TestView = TestView.fromNib()
+        let view: TestView = TestView.fromNib(type: TestView.self)
         view.layer.cornerRadius = 36
         view.onHit = {
             self.rFinal += Float.pi / 2

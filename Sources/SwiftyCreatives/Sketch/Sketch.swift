@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Sketch.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2023/01/05.
@@ -32,7 +32,7 @@ open class Sketch: SketchBase {
     }
     
     open func updateAndDrawLight(encoder: SCEncoder) {
-        encoder.setFragmentBytes([LIGHTS.count], length: MemoryLayout<Int>.stride, index: 2)
+        encoder.setFragmentBytes([LIGHTS.count], length: Int.memorySize, index: 2)
         encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: 3)
     }
     

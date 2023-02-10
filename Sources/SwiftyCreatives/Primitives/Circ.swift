@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Circ.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2023/01/30.
@@ -94,7 +94,7 @@ public struct CircleInfo: PrimitiveInfo {
     0, 27, 28,
     0, 28, 29,
     
-    ]), length: 28 * 3 * MemoryLayout<UInt16>.stride)!
+    ]), length: 28 * 3 * UInt16.memorySize)!
 }
 
 public class Circ: Primitive<CircleInfo> {

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Functions.metal
 //  
 //
 //  Created by Yuki Kuwashima on 2023/01/05.

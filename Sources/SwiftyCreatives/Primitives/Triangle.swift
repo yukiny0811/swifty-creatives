@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Triangle.swift
 //
 //
 //  Created by Yuki Kuwashima on 2022/12/16.
