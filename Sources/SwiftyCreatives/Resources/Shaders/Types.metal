@@ -1,5 +1,5 @@
 //
-//  Simple_Types.swift
+//  Types.metal
 //  
 //
 //  Created by Yuki Kuwashima on 2022/12/16.

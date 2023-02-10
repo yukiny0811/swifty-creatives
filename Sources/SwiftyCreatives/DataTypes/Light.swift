@@ -1,11 +1,9 @@
 //
-//  File.swift
+//  Light.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2023/01/05.
 //
-
-import Foundation
 
 public struct Light {
     public init(position: f3, color: f3, brightness: Float, ambientIntensity: Float, diffuseIntensity: Float, specularIntensity: Float) {

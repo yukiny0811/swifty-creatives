@@ -5,7 +5,7 @@
 //  Created by Yuki Kuwashima on 2022/12/09.
 //
 
-/// Config for Camera
+/// Config base for camera
 public protocol CameraConfigBase {
     
     /// field of view in radians
