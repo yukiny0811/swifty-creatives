@@ -16,6 +16,7 @@ Using Metal directly for rendering.
         - Rectangle
         - Circle
         - Triangle
+        - Line
     - 3D
         - Box
         - 3D Model
