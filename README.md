@@ -83,3 +83,6 @@ ZStack {
 
 <img width="863" alt="スクリーンショット 2023-02-03 7 51 34" src="https://user-images.githubusercontent.com/28947703/216469226-3f32ccee-c045-48c3-8fc0-0044ef7da891.png">
 
+## Other Examples
+- https://github.com/yukiny0811/sc-treeart
+- https://github.com/yukiny0811/sc-stable-fluids
