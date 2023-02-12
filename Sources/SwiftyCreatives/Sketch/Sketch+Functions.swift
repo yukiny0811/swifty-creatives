@@ -131,4 +131,9 @@ public extension Sketch {
         let _ = self.customMatrix.popLast()
         privateEncoder?.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: 15)
     }
+    
+    func setFog(color: f4, density: Float) {
+        privateEncoder?.setFragmentBytes([density], length: Float.memorySize, index: 16)
+        privateEncoder?.setFragmentBytes([color], length: f4.memorySize, index: 17)
+    }
 }

@@ -66,5 +66,8 @@ extension RendererBase {
         encoder.setFragmentBytes([Material(ambient: f3.zero, diffuse: f3.zero, specular: f3.zero, shininess: 0)], length: Material.memorySize, index: 1)
         encoder.setFragmentBytes([false], length: Bool.memorySize, index: 6)
         encoder.setFragmentBytes([false], length: Bool.memorySize, index: 7)
+        
+        encoder.setFragmentBytes([0.0], length: Float.memorySize, index: 16)
+        encoder.setFragmentBytes([f4.zero], length: f4.memorySize, index: 17)
     }
 }

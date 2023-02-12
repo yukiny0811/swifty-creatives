@@ -89,3 +89,8 @@ inline float4x4 createModelMatrix(
     
     return modelMatrix;
 }
+
+inline float4 createFog(float distance, float4 color, float density, float4 fogColor) {
+    float fog = 1.0 - clamp(exp(-density * distance), 0.0, 1.0);
+    return mix(color, fogColor, fog);
+}

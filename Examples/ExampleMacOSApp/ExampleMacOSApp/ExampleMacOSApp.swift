@@ -21,6 +21,7 @@ struct ExampleMacOSApp: App {
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample6())
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample7())
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample8())
+//                SketchView<MainCameraConfig, Sample9DrawConfig>(Sample9())
             }
             .background(.black)
         }
