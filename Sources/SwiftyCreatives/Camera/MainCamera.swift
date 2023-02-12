@@ -14,63 +14,82 @@ public class MainCamera<
     var frameWidth: Float = 0
     var frameHeight: Float = 0
     
-    var matrix: f4x4
-    var matrixX: f4x4
-    var matrixY: f4x4
+    var matrixR: f4x4
     var matrixT: f4x4
+    
+    private let axisX = f4(1, 0, 0, 1)
+    private let axisY = f4(0, 1, 0, 1)
+    private let axisZ = f4(0, 0, 1, 1)
     
     public var mainMatrix: [f4x4] = [f4x4(0)]
     public var perspectiveMatrix: [f4x4] = [f4x4(0)]
     
     public init() {
-        matrixX = f4x4.createIdentity()
-        matrixY = f4x4.createIdentity()
+        matrixR = f4x4.createIdentity()
         matrixT = f4x4.createTransform(0, 0, -20)
-        matrix = matrixT * matrixX * matrixY
-        updateMatrix()
+        updateMainMatrix()
     }
     
     public func setTranslate(_ x: Float, _ y: Float, _ z: Float) {
         matrixT = f4x4.createTransform(x, y, z)
-        matrix = matrixT * matrixX * matrixY
-        updateMatrix()
+        updateMainMatrix()
     }
     
     public func translate(_ x: Float, _ y: Float, _ z: Float) {
         matrixT = matrixT * f4x4.createTransform(x, y, z)
-        matrix = matrixT * matrixX * matrixY
-        updateMatrix()
+        updateMainMatrix()
     }
     
-    public func setRotation(_ x: Float, _ y: Float, _ z: Float) {
-        matrixX = f4x4.createRotation(angle: x, axis: f3(1, 0, 0))
-        matrixY = f4x4.createRotation(angle: y, axis: f3(0, 1, 0))
-        matrix = matrixT * matrixX * matrixY
-        updateMatrix()
+    public func setRotation(rad: Float, axis: f3) {
+        matrixR = f4x4.createRotation(angle: rad, axis: axis)
+        updateMainMatrix()
+    }
+    
+    public func rotate(rad: Float, axis: f3) {
+        matrixR = matrixR * f4x4.createRotation(angle: rad, axis: axis)
+        updateMainMatrix()
     }
     
     public func rotateAroundX(_ rad: Float) {
-        if Config.enableEasyMove {
-            let mockMatrixX = matrixX * f4x4.createRotation(angle: rad, axis: f3(1, 0, 0))
-            if mockMatrixX.columns.2.z <= Config.polarSpacing { return }
-        }
-        matrixX = matrixX * f4x4.createRotation(angle: rad, axis: f3(1, 0, 0))
-        matrix = matrixT * matrixX * matrixY
-        updateMatrix()
-    }
-    public func rotateAroundY(_ rad: Float) {
-        matrixY = matrixY * f4x4.createRotation(angle: rad, axis: f3(0, 1, 0))
-        matrix = matrixT * matrixX * matrixY
-        updateMatrix()
-    }
-    public func rotateAroundZ(_ rad: Float) {
-        matrix = matrix * f4x4.createRotation(angle: rad, axis: f3(0, 0, 1))
-        updateMatrix()
+        let currentAxis = axisX
+        matrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))
+        updateMainMatrix()
     }
     
-    public func updateMatrix() {
-        mainMatrix[0] = matrix
+    public func rotateAroundY(_ rad: Float) {
+        let currentAxis = axisY
+        matrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))
+        updateMainMatrix()
     }
+    
+    public func rotateAroundZ(_ rad: Float) {
+        let currentAxis = axisZ
+        matrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))
+        updateMainMatrix()
+    }
+    
+    public func rotateAroundVisibleX(_ rad: Float) {
+        let currentAxis = axisX * matrixR
+        matrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))
+        updateMainMatrix()
+    }
+    
+    public func rotateAroundVisibleY(_ rad: Float) {
+        let currentAxis = axisY * matrixR
+        matrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))
+        updateMainMatrix()
+    }
+    
+    public func rotateAroundVisibleZ(_ rad: Float) {
+        let currentAxis = axisZ * matrixR
+        matrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))
+        updateMainMatrix()
+    }
+    
+    private func updateMainMatrix() {
+        mainMatrix[0] = matrixT * matrixR
+    }
+    
     public func updatePMatrix() {
         if Config.isPerspective {
             perspectiveMatrix[0] = f4x4.createPerspective(fov: Float.degreesToRadians(Config.fov), aspect: frameWidth / frameHeight, near: Config.near, far: Config.far)
@@ -124,6 +143,12 @@ public class MainCamera<
         let worldOrigin = f3(temp2.x, temp2.y, temp2.z)
         
         return (worldOrigin, worldDirection)
+    }
+    
+    public func mock_rotateAroundVisibleX(_ rad: Float) -> f4x4 {
+        let currentAxis = axisX * matrixR
+        let mockMatrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))
+        return matrixT * mockMatrixR
     }
 }
 

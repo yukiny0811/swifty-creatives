@@ -61,9 +61,19 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
         renderer.drawProcess.mouseDown(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func mouseDragged(with event: NSEvent) {
-        if CameraConfig.enableEasyMove {
-            renderer.camera.rotateAroundX(Float(event.deltaY) * 0.01)
-            renderer.camera.rotateAroundY(Float(event.deltaX) * 0.01)
+        let moveRadX = Float(event.deltaY) * 0.01
+        let moveRadY = Float(event.deltaX) * 0.01
+        switch CameraConfig.easyCameraType {
+        case .manual:
+            break
+        case .easy(polarSpacing: let polarSpacing):
+            if checkIfExceedsPolarSpacing(rad: moveRadX, polarSpacing: polarSpacing) == false {
+                renderer.camera.rotateAroundVisibleX(moveRadX)
+            }
+            renderer.camera.rotateAroundY(moveRadY)
+        case .flexible:
+            renderer.camera.rotateAroundVisibleX(moveRadX)
+            renderer.camera.rotateAroundVisibleY(moveRadY)
         }
         renderer.drawProcess.mouseDragged(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
@@ -102,11 +112,21 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
         renderer.drawProcess.touchesBegan(touches, with: event, camera: renderer.camera, view: self)
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if CameraConfig.enableEasyMove {
-            let touch = touches.first!
-            let diff = touch.location(in: self) - touch.previousLocation(in: self)
-            renderer.camera.rotateAroundX(Float(diff.y) * 0.01)
-            renderer.camera.rotateAroundY(Float(diff.x) * 0.01)
+        let touch = touches.first!
+        let diff = touch.location(in: self) - touch.previousLocation(in: self)
+        let moveRadX = Float(diff.y) * 0.01
+        let moveRadY = Float(diff.x) * 0.01
+        switch CameraConfig.easyCameraType {
+        case .manual:
+            break
+        case .easy(polarSpacing: let polarSpacing):
+            if checkIfExceedsPolarSpacing(rad: moveRadX, polarSpacing: polarSpacing) == false {
+                renderer.camera.rotateAroundVisibleX(moveRadX)
+            }
+            renderer.camera.rotateAroundY(moveRadY)
+        case .flexible:
+            renderer.camera.rotateAroundVisibleX(moveRadX)
+            renderer.camera.rotateAroundVisibleY(moveRadY)
         }
         renderer.drawProcess.touchesMoved(touches, with: event, camera: renderer.camera, view: self)
     }
@@ -117,4 +137,13 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
         renderer.drawProcess.touchesCancelled(touches, with: event, camera: renderer.camera, view: self)
     }
     #endif
+    
+    private func checkIfExceedsPolarSpacing(rad: Float, polarSpacing: Float) -> Bool {
+        let mockedMainMatrix = renderer.camera.mock_rotateAroundVisibleX(rad)
+        let detectionValue = mockedMainMatrix.columns.1.y
+        if detectionValue < polarSpacing {
+            return true
+        }
+        return false
+    }
 }
