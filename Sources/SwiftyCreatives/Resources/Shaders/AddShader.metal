@@ -47,6 +47,8 @@ fragment half4 add_fragment (RasterizerData rd [[stage_in]],
                              const device Light *lights [[ buffer(3) ]],
                              const device FrameUniforms_HasTexture& uniformHasTexture [[ buffer(6) ]],
                              const device FrameUniforms_IsActiveToLight &isActiveToLight [[ buffer(7) ]],
+                             const device FrameUniforms_FogDensity &fogDensity [[ buffer(16) ]],
+                             const device FrameUniforms_FogColor &fogColor [[ buffer(17) ]],
                              texture2d<half> tex [[ texture(0) ]]) {
     
     half4 resultColor = half4(0, 0, 0, 0);
@@ -59,11 +61,15 @@ fragment half4 add_fragment (RasterizerData rd [[stage_in]],
         resultColor = half4(rd.color);
     }
     
-    
     if (isActiveToLight.value) {
         float3 phongIntensity = calculatePhongIntensity(rd, material, lightCount, lights);
         resultColor = half4(float4(resultColor) * float4(phongIntensity, 1));
     }
+    
+    resultColor = half4(createFog(rd.position.z / rd.position.w,
+                                    float4(resultColor),
+                                    fogDensity.value,
+                                    fogColor.value));
     
     return resultColor + c;
 }

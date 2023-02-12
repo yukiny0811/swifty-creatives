@@ -115,7 +115,9 @@ void OITFragmentFunction(RasterizerData in,
                          const device int &lightCount,
                          const device Light *lights,
                          FrameUniforms_HasTexture uniformHasTexture,
-                         const device FrameUniforms_IsActiveToLight &isActiveToLight,
+                         FrameUniforms_IsActiveToLight isActiveToLight,
+                         FrameUniforms_FogDensity uniformFogDensity,
+                         FrameUniforms_FogColor uniformFogColor,
                          texture2d<half> tex) {
     const float depth = in.position.z / in.position.w;
     
@@ -130,6 +132,11 @@ void OITFragmentFunction(RasterizerData in,
         float3 phongIntensity = calculatePhongIntensity(in, material, lightCount, lights);
         fragmentColor = half4(float4(fragmentColor) * float4(phongIntensity, 1));
     }
+    
+    fragmentColor = half4(createFog(in.position.z / in.position.w,
+                                    float4(fragmentColor),
+                                    uniformFogDensity.value,
+                                    uniformFogColor.value));
     
     InsertFragment(oitData, fragmentColor, depth, 1 - fragmentColor.a);
 }
@@ -166,8 +173,10 @@ OITFragmentFunction_4Layer(RasterizerData in [[ stage_in ]],
                            const device Light *lights [[ buffer(3) ]],
                            const device FrameUniforms_HasTexture& uniformHasTexture [[ buffer(6) ]],
                            const device FrameUniforms_IsActiveToLight &isActiveToLight [[ buffer(7) ]],
+                           const device FrameUniforms_FogDensity &fogDensity [[ buffer(16) ]],
+                           const device FrameUniforms_FogColor &fogColor [[ buffer(17) ]],
                            texture2d<half> tex [[ texture(0) ]]) {
-    OITFragmentFunction(in, &oitImageblock.oitData, material, lightCount, lights, uniformHasTexture, isActiveToLight, tex);
+    OITFragmentFunction(in, &oitImageblock.oitData, material, lightCount, lights, uniformHasTexture, isActiveToLight, fogDensity, fogColor, tex);
     FragOut<4> Out;
     Out.aoitImageBlock = oitImageblock;
     return Out;

@@ -44,6 +44,14 @@ struct FrameUniforms_CustomMatrix {
     float4x4 value;
 };
 
+struct FrameUniforms_FogDensity {
+    float value;
+};
+
+struct FrameUniforms_FogColor {
+    float4 value;
+};
+
 struct RasterizerData {
     float4 position [[ position ]];
     float4 color;
