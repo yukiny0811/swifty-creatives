@@ -46,6 +46,8 @@ public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
     
     public var viewObj: UIView?
     
+    public var cacheCustomMatrix: f4x4 = f4x4.createIdentity()
+    
     public required init() {
         super.init()
         hasTexture = [true]
@@ -84,22 +86,21 @@ public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
         encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertices.count)
     }
     
-    public func buttonTest(origin: f3, direction: f3, testDistance: Float = 3000) {
-        guard let coord = hitTestGetNormalizedCoord(origin: origin, direction: direction, testDistance: testDistance) else {
-            return
-        }
-        let viewCoord = CGPoint(
-            x: (CGFloat(coord.x)+1.0) / 2,
-            y: 1.0 - (CGFloat(coord.y)+1.0) / 2
-        )
-        let result = self.viewObj!.hitTest(CGPoint(
-            x: viewCoord.x * self.viewObj!.bounds.width,
-            y: viewCoord.y * self.viewObj!.bounds.height
-        ), with: nil)
-        guard let button = result as? UIButton else {
-            return
-        }
-        button.sendActions(for: .touchUpInside)
+    public func drawWidthCache(_ encoder: SCEncoder, customMatrix: f4x4) {
+        encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: 0)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
+        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: 6)
+        
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
+        encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: 11)
+        encoder.setVertexBytes(UIViewObjectInfo.normals, length: UIViewObjectInfo.normals.count * f3.memorySize, index: 12)
+        
+        encoder.setFragmentTexture(self.texture, index: 0)
+        encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertices.count)
+        
+        self.cacheCustomMatrix = customMatrix
     }
 }
 

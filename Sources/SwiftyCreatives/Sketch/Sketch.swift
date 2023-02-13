@@ -11,10 +11,16 @@ import AppKit
 import UIKit
 #endif
 
+import simd
+
 open class Sketch: SketchBase {
     
-    var customMatrix: [f4x4] = [f4x4.createIdentity()]
+    internal var customMatrix: [f4x4] = [f4x4.createIdentity()]
     
+    public func getCustomMatrix() -> f4x4 {
+        return self.customMatrix.reduce(f4x4.createIdentity(), *)
+    }
+
     private(set) var privateEncoder: SCEncoder?
     
     public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0), color: f3.one, brightness: 1, ambientIntensity: 1, diffuseIntensity: 1, specularIntensity: 50)]

@@ -85,7 +85,7 @@ inline float4x4 createModelMatrix(
                                          float4(0.0, 0.0, uniformModelScale.value.z, 0.0),
                                          float4(0.0, 0.0, 0.0, 1.0));
     
-    float4x4 modelMatrix = uniformCustomMatrix.value * transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix);
+    float4x4 modelMatrix = transpose(modelScaleMatrix * modelRotateXMatrix * modelRotateYMatrix * modelRotateZMatrix * modelTransMatrix * transpose(uniformCustomMatrix.value));
     
     return modelMatrix;
 }

@@ -50,6 +50,14 @@ public extension f4x4 {
             f4(0, 0, 0, 1)
         ))
     }
+    static func createScale(_ x: Float, _ y: Float, _ z: Float) -> f4x4 {
+        return simd_transpose(Self.init(
+            f4(x, 0, 0, 0),
+            f4(0, y, 0, 0),
+            f4(0, 0, z, 0),
+            f4(0, 0, 0, 1)
+        ))
+    }
     static func createRotation(angle: Float, axis: f3) -> f4x4 {
         return Self.init(
             simd_quatf(angle: angle, axis: axis)

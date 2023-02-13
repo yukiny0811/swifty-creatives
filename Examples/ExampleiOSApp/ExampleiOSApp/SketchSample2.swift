@@ -42,7 +42,7 @@ final class SketchSample2: Sketch {
         let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))
         let origin = processed.origin
         let direction = processed.direction
-        viewObj.buttonTest(origin: origin, direction: direction)
+        viewObj.calculateHitTest(origin: origin, direction: direction, testDistance: 3000, customMatrix: getCustomMatrix())
     }
 }
 

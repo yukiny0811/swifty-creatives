@@ -76,12 +76,13 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         return self
     }
     
-    public func mockModel() -> f4x4 {
+    public func mockModel(customMatrix: f4x4) -> f4x4 {
+        let scale = f4x4.createScale(self.scale.x, self.scale.y, self.scale.z)
         let rotX = f4x4.createRotation(angle: self.rot.x, axis: f3(1, 0, 0))
         let rotY = f4x4.createRotation(angle: self.rot.y, axis: f3(0, 1, 0))
         let rotZ = f4x4.createRotation(angle: self.rot.z, axis: f3(0, 0, 1))
         let trans = f4x4.createTransform(self.pos.x, self.pos.y, self.pos.z)
-        let model = trans * rotZ * rotY * rotX
+        let model = simd_transpose(customMatrix) * trans * rotZ * rotY * rotX * scale
         return model
     }
 }
