@@ -77,9 +77,9 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     }
     
     public func mockModel() -> f4x4 {
-        let rotX = f4x4.createRotation(angle: self.rot.x, axis: f3(1, 0, 0))
-        let rotY = f4x4.createRotation(angle: self.rot.y, axis: f3(0, 1, 0))
-        let rotZ = f4x4.createRotation(angle: self.rot.z, axis: f3(0, 0, 1))
+        let rotX = f4x4.mock_createRotationX(angle: rot.x)
+        let rotY = f4x4.mock_createRotationY(angle: rot.y)
+        let rotZ = f4x4.mock_createRotationZ(angle: rot.z)
         let trans = f4x4.createTransform(self.pos.x, self.pos.y, self.pos.z)
         let model = trans * rotZ * rotY * rotX
         return model

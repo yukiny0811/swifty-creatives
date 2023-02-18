@@ -38,7 +38,7 @@ public struct ImgInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class Img: HitTestablePrimitive<ImgInfo> {
+public class Img: RectanglePlanePrimitive<ImgInfo> {
     
     public required init() {
         super.init()

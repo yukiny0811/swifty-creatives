@@ -41,7 +41,7 @@ public struct UIViewObjectInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class UIViewObject: HitTestablePrimitive<UIViewObjectInfo> {
+public class UIViewObject: RectanglePlanePrimitive<UIViewObjectInfo> {
     private var texture: MTLTexture?
     
     public var viewObj: UIView?
