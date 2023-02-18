@@ -80,4 +80,37 @@ public extension f4x4 {
             f4(0, 0, 0, 1)
         )
     }
+    
+    static func mock_createRotationX(angle: Float) -> f4x4 {
+        let cosX = cos(angle)
+        let sinX = sin(angle)
+        return Self.init(
+            f4(1.0, 0.0, 0.0, 0.0),
+            f4(0.0, cosX, -sinX, 0.0),
+            f4(0.0, sinX, cosX, 0.0),
+            f4(0.0, 0.0, 0.0, 1.0)
+        )
+    }
+    
+    static func mock_createRotationY(angle: Float) -> f4x4 {
+        let cosY = cos(angle)
+        let sinY = sin(angle)
+        return Self.init(
+            f4(cosY, 0.0, sinY, 0.0),
+            f4(0.0, 1.0, 0.0, 0.0),
+            f4(-sinY, 0.0, cosY, 0.0),
+            f4(0.0, 0.0, 0.0, 1.0)
+        )
+    }
+    
+    static func mock_createRotationZ(angle: Float) -> f4x4 {
+        let cosZ = cos(angle)
+        let sinZ = sin(angle)
+        return Self.init(
+            f4(cosZ, -sinZ, 0.0, 0.0),
+            f4(sinZ, cosZ, 0.0, 0.0),
+            f4(0.0, 0.0, 1.0, 0.0),
+            f4(0.0, 0.0, 0.0, 1.0)
+        )
+    }
 }

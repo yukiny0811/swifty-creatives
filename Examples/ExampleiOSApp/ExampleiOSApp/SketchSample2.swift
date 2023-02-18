@@ -33,7 +33,7 @@ final class SketchSample2: Sketch {
     }
     
     override func draw(encoder: SCEncoder) {
-        viewObj.draw(encoder)
+        viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {

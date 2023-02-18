@@ -21,6 +21,7 @@ final class Sample10: Sketch {
     override func draw(encoder: SCEncoder) {
         for r in rect {
             translate(0, 3, 0)
+            rotateY(0.3)
             r.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
         }
     }

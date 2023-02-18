@@ -38,13 +38,9 @@ public struct RectInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class Rect: HitTestablePrimitive<RectInfo> {
+public class Rect: RectanglePlanePrimitive<RectInfo> {
     
     public required init() {
         super.init()
-    }
-    public func drawWithCache(encoder: SCEncoder, customMatrix: f4x4) {
-        draw(encoder)
-        self.cachedCustomMatrix = customMatrix
     }
 }

@@ -40,7 +40,7 @@ public struct TextObjectInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class TextObject: Primitive<TextObjectInfo> {
+public class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
     private var texture: MTLTexture?
     
     public required init() {
