@@ -164,20 +164,15 @@ public class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         return self
     }
     public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: SCEncoder) {
-        encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: 0)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
-        
-        encoder.setVertexBytes(TextObjectInfo.uvs, length: TextObjectInfo.uvs.count * f2.memorySize, index: 11)
-        encoder.setVertexBytes(TextObjectInfo.normals, length: TextObjectInfo.normals.count * f3.memorySize, index: 12)
-        
-        encoder.setFragmentBytes([true], length: Bool.memorySize, index: 6)
-        encoder.setFragmentTexture(self.texture, index: 0)
+        encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
+        encoder.setVertexBytes(TextObjectInfo.uvs, length: TextObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(TextObjectInfo.normals, length: TextObjectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+        encoder.setFragmentTexture(self.texture, index: FragmentTextureIndex.MainTexture.rawValue)
         encoder.drawPrimitives(type: TextObjectInfo.primitiveType, vertexStart: 0, vertexCount: TextObjectInfo.vertices.count)
-        
-        
-        
     }
 }

@@ -6,6 +6,7 @@
 //
 
 #include <metal_stdlib>
+#include "SharedIndices.h"
 using namespace metal;
 
 struct FrameUniforms_ProjectionMatrix {
@@ -62,9 +63,9 @@ struct RasterizerData {
 };
 
 struct Vertex {
-    float3 position [[ attribute(0) ]];
-    float2 uv [[ attribute(1) ]];
-    float3 normal [[ attribute(2) ]];
+    float3 position [[ attribute(VertexAttribute_Position) ]];
+    float2 uv [[ attribute(VertexAttribute_UV) ]];
+    float3 normal [[ attribute(VertexAttribute_Normal) ]];
 };
 
 struct Light {

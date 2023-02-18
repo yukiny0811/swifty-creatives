@@ -81,12 +81,12 @@ public class NormalBlendRenderer<
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder?.setDepthStencilState(depthStencilState)
         
-        renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: f4x4.memorySize, index: 4)
-        renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: f4x4.memorySize, index: 5)
+        renderCommandEncoder?.setVertexBytes(camera.perspectiveMatrix, length: f4x4.memorySize, index: VertexBufferIndex.ProjectionMatrix.rawValue)
+        renderCommandEncoder?.setVertexBytes(camera.mainMatrix, length: f4x4.memorySize, index: VertexBufferIndex.ViewMatrix.rawValue)
         
         let cameraPosBuffer = ShaderCore.device.makeBuffer(bytes: [camera.getCameraPos()], length: f3.memorySize)
-        renderCommandEncoder?.setVertexBuffer(cameraPosBuffer, offset: 0, index: 6)
-        renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
+        renderCommandEncoder?.setVertexBuffer(cameraPosBuffer, offset: 0, index: VertexBufferIndex.CameraPos.rawValue)
+        renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: FragmentTextureIndex.MainTexture.rawValue)
         
         renderCommandEncoder?.setViewport(
             MTLViewport(

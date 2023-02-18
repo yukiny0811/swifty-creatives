@@ -70,17 +70,15 @@ public class UIViewObject: RectanglePlanePrimitive<UIViewObjectInfo> {
         )
     }
     override public func draw(_ encoder: SCEncoder) {
-        encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: 0)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: 6)
-        
-        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
-        encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: 11)
-        encoder.setVertexBytes(UIViewObjectInfo.normals, length: UIViewObjectInfo.normals.count * f3.memorySize, index: 12)
-        
-        encoder.setFragmentTexture(self.texture, index: 0)
+        encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
+        encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(UIViewObjectInfo.normals, length: UIViewObjectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+        encoder.setFragmentTexture(self.texture, index: FragmentTextureIndex.MainTexture.rawValue)
         encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertices.count)
     }
     
