@@ -32,14 +32,37 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
         self.layer.isOpaque = false
         #endif
         
+        #if os(macOS)
+        configureMacOS()
+        #endif
+        
         #if os(iOS)
+        configureiOS()
+        #endif
+    }
+    
+    
+    #if os(macOS)
+    func configureMacOS() {
+        let options: NSTrackingArea.Options = [
+            .mouseMoved,
+            .activeAlways,
+            .inVisibleRect
+        ]
+        let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+        self.addTrackingArea(trackingArea)
+    }
+    #endif
+    
+    #if os(iOS)
+    func configureiOS() {
         let scrollGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(onScroll))
         scrollGestureRecognizer.allowedScrollTypesMask = .continuous
         scrollGestureRecognizer.minimumNumberOfTouches = 2
         scrollGestureRecognizer.maximumNumberOfTouches = 2
         self.addGestureRecognizer(scrollGestureRecognizer)
-        #endif
     }
+    #endif
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -59,6 +82,9 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
     override public var acceptsFirstResponder: Bool { return true }
     public override func mouseDown(with event: NSEvent) {
         renderer.drawProcess.mouseDown(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+    }
+    public override func mouseMoved(with event: NSEvent) {
+        renderer.drawProcess.mouseMoved(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func mouseDragged(with event: NSEvent) {
         let moveRadX = Float(event.deltaY) * 0.01

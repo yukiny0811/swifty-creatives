@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import simd
+
 open class Sketch: SketchBase {
     
     var customMatrix: [f4x4] = [f4x4.createIdentity()]
@@ -31,12 +33,17 @@ open class Sketch: SketchBase {
         self.privateEncoder = encoder
     }
     
+    public func getCustomMatrix() -> f4x4 {
+        return customMatrix.reduce(f4x4.createIdentity(), *)
+    }
+    
     open func updateAndDrawLight(encoder: SCEncoder) {
         encoder.setFragmentBytes([LIGHTS.count], length: Int.memorySize, index: 2)
         encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: 3)
     }
     
     #if os(macOS)
+    open func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
     open func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
     open func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
     open func mouseUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}

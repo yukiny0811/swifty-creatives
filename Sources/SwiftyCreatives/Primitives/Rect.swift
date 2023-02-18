@@ -43,4 +43,8 @@ public class Rect: HitTestablePrimitive<RectInfo> {
     public required init() {
         super.init()
     }
+    public func drawWithCache(encoder: SCEncoder, customMatrix: f4x4) {
+        draw(encoder)
+        self.cachedCustomMatrix = customMatrix
+    }
 }

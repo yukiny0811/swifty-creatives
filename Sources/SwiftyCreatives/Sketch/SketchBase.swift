@@ -22,6 +22,7 @@ public protocol SketchBase: AnyObject {
     func beforeDraw(encoder: SCEncoder)
     
     #if os(macOS)
+    func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
     func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
     func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
     func mouseUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
