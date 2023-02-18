@@ -31,8 +31,6 @@ public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<
         let ttt = abs(PAdotN) / (abs(PAdotN)+abs(PBdotN))
         let x = A + (B-A) * ( ttt )
         
-        let localPos = x - selfPos
-        
         let inverseModel = simd_inverse(model)
         let processedLocalPos = f4(x.x, x.y, x.z, 1) * inverseModel
         
@@ -40,7 +38,9 @@ public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<
             return nil
         }
         
-        return (x, localPos)
+        let processedLocalPos_f3 = f3(processedLocalPos.x, processedLocalPos.y, processedLocalPos.z)
+        
+        return (x, processedLocalPos_f3)
     }
     
     public func hitTestGetPos(origin: f3, direction: f3, testDistance: Float = 3000) -> f3? {
