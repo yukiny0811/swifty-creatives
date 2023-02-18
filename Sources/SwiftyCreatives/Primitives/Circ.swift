@@ -104,17 +104,16 @@ public class Circ: Primitive<CircleInfo> {
     }
     
     public override func draw(_ encoder: SCEncoder) {
-        encoder.setFragmentBytes(_material, length: Material.memorySize, index: 1)
-        encoder.setVertexBytes(CircleInfo.vertices, length: CircleInfo.vertices.count * f3.memorySize, index: 0)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
-        encoder.setVertexBytes(CircleInfo.uvs, length: CircleInfo.uvs.count * f2.memorySize, index: 11)
-        encoder.setVertexBytes(CircleInfo.normals, length: CircleInfo.normals.count * f3.memorySize, index: 12)
-        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: 6)
-        encoder.setFragmentBytes(self.isActiveToLight, length: Bool.memorySize, index: 7)
-
+        encoder.setVertexBytes(CircleInfo.vertices, length: CircleInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
+        encoder.setVertexBytes(CircleInfo.uvs, length: CircleInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(CircleInfo.normals, length: CircleInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setFragmentBytes(_material, length: Material.memorySize, index: FragmentBufferIndex.Material.rawValue)
+        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+        encoder.setFragmentBytes(self.isActiveToLight, length: Bool.memorySize, index: FragmentBufferIndex.IsActiveToLight.rawValue)
         encoder.drawIndexedPrimitives(type: .triangle, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
         
     }

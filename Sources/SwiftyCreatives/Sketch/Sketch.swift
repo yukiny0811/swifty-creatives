@@ -38,8 +38,8 @@ open class Sketch: SketchBase {
     }
     
     open func updateAndDrawLight(encoder: SCEncoder) {
-        encoder.setFragmentBytes([LIGHTS.count], length: Int.memorySize, index: 2)
-        encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: 3)
+        encoder.setFragmentBytes([LIGHTS.count], length: Int.memorySize, index: FragmentBufferIndex.LightCount.rawValue)
+        encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: FragmentBufferIndex.Lights.rawValue)
     }
     
     #if os(macOS)

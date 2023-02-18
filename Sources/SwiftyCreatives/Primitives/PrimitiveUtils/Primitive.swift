@@ -56,16 +56,16 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     }
     
     public func draw(_ encoder: SCEncoder) {
-        encoder.setFragmentBytes(_material, length: Material.memorySize, index: 1)
-        encoder.setVertexBytes(Info.vertices, length: Info.vertices.count * f3.memorySize, index: 0)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setVertexBytes(_color, length: f4.memorySize, index: 10)
-        encoder.setVertexBytes(Info.uvs, length: Info.uvs.count * f2.memorySize, index: 11)
-        encoder.setVertexBytes(Info.normals, length: Info.normals.count * f3.memorySize, index: 12)
-        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: 6)
-        encoder.setFragmentBytes(self.isActiveToLight, length: Bool.memorySize, index: 7)
+        encoder.setVertexBytes(Info.vertices, length: Info.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+        encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
+        encoder.setVertexBytes(Info.uvs, length: Info.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(Info.normals, length: Info.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setFragmentBytes(_material, length: Material.memorySize, index: FragmentBufferIndex.Material.rawValue)
+        encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+        encoder.setFragmentBytes(self.isActiveToLight, length: Bool.memorySize, index: FragmentBufferIndex.IsActiveToLight.rawValue)
         encoder.drawPrimitives(type: Info.primitiveType, vertexStart: 0, vertexCount: Info.vertices.count)
     }
     

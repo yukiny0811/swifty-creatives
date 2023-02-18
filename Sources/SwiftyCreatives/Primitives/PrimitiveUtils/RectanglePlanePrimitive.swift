@@ -59,9 +59,4 @@ public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<
             return nil
         }
     }
-    
-    public func drawWithCache(encoder: SCEncoder, customMatrix: f4x4) {
-        draw(encoder)
-        cachedCustomMatrix = customMatrix
-    }
 }

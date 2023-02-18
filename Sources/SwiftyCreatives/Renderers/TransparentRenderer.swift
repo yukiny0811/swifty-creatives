@@ -120,12 +120,12 @@ class TransparentRenderer<
         
         // MARK: - set buffer
         
-        renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: f4x4.memorySize, index: 4)
-        renderEncoder.setVertexBytes(camera.mainMatrix, length: f4x4.memorySize, index: 5)
+        renderEncoder.setVertexBytes(camera.perspectiveMatrix, length: f4x4.memorySize, index: VertexBufferIndex.ProjectionMatrix.rawValue)
+        renderEncoder.setVertexBytes(camera.mainMatrix, length: f4x4.memorySize, index: VertexBufferIndex.ViewMatrix.rawValue)
         
         let cameraPosBuffer = ShaderCore.device.makeBuffer(bytes: [camera.getCameraPos()], length: f3.memorySize)
-        renderEncoder.setVertexBuffer(cameraPosBuffer, offset: 0, index: 6)
-        renderEncoder.setFragmentTexture(AssetUtil.defaultMTLTexture, index: 0)
+        renderEncoder.setVertexBuffer(cameraPosBuffer, offset: 0, index: VertexBufferIndex.CameraPos.rawValue)
+        renderEncoder.setFragmentTexture(AssetUtil.defaultMTLTexture, index: FragmentTextureIndex.MainTexture.rawValue)
         
         // MARK: - draw primitive
         drawProcess.beforeDraw(encoder: renderEncoder)

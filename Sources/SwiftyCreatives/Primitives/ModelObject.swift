@@ -38,9 +38,9 @@ public class ModelObject: Primitive<ModelObjectInfo> {
         ]
 
         vertexDescriptor.attributes = [
-            MDLVertexAttribute(name: MDLVertexAttributePosition, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 0, bufferIndex: 1),
-            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 2)
+            MDLVertexAttribute(name: MDLVertexAttributePosition, format: MDLVertexFormat.float3, offset: 0, bufferIndex: VertexAttributeIndex.Position.rawValue),
+            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 0, bufferIndex: VertexAttributeIndex.UV.rawValue),
+            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 0, bufferIndex: VertexAttributeIndex.Normal.rawValue)
         ]
 
         let asset = MDLAsset(
@@ -91,9 +91,9 @@ public class ModelObject: Primitive<ModelObjectInfo> {
         ]
 
         vertexDescriptor.attributes = [
-            MDLVertexAttribute(name: MDLVertexAttributePosition, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 0),
-            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 0, bufferIndex: 1),
-            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 0, bufferIndex: 2)
+            MDLVertexAttribute(name: MDLVertexAttributePosition, format: MDLVertexFormat.float3, offset: 0, bufferIndex: VertexAttributeIndex.Position.rawValue),
+            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 0, bufferIndex: VertexAttributeIndex.UV.rawValue),
+            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 0, bufferIndex: VertexAttributeIndex.Normal.rawValue)
         ]
 
         let asset = MDLAsset(
@@ -135,28 +135,27 @@ public class ModelObject: Primitive<ModelObjectInfo> {
         
         guard let meshes = self.mesh as? [MTKMesh] else { return }
         
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: 1)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: 2)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: 3)
-        encoder.setFragmentBytes([true], length: Bool.memorySize, index: 6)
+        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+        encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         
         for mesh in meshes {
             
             for b in 0..<mesh.vertexBuffers.count {
                 switch b {
                 case 0:
-                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: 0)
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
                 case 1:
-                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: 11)
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.UV.rawValue)
                 case 2:
-                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: 12)
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.Normal.rawValue)
                 default:
                     break
                 }
             }
             for s in mesh.submeshes {
-                
-                encoder.setFragmentTexture(texture, index: 0)
+                encoder.setFragmentTexture(texture, index: FragmentTextureIndex.MainTexture.rawValue)
                 encoder.drawIndexedPrimitives(type: s.primitiveType, indexCount: s.indexCount, indexType: s.indexType, indexBuffer: s.indexBuffer.buffer, indexBufferOffset: s.indexBuffer.offset)
             }
         }
