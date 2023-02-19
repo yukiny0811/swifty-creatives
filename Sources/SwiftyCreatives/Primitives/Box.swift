@@ -136,7 +136,6 @@ public struct BoxInfo: PrimitiveInfo {
 }
 
 open class Box: Primitive<BoxInfo> {
-    
     public required init() {
         super.init()
     }
