@@ -21,7 +21,7 @@ public struct ModelObjectInfo: PrimitiveInfo {
     public static let hasTexture: [Bool] = [true]
 }
 
-public class ModelObject: Primitive<ModelObjectInfo> {
+open class ModelObject: Primitive<ModelObjectInfo> {
     
     var mesh: [Any] = []
     var texture: MTLTexture?
@@ -135,8 +135,6 @@ public class ModelObject: Primitive<ModelObjectInfo> {
         
         guard let meshes = self.mesh as? [MTKMesh] else { return }
         
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         

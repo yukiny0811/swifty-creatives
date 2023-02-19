@@ -12,7 +12,6 @@ final class Sample3: Sketch {
     override init() {
         super.init()
         object
-            .setPos(f3.zero)
             .setScale(f3.one * 5)
             .setColor(f4.randomPoint(0...1))
     }

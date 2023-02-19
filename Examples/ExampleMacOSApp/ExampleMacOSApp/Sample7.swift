@@ -32,15 +32,19 @@ final class Sample7: Sketch {
             let elapsedSin = sin(elapsed * Float(i+1))
             let elapsedCos = cos(elapsed * Float(i+1))
             boxes[i]
-                .setPos(f3(elapsedCos * 5, elapsedSin * 5, 0))
                 .setColor(f4(elapsedSin, boxes[i].color.y, boxes[i].color.z, 1))
         }
         elapsed += 0.01
     }
     
     override func draw(encoder: SCEncoder) {
-        for b in boxes {
-            b.draw(encoder)
+        for i in 0..<boxes.count {
+            pushMatrix()
+            let elapsedSin = sin(elapsed * Float(i+1))
+            let elapsedCos = cos(elapsed * Float(i+1))
+            translate(elapsedCos * 5, elapsedSin * 5, 0)
+            boxes[i].draw(encoder)
+            popMatrix()
         }
         text.draw(0, 0, 0, encoder)
     }

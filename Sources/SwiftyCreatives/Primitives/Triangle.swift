@@ -34,7 +34,7 @@ public struct TriangleInfo: PrimitiveInfo {
     ]
 }
 
-public class Triangle: Primitive<TriangleInfo> {
+open class Triangle: Primitive<TriangleInfo> {
     public required init() {
         super.init()
     }

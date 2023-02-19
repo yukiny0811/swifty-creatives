@@ -97,7 +97,7 @@ public struct CircleInfo: PrimitiveInfo {
     ]), length: 28 * 3 * UInt16.memorySize)!
 }
 
-public class Circ: Primitive<CircleInfo> {
+open class Circ: Primitive<CircleInfo> {
     
     public required init() {
         super.init()
@@ -105,8 +105,6 @@ public class Circ: Primitive<CircleInfo> {
     
     public override func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(CircleInfo.vertices, length: CircleInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
         encoder.setVertexBytes(CircleInfo.uvs, length: CircleInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)

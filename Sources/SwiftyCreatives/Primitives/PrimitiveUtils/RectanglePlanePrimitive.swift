@@ -7,18 +7,28 @@
 
 import simd
 
-public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<Info> {
+open class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<Info> {
     private func calculateHitTest(origin: f3, direction: f3, testDistance: Float) -> (globalPos: f3, localPos: f3)? {
         
-        let model = mockModel() * simd_transpose(cachedCustomMatrix)
-        let selfPos_f4 = f4(pos.x, pos.y, pos.z, 1) * model
+        let model = f4x4.createIdentity()
+        let customModel = simd_transpose(cachedCustomMatrix)
+        
+        
+        var selfPos_f4 = f4(0, 0, 0, 1) * model
+        selfPos_f4.w = 1
+        selfPos_f4 = selfPos_f4 * customModel
+        
         let selfPos = f3(selfPos_f4.x, selfPos_f4.y, selfPos_f4.z)
 
-        let a = f4(0, 0, 1, 1) * model
+        var a = f4(0, 0, 1000, 1) * model
+        a.w = 1
+        a = a * customModel
 
         let A = origin
         let B = origin + direction * testDistance
+        
         let n = simd_normalize(f3(a.x, a.y, a.z) - selfPos)
+        
         let P = selfPos
 
         let PAdotN = simd_dot(A-P, n)
@@ -32,7 +42,10 @@ public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<
         let x = A + (B-A) * ( ttt )
         
         let inverseModel = simd_inverse(model)
-        let processedLocalPos = f4(x.x, x.y, x.z, 1) * inverseModel
+        let inverseCustomModel = simd_inverse(customModel)
+        var processedLocalPos = f4(x.x, x.y, x.z, 1) * inverseCustomModel
+        processedLocalPos.w = 1
+        processedLocalPos = processedLocalPos * inverseModel
         
         guard abs(processedLocalPos.x) <= scale.x && abs(processedLocalPos.y) <= scale.y else {
             return nil

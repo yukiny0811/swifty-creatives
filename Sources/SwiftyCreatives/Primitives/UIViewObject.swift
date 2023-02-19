@@ -41,7 +41,7 @@ public struct UIViewObjectInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class UIViewObject: RectanglePlanePrimitive<UIViewObjectInfo> {
+open class UIViewObject: RectanglePlanePrimitive<UIViewObjectInfo> {
     private var texture: MTLTexture?
     
     public var viewObj: UIView?
@@ -71,8 +71,6 @@ public class UIViewObject: RectanglePlanePrimitive<UIViewObjectInfo> {
     }
     override public func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
         encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)

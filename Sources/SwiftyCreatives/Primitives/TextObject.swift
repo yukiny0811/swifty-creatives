@@ -40,7 +40,7 @@ public struct TextObjectInfo: PrimitiveInfo {
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
 }
 
-public class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
+open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
     private var texture: MTLTexture?
     
     public required init() {
@@ -165,8 +165,6 @@ public class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
     }
     public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: SCEncoder) {
         encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
         encoder.setVertexBytes(TextObjectInfo.uvs, length: TextObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)

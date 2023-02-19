@@ -13,7 +13,6 @@ final class Sample6: Sketch {
         super.init()
         for _ in 0..<100 {
             let box = Box()
-                .setPos(f3.randomPoint(-7...7))
                 .setColor(f4.randomPoint(0...1))
                 .setScale(f3.randomPoint(1...2))
             objects.append(box)
@@ -24,7 +23,10 @@ final class Sample6: Sketch {
     }
     override func draw(encoder: SCEncoder) {
         for o in objects {
+            pushMatrix()
+            translate(Float.random(in: -7...7), Float.random(in: -7...7), Float.random(in: -7...7))
             o.draw(encoder)
+            popMatrix()
         }
     }
 }
