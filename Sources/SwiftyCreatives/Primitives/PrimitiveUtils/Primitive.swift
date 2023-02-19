@@ -13,14 +13,10 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     open var isActiveToLight: [Bool] = [false]
     
     internal var _color: [f4] = [f4.zero]
-    internal var _mPos: [f3] = [f3.zero]
-    internal var _mRot: [f3] = [f3.zero]
     internal var _mScale: [f3] = [f3.one]
     internal var _material: [Material] = [Material(ambient: f3(1, 1, 1), diffuse: f3(1, 1, 1), specular: f3.one, shininess: 50)]
     
     public var color: f4 { _color[0] }
-    public var pos: f3 { _mPos[0] }
-    public var rot: f3 { _mRot[0] }
     public var scale: f3 { _mScale[0] }
     
     required public init() {}
@@ -28,18 +24,6 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     @discardableResult
     public func setColor(_ value: f4) -> Self {
         _color[0] = value
-        return self
-    }
-    
-    @discardableResult
-    public func setPos(_ value: f3) -> Self {
-        _mPos[0] = value
-        return self
-    }
-    
-    @discardableResult
-    public func setRot(_ value: f3) -> Self {
-        _mRot[0] = value
         return self
     }
     
@@ -82,7 +66,6 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         let rotZ = f4x4.mock_createRotationZ(angle: rot.z)
         let trans = f4x4.createTransform(self.pos.x, self.pos.y, self.pos.z)
         let model = trans * rotZ * rotY * rotX
-//        let model = rotX * rotY * rotZ * trans
         return model
     }
 }

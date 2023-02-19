@@ -11,15 +11,16 @@ public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<
     private func calculateHitTest(origin: f3, direction: f3, testDistance: Float) -> (globalPos: f3, localPos: f3)? {
         
         let model = mockModel()
+        let customModel = simd_transpose(cachedCustomMatrix)
+        
+        
         var selfPos_f4 = f4(pos.x, pos.y, pos.z, 1) * model
         selfPos_f4.w = 1
-        
-        let customModel = simd_transpose(cachedCustomMatrix)
         selfPos_f4 = selfPos_f4 * customModel
         
         let selfPos = f3(selfPos_f4.x, selfPos_f4.y, selfPos_f4.z)
 
-        var a = f4(0, 0, 1, 1) * model
+        var a = f4(0, 0, 1000, 1) * model
         a.w = 1
         a = a * customModel
 
@@ -32,8 +33,6 @@ public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<
 
         let PAdotN = simd_dot(A-P, n)
         let PBdotN = simd_dot(B-P, n)
-        
-        print(a, selfPos)
         
         guard (PAdotN >= 0 && PBdotN <= 0) || (PAdotN <= 0 && PBdotN >= 0) else {
             return nil
