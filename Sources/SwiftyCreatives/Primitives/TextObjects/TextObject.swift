@@ -48,14 +48,6 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         hasTexture = [true]
     }
     
-#if os(macOS)
-    public typealias FontAlias = NSFont
-    public typealias ColorAlias = NSColor
-#elseif os(iOS)
-    public typealias FontAlias = UIFont
-    public typealias ColorAlias = UIColor
-#endif
-    
     func createParagraphStyle() -> NSParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -88,15 +80,15 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         textureDescriptor.usage = [.shaderWrite, .shaderRead]
         texture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)!
         
-#if os(iOS)
+        #if os(iOS)
         UIGraphicsBeginImageContextWithOptions(resolution, false, 0)
         guard let ctx = UIGraphicsGetCurrentContext() else { return self }
         ctx.translateBy(x: 0, y: resolution.height)
         ctx.scaleBy(x: 1, y: -1)
-#elseif os(macOS)
+        #elseif os(macOS)
         let gContext = NSGraphicsContext.init(bitmapImageRep: NSBitmapImageRep(ciImage: CIImage(mtlTexture: texture!)!))!
         let ctx = gContext.cgContext
-#endif
+        #endif
         let paragraphStyle = createParagraphStyle()
         let attributedString = createAttributedString(text: text, font: font, color: color, paragraphStyle: paragraphStyle)
         let framesetter = CTFramesetterCreateWithAttributedString(attributedString)

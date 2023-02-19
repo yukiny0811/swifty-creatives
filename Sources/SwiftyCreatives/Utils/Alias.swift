@@ -32,3 +32,17 @@ public typealias UISketchView = KitSketchView
 // MARK: - Metal
 import Metal
 public typealias SCEncoder = MTLRenderCommandEncoder
+
+// MARK: - Font
+#if os(macOS)
+public typealias FontAlias = NSFont
+#elseif os(iOS)
+public typealias FontAlias = UIFont
+#endif
+
+// MARK: Color
+#if os(macOS)
+public typealias ColorAlias = NSColor
+#elseif os(iOS)
+public typealias ColorAlias = UIColor
+#endif
