@@ -7,14 +7,14 @@
 
 import simd
 
-public class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<Info> {
+open class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<Info> {
     private func calculateHitTest(origin: f3, direction: f3, testDistance: Float) -> (globalPos: f3, localPos: f3)? {
         
-        let model = mockModel()
+        let model = f4x4.createIdentity()
         let customModel = simd_transpose(cachedCustomMatrix)
         
         
-        var selfPos_f4 = f4(pos.x, pos.y, pos.z, 1) * model
+        var selfPos_f4 = f4(0, 0, 0, 1) * model
         selfPos_f4.w = 1
         selfPos_f4 = selfPos_f4 * customModel
         

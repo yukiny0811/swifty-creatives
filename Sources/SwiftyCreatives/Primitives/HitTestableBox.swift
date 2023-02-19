@@ -7,7 +7,7 @@
 
 import simd
 
-public class HitTestableBox: PrimitiveBase {
+open class HitTestableBox: PrimitiveBase {
     
     internal let front = Rect()
     internal let back = Rect()
@@ -22,8 +22,6 @@ public class HitTestableBox: PrimitiveBase {
     internal var _color: [f4] = [f4.zero]
     internal var _mScale: [f3] = [f3.one]
     internal var _material: [Material] = [Material(ambient: f3(1, 1, 1), diffuse: f3(1, 1, 1), specular: f3.one, shininess: 50)]
-    
-    private var cachedCustomMatrix: f4x4 = f4x4.createIdentity()
     
     public required init() {
         setColor(color)
@@ -58,15 +56,6 @@ public class HitTestableBox: PrimitiveBase {
     public func setMaterial(_ material: Material) -> Self {
         _material[0] = material
         return self
-    }
-    
-    public func drawWithCache(encoder: SCEncoder, customMatrix: f4x4) {
-        front.drawWithCache(encoder: encoder, customMatrix: customMatrix)
-        back.drawWithCache(encoder: encoder, customMatrix: customMatrix)
-        l.drawWithCache(encoder: encoder, customMatrix: customMatrix)
-        r.drawWithCache(encoder: encoder, customMatrix: customMatrix)
-        top.drawWithCache(encoder: encoder, customMatrix: customMatrix)
-        bottom.drawWithCache(encoder: encoder, customMatrix: customMatrix)
     }
     
     public func draw(_ encoder: SCEncoder) {}

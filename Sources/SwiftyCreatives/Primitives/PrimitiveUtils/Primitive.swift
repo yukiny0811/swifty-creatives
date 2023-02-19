@@ -41,8 +41,6 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     
     public func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(Info.vertices, length: Info.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
-        encoder.setVertexBytes(_mPos, length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
-        encoder.setVertexBytes(_mRot, length: f3.memorySize, index: VertexBufferIndex.ModelRot.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
         encoder.setVertexBytes(Info.uvs, length: Info.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
@@ -58,14 +56,5 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     public func multiplyScale(_ value: Float) -> Self {
         _mScale[0] *= value
         return self
-    }
-    
-    public func mockModel() -> f4x4 {
-        let rotX = f4x4.mock_createRotationX(angle: rot.x)
-        let rotY = f4x4.mock_createRotationY(angle: rot.y)
-        let rotZ = f4x4.mock_createRotationZ(angle: rot.z)
-        let trans = f4x4.createTransform(self.pos.x, self.pos.y, self.pos.z)
-        let model = trans * rotZ * rotY * rotX
-        return model
     }
 }

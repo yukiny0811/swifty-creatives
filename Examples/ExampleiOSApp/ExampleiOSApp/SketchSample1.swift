@@ -10,16 +10,16 @@ import UIKit
 
 final class SketchSample1: Sketch {
     
-    var boxes: [Box] = []
+    var boxes: [MyBox] = []
     var elapsed: Float = 0.0
     
     override init() {
         super.init()
         for _ in 0...100 {
-            let box = Box()
+            let box = MyBox()
                 .setColor(f4.randomPoint(0...1))
-                .setPos(f3.randomPoint(-7...7))
                 .setScale(f3.one * Float.random(in: 0.3...0.5))
+            box.pos = f3.random(in: -7...7)
             boxes.append(box)
         }
     }
@@ -35,7 +35,10 @@ final class SketchSample1: Sketch {
     
     override func draw(encoder: SCEncoder) {
         for b in boxes {
+            pushMatrix()
+            translate(b.pos.x, b.pos.y, b.pos.z)
             b.draw(encoder)
+            popMatrix()
         }
     }
     
@@ -47,10 +50,14 @@ final class SketchSample1: Sketch {
         let direction = processed.direction
         let finalPos = origin + direction * 20
         
-        let box = Box()
+        let box = MyBox()
         box.setColor(f4(1, 1, 1, 1))
-        box.setPos(finalPos)
+        box.pos = finalPos
         box.setScale(f3.one * 0.2)
         boxes.append(box)
     }
+}
+
+class MyBox: Box {
+    var pos: f3 = .zero
 }

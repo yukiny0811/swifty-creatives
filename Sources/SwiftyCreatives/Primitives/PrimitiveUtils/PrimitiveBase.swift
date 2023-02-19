@@ -8,8 +8,6 @@
 public protocol PrimitiveBase: AnyObject {
     
     var color: f4 { get }
-    var pos: f3 { get }
-    var rot: f3 { get }
     var scale: f3 { get }
     
     init()

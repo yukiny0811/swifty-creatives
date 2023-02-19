@@ -28,11 +28,11 @@ final class SketchSample2: Sketch {
     override func update(camera: some MainCameraBase) {
         if r < rFinal {
             r += 0.06
-            viewObj.setRot(f3(0, 0, r))
         }
     }
     
     override func draw(encoder: SCEncoder) {
+        rotateZ(r)
         viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
     }
     
