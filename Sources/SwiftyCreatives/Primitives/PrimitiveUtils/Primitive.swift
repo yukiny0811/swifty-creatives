@@ -82,6 +82,7 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
         let rotZ = f4x4.mock_createRotationZ(angle: rot.z)
         let trans = f4x4.createTransform(self.pos.x, self.pos.y, self.pos.z)
         let model = trans * rotZ * rotY * rotX
+//        let model = rotX * rotY * rotZ * trans
         return model
     }
 }
