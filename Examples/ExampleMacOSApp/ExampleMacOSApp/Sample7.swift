@@ -30,7 +30,6 @@ final class Sample7: Sketch {
         camera.rotateAroundY(0.03)
         for i in 0..<boxes.count {
             let elapsedSin = sin(elapsed * Float(i+1))
-            let elapsedCos = cos(elapsed * Float(i+1))
             boxes[i]
                 .setColor(f4(elapsedSin, boxes[i].color.y, boxes[i].color.z, 1))
         }

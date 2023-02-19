@@ -13,6 +13,8 @@ import UIKit
 
 public protocol SketchBase: AnyObject {
     
+    var deltaTime: Float { get set }
+    
     // MARK: functions
     func setupCamera(camera: some MainCameraBase)
     func update(camera: some MainCameraBase)

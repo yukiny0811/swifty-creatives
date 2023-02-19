@@ -18,6 +18,7 @@ public class NormalBlendRenderer<
     var camera: MainCamera<CameraConfig>
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
+    var savedDate: Date = Date()
     
     public init(sketch: SketchBase) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -45,6 +46,7 @@ public class NormalBlendRenderer<
         
         self.drawProcess.setupCamera(camera: camera)
         
+        savedDate = Date()
     }
 
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -54,6 +56,9 @@ public class NormalBlendRenderer<
     }
 
     public func draw(in view: MTKView) {
+        
+        calculateDeltaTime()
+        
         view.drawableSize = CGSize(
             width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
             height: view.frame.size.height * CGFloat(DrawConfig.contentScaleFactor)
