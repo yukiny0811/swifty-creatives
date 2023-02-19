@@ -35,8 +35,6 @@ Using Metal directly for rendering.
     - Phong's reflection model
 - Functions
     - set color
-    - set position
-    - set rotation
     - set scale
     - push / pop matrix
 - View
