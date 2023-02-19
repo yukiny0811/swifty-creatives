@@ -12,35 +12,36 @@ import simd
 
 class ColoredHitTestableBox: HitTestableBox {
     var saveColor: f4 = .zero
+    var height: Float = 0
+    var target: Float = 0
+    func reset() {
+        target = Float.random(in: 1...13)
+    }
+    func update() {
+        let diff = target - height
+        let changeValue = diff * 0.1
+        height += changeValue
+    }
 }
 
 final class Sample12: Sketch {
     
+    let numberFactory = NumberTextFactory(font: NSFont.systemFont(ofSize: 60))
+    
     static let count = 6
     static let multiplier: Float = 5
     var boxes: [[ColoredHitTestableBox]] = []
-    var texts: [[TextObject]] = []
     
     override init() {
         for _ in 0...Self.count {
             var array: [ColoredHitTestableBox] = []
-            var textarray: [TextObject] = []
             for _ in 0...Self.count {
-                let height: Float = Float.random(in: 1...7)
-                
                 let box = ColoredHitTestableBox()
-                    .setScale(f3(1.5, height, 1.5))
                 box.saveColor = f4(0.0, Float.random(in: 0.1...0.7), Float.random(in: 0.1...0.7), 1)
                 box.setColor(box.saveColor)
                 array.append(box)
-                
-                let text = TextObject()
-                    .setText(String(Int(height)) + ".0", font: .systemFont(ofSize: 60), color: .white)
-                    .multiplyScale(0.7)
-                textarray.append(text)
             }
             boxes.append(array)
-            texts.append(textarray)
         }
     }
     
@@ -48,17 +49,25 @@ final class Sample12: Sketch {
         camera.setTranslate(0, 0, -30)
     }
     
+    override func update(camera: some MainCameraBase) {
+        for x in 0...Self.count {
+            for y in 0...Self.count {
+                boxes[x][y].update()
+            }
+        }
+    }
+    
     override func draw(encoder: SCEncoder) {
-        translate(-15, 0, -15)
+        translate(-15, -15, -15)
         for x in 0...Self.count {
             for y in 0...Self.count {
                 pushMatrix()
                 translate(Float(x) * Self.multiplier, 0, Float(y) * Self.multiplier)
+                boxes[x][y].setScale(f3(1.5, boxes[x][y].height, 1.5))
                 translate(0, boxes[x][y].scale.y, 0)
                 drawHitTestableBox(box: boxes[x][y])
-                
                 translate(0, boxes[x][y].scale.y + 1, 0)
-                texts[x][y].draw(0, 0, 0, encoder)
+                drawNumberText(encoder: encoder, factory: numberFactory, text: String( Float(Int(boxes[x][y].height*10))/10 ))
                 popMatrix()
             }
         }
@@ -68,7 +77,6 @@ final class Sample12: Sketch {
         var location = event.locationInWindow
         location.y = viewFrame.height - location.y
         let ray = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
-        
         var savedIndex: (Int, Int)? = nil
         var closestDistance: Float = 10000
         for i in 0..<boxes.count {
@@ -84,6 +92,16 @@ final class Sample12: Sketch {
         }
         if let savedIndex = savedIndex {
             boxes[savedIndex.0][savedIndex.1].setColor(f4(1, 1, 0, 1))
+        }
+    }
+    
+    override func keyDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+        if event.keyCode == 49 {
+            for x in 0...Self.count {
+                for y in 0...Self.count {
+                    boxes[x][y].reset()
+                }
+            }
         }
     }
 }
