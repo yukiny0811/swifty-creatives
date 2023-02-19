@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5643923129A14E2F0053C6E6 /* Sample10.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5643923029A14E2F0053C6E6 /* Sample10.swift */; };
 		5643923329A187740053C6E6 /* Sample11.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5643923229A187740053C6E6 /* Sample11.swift */; };
+		5643923729A1D9CD0053C6E6 /* Sample12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5643923629A1D9CD0053C6E6 /* Sample12.swift */; };
 		56694B05298AB8100022C24D /* Sample1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B04298AB8100022C24D /* Sample1.swift */; };
 		56694B07298AB8730022C24D /* Sample2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B06298AB8730022C24D /* Sample2.swift */; };
 		56694B09298AB8840022C24D /* Sample3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B08298AB8840022C24D /* Sample3.swift */; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		5643923029A14E2F0053C6E6 /* Sample10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample10.swift; sourceTree = "<group>"; };
 		5643923229A187740053C6E6 /* Sample11.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample11.swift; sourceTree = "<group>"; };
+		5643923629A1D9CD0053C6E6 /* Sample12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample12.swift; sourceTree = "<group>"; };
 		56694B04298AB8100022C24D /* Sample1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample1.swift; sourceTree = "<group>"; };
 		56694B06298AB8730022C24D /* Sample2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample2.swift; sourceTree = "<group>"; };
 		56694B08298AB8840022C24D /* Sample3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample3.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				569A83982999236000F62062 /* Sample9.swift */,
 				5643923029A14E2F0053C6E6 /* Sample10.swift */,
 				5643923229A187740053C6E6 /* Sample11.swift */,
+				5643923629A1D9CD0053C6E6 /* Sample12.swift */,
 				56C53FCA294A645200962DD6 /* Assets.xcassets */,
 				56C53FCF294A645200962DD6 /* ExampleMacOSApp.entitlements */,
 				56C53FCC294A645200962DD6 /* Preview Content */,
@@ -202,6 +205,7 @@
 				56694B11298AB8EE0022C24D /* Sample6.swift in Sources */,
 				56694B05298AB8100022C24D /* Sample1.swift in Sources */,
 				56694B0B298AB89A0022C24D /* Sample4.swift in Sources */,
+				5643923729A1D9CD0053C6E6 /* Sample12.swift in Sources */,
 				56694B07298AB8730022C24D /* Sample2.swift in Sources */,
 				56694B0F298AB8D70022C24D /* Sample5.swift in Sources */,
 			);
