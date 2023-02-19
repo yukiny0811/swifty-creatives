@@ -12,6 +12,7 @@ protocol RendererBase: MTKViewDelegate {
     associatedtype Camera: MainCameraBase
     var camera: Camera { get }
     var drawProcess: any SketchBase { get set }
+    var savedDate: Date { get set }
 }
 
 extension RendererBase {
@@ -69,5 +70,12 @@ extension RendererBase {
         
         encoder.setFragmentBytes([0.0], length: Float.memorySize, index: FragmentBufferIndex.FogDensity.rawValue)
         encoder.setFragmentBytes([f4.zero], length: f4.memorySize, index: FragmentBufferIndex.FogColor.rawValue)
+    }
+    
+    func calculateDeltaTime() {
+        let date = Date()
+        let elapsed: Float = Float(date.timeIntervalSince(savedDate))
+        drawProcess.deltaTime = elapsed
+        savedDate = date
     }
 }

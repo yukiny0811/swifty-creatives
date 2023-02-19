@@ -30,6 +30,8 @@ class TransparentRenderer<
     var drawProcess: SketchBase
     var camera: MainCamera<CameraConfig>
     
+    var savedDate: Date = Date()
+    
     public init(sketch: SketchBase) {
         
         // MARK: - functions
@@ -76,12 +78,16 @@ class TransparentRenderer<
         super.init()
         
         self.drawProcess.setupCamera(camera: camera)
+        
+        savedDate = Date()
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         
     }
     func draw(in view: MTKView) {
+        
+        calculateDeltaTime()
         
         view.drawableSize = CGSize(
             width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
