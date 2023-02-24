@@ -5,7 +5,7 @@
 //  Created by Yuki Kuwashima on 2022/12/17.
 //
 
-public protocol PrimitiveBase: AnyObject {
+protocol PrimitiveBase: AnyObject {
     
     var color: f4 { get }
     var scale: f3 { get }

@@ -13,10 +13,10 @@ final class Sample10: Sketch {
     override func setupCamera(camera: some MainCameraBase) {
         camera.setTranslate(0, 0, -10)
     }
-    var rect: [Rect] = [
-        Rect().setColor(f4.one),
-        Rect().setColor(f4.one),
-        Rect().setColor(f4.one)
+    var rect: [HitTestableRect] = [
+        HitTestableRect().setColor(f4.one),
+        HitTestableRect().setColor(f4.one),
+        HitTestableRect().setColor(f4.one)
     ]
     override func draw(encoder: SCEncoder) {
         for r in rect {

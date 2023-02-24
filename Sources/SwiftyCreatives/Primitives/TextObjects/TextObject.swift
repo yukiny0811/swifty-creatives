@@ -9,41 +9,10 @@ import MetalKit
 import CoreImage.CIFilterBuiltins
 import CoreGraphics
 
-public struct TextObjectInfo: PrimitiveInfo {
-    public static var vertices: [f3] = [
-        Self.VertexPoint.A,
-        Self.VertexPoint.B,
-        Self.VertexPoint.D,
-        Self.VertexPoint.C
-    ]
-    
-    public static var uvs: [f2] = [
-        f2(0, 0),
-        f2(0, 1),
-        f2(1, 0),
-        f2(1, 1)
-    ]
-    
-    public static var normals: [f3] = [
-        f3(0, 0, 1),
-        f3(0, 0, 1),
-        f3(0, 0, 1),
-        f3(0, 0, 1)
-    ]
-    
-    public final class VertexPoint {
-        static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
-        static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
-        static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
-        static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
-    }
-    public static let primitiveType: MTLPrimitiveType = .triangleStrip
-}
-
-open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
+open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
     private var texture: MTLTexture?
     
-    public required init() {
+    public override init() {
         super.init()
         hasTexture = [true]
     }
@@ -156,13 +125,13 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         return self
     }
     public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: SCEncoder) {
-        encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
-        encoder.setVertexBytes(TextObjectInfo.uvs, length: TextObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        encoder.setVertexBytes(TextObjectInfo.normals, length: TextObjectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
         encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         encoder.setFragmentTexture(self.texture, index: FragmentTextureIndex.MainTexture.rawValue)
-        encoder.drawPrimitives(type: TextObjectInfo.primitiveType, vertexStart: 0, vertexCount: TextObjectInfo.vertices.count)
+        encoder.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
 }

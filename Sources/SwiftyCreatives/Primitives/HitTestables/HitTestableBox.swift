@@ -9,12 +9,12 @@ import simd
 
 open class HitTestableBox: PrimitiveBase {
     
-    internal let front = Rect()
-    internal let back = Rect()
-    internal let l = Rect()
-    internal let r = Rect()
-    internal let top = Rect()
-    internal let bottom = Rect()
+    internal let front = HitTestableRect()
+    internal let back = HitTestableRect()
+    internal let l = HitTestableRect()
+    internal let r = HitTestableRect()
+    internal let top = HitTestableRect()
+    internal let bottom = HitTestableRect()
     
     public var color: f4 { _color[0] }
     public var scale: f3 { _mScale[0] }

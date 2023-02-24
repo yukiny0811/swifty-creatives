@@ -1,13 +1,13 @@
 //
-//  Rect.swift
+//  File.swift
+//  
 //
-//
-//  Created by Yuki Kuwashima on 2022/12/16.
+//  Created by Yuki Kuwashima on 2023/02/25.
 //
 
 import Metal
 
-public struct RectInfo: PrimitiveInfo {
+public struct RectShapeInfo: PrimitiveInfo {
     public static var vertices: [f3] = [
         Self.VertexPoint.A,
         Self.VertexPoint.B,
@@ -36,11 +36,4 @@ public struct RectInfo: PrimitiveInfo {
         static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
     }
     public static let primitiveType: MTLPrimitiveType = .triangleStrip
-}
-
-open class Rect: RectanglePlanePrimitive<RectInfo> {
-    
-    public required init() {
-        super.init()
-    }
 }
