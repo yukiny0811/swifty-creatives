@@ -20,7 +20,8 @@ open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
         hasTexture = [true]
     }
     
-    public func load(view: UIView) {
+    @discardableResult
+    public func load(view: UIView) -> Self {
         
         self.viewObj = view
         
@@ -37,6 +38,7 @@ open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
                 1
             )
         )
+        return self
     }
     override public func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)

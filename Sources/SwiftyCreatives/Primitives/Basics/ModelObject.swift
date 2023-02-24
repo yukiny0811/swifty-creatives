@@ -13,60 +13,8 @@ open class ModelObject: Primitive<ModelObjectInfo> {
     var mesh: [Any] = []
     var texture: MTLTexture?
     
-    public func loadModelFromInternal(name: String, extensionName: String) {
-        
-        let allocator = MTKMeshBufferAllocator(device: ShaderCore.device)
-
-        let vertexDescriptor = MDLVertexDescriptor()
-        vertexDescriptor.layouts = [
-            MDLVertexBufferLayout(stride: 16),
-            MDLVertexBufferLayout(stride: 8),
-            MDLVertexBufferLayout(stride: 16)
-        ]
-
-        vertexDescriptor.attributes = [
-            MDLVertexAttribute(name: MDLVertexAttributePosition, format: MDLVertexFormat.float3, offset: 0, bufferIndex: VertexAttributeIndex.Position.rawValue),
-            MDLVertexAttribute(name: MDLVertexAttributeTextureCoordinate, format: MDLVertexFormat.float2, offset: 0, bufferIndex: VertexAttributeIndex.UV.rawValue),
-            MDLVertexAttribute(name: MDLVertexAttributeNormal, format: MDLVertexFormat.float3, offset: 0, bufferIndex: VertexAttributeIndex.Normal.rawValue)
-        ]
-
-        let asset = MDLAsset(
-            url: Bundle.module.url(forResource: name, withExtension: extensionName)!,
-            vertexDescriptor: vertexDescriptor,
-            bufferAllocator: allocator
-        )
-        
-        asset.loadTextures()
-
-        mesh = try! MTKMesh.newMeshes(asset: asset, device: ShaderCore.device).metalKitMeshes
-        
-        let meshes = asset.childObjects(of: MDLMesh.self) as? [MDLMesh]
-        guard let mdlMesh = meshes?.first else {
-            fatalError("Did not find any meshes in the Model I/O asset")
-        }
-        
-        let textureLoader = MTKTextureLoader(device: ShaderCore.device)
-        let options: [MTKTextureLoader.Option : Any] = [
-            .textureUsage : MTLTextureUsage.shaderRead.rawValue,
-            .textureStorageMode : MTLStorageMode.private.rawValue,
-            .origin : MTKTextureLoader.Origin.bottomLeft.rawValue
-        ]
-        
-        for sub in mdlMesh.submeshes! as! [MDLSubmesh] {
-            if let baseColorProperty = sub.material?.property(
-                with: MDLMaterialSemantic.baseColor
-            ) {
-                if baseColorProperty.type == .texture, let textureURL = baseColorProperty.urlValue {
-                    let tex = try? textureLoader.newTexture(
-                        URL: textureURL,
-                        options: options)
-                    texture = tex
-                }
-            }
-        }
-    }
-    
-    public func loadModel(name: String, extensionName: String) {
+    @discardableResult
+    public func loadModel(name: String, extensionName: String) -> Self {
         
         let allocator = MTKMeshBufferAllocator(device: ShaderCore.device)
 
@@ -95,7 +43,7 @@ open class ModelObject: Primitive<ModelObjectInfo> {
         
         let meshes = asset.childObjects(of: MDLMesh.self) as? [MDLMesh]
         guard let mdlMesh = meshes?.first else {
-            fatalError("Did not find any meshes in the Model I/O asset")
+            return self
         }
         
         let textureLoader = MTKTextureLoader(device: ShaderCore.device)
@@ -117,6 +65,7 @@ open class ModelObject: Primitive<ModelObjectInfo> {
                 }
             }
         }
+        return self
     }
     override public func draw(_ encoder: SCEncoder) {
         

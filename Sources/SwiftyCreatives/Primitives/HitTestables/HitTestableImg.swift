@@ -10,7 +10,9 @@ import MetalKit
 open class HitTestableImg: RectanglePlanePrimitive<RectShapeInfo> {
     public override init() { super.init() }
     private var texture: MTLTexture?
-    public func load(image: CGImage) {
+    
+    @discardableResult
+    public func load(image: CGImage) -> Self {
         let tex = try! ShaderCore.textureLoader.newTexture(cgImage: image)
         self.texture = tex
         let longer: Float = Float(max(image.width, image.height))
@@ -21,6 +23,7 @@ open class HitTestableImg: RectanglePlanePrimitive<RectShapeInfo> {
                 1
             )
         )
+        return self
     }
     override public func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
