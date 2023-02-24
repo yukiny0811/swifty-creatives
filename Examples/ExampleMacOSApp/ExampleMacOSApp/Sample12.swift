@@ -27,7 +27,7 @@ class ColoredHitTestableBox: HitTestableBox {
 final class Sample12: Sketch {
     
     let numberFactory = NumberTextFactory(font: NSFont.systemFont(ofSize: 60))
-    let textFactory = GeneralTextFactory(font: NSFont.systemFont(ofSize: 60), register: "someTextFrameRate:" + GeneralTextFactory.Template.numerics)
+    let textFactory = GeneralTextFactory(font: NSFont.systemFont(ofSize: 60), register: "someTextFrameRate:" + TextFactory.Template.numerics)
     
     static let count = 6
     static let multiplier: Float = 5
@@ -71,7 +71,7 @@ final class Sample12: Sketch {
                 translate(0, boxes[x][y].scale.y + 1, 0)
                 drawNumberText(encoder: encoder, factory: numberFactory, number: Float(Int(boxes[x][y].height*10))/10)
                 translate(0, 1.5, 0)
-                drawGeneralText(encoder: encoder, factory: textFactory, text: "some Texts", spacing: 0.5, scale: 0.5)
+                drawGeneralText(encoder: encoder, factory: textFactory, text: "some Texts", spacing: 0.3, scale: 0.5, spacer: 0.7)
                 popMatrix()
             }
         }

@@ -16,10 +16,9 @@ public class TextFactory {
             let str = String(c)
             let attributedString = createAttributedString(character: str, font: font, color: .white)
             let characterImage = createCharacterImage(attributedString: attributedString)
-            let longer: Float = Float(max(characterImage.extent.width, characterImage.extent.height))
             registeredTextures[str] = TextFactory.TextureData(
                 texture: createCharacterTexture(image: characterImage),
-                size: f3(Float(characterImage.extent.width) / longer, Float(characterImage.extent.height) / longer, 1)
+                size: f3(Float(characterImage.extent.width / characterImage.extent.height), 1, 1)
             )
         }
     }
