@@ -10,6 +10,8 @@ import ModelIO
 
 open class ModelObject: Primitive<ModelObjectInfo> {
     
+    public override init() {}
+    
     var mesh: [Any] = []
     var texture: MTLTexture?
     
@@ -61,6 +63,13 @@ open class ModelObject: Primitive<ModelObjectInfo> {
                     let tex = try? textureLoader.newTexture(
                         URL: textureURL,
                         options: options)
+                    texture = tex
+                } else if baseColorProperty.type == .string {
+                    #if os(iOS)
+                    let tex = try? textureLoader.newTexture(cgImage: UIImage(named: baseColorProperty.stringValue!)!.cgImage!)
+                    #elseif os(macOS)
+                    let tex = try? textureLoader.newTexture(cgImage: NSImage(named: baseColorProperty.stringValue!)!.cgImage(forProposedRect: nil, context: nil, hints: nil)!)
+                    #endif
                     texture = tex
                 }
             }
