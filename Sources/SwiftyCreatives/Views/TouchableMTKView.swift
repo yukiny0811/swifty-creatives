@@ -17,7 +17,7 @@ public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
         self.frame = .zero
         self.delegate = renderer
         self.enableSetNeedsDisplay = false
-        self.colorPixelFormat = .bgra8Unorm_srgb
+        self.colorPixelFormat = .bgra8Unorm
         self.framebufferOnly = true
         self.preferredFramesPerSecond = 120
         self.autoResizeDrawable = true

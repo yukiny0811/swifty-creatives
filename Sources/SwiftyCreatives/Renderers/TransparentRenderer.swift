@@ -51,7 +51,7 @@ class TransparentRenderer<
         pipelineStateDescriptor.rasterSampleCount = 1
         pipelineStateDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
         pipelineStateDescriptor.stencilAttachmentPixelFormat = .depth32Float_stencil8
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         pipelineStateDescriptor.colorAttachments[0].isBlendingEnabled = false
         pipelineStateDescriptor.fragmentFunction = transparencyMethodFragmentFunction
         pipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
@@ -59,7 +59,7 @@ class TransparentRenderer<
         // MARK: - Tile descriptor
         let tileDesc = MTLTileRenderPipelineDescriptor()
         tileDesc.tileFunction = resolveFunction
-        tileDesc.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
+        tileDesc.colorAttachments[0].pixelFormat = .bgra8Unorm
         tileDesc.threadgroupSizeMatchesTileSize = true
         resolveState = try! ShaderCore.device.makeRenderPipelineState(tileDescriptor: tileDesc, options: .argumentInfo, reflection: nil) // FIXME: argumentinfo?
         
