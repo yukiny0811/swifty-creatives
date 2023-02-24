@@ -15,10 +15,8 @@ import simd
 
 open class Sketch: SketchBase {
     
-    @usableFromInline
     var customMatrix: [f4x4] = [f4x4.createIdentity()]
     
-    @usableFromInline
     private(set) var privateEncoder: SCEncoder?
     
     public var deltaTime: Float = 0

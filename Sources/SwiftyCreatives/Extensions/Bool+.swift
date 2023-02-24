@@ -6,7 +6,6 @@
 //
 
 extension Bool {
-    @usableFromInline
     static var memorySize: Int {
         return MemoryLayout<Self>.stride
     }
