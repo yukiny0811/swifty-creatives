@@ -8,16 +8,6 @@
 import MetalKit
 import ModelIO
 
-
-public struct ModelObjectInfo: PrimitiveInfo {
-    public static var vertices: [f3] = []
-    public static var uvs: [f2] = []
-    public static var normals: [f3] = []
-    public static let vertexCount: Int = 0
-    public static let primitiveType: MTLPrimitiveType = .triangleStrip
-    public static let hasTexture: [Bool] = [true]
-}
-
 open class ModelObject: Primitive<ModelObjectInfo> {
     
     var mesh: [Any] = []
