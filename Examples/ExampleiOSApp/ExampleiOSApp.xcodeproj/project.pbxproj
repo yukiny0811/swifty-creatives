@@ -20,6 +20,7 @@
 		563B3480295A2AE400AD9EEF /* TestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestView.xib; sourceTree = "<group>"; };
 		563B3482295A86E500AD9EEF /* SketchSample2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchSample2.swift; sourceTree = "<group>"; };
 		563B3484295A878D00AD9EEF /* SketchSample1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchSample1.swift; sourceTree = "<group>"; };
+		567B053529A89B2D003207FC /* ExampleiOSApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ExampleiOSApp.entitlements; sourceTree = "<group>"; };
 		56C53FE3294A689400962DD6 /* ExampleiOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleiOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56C53FEA294A689500962DD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56C53FED294A689500962DD6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -60,6 +61,7 @@
 		56C53FE5294A689400962DD6 /* ExampleiOSApp */ = {
 			isa = PBXGroup;
 			children = (
+				567B053529A89B2D003207FC /* ExampleiOSApp.entitlements */,
 				56C53FF9294A695300962DD6 /* ExampleiOSApp.swift */,
 				563B3484295A878D00AD9EEF /* SketchSample1.swift */,
 				563B3482295A86E500AD9EEF /* SketchSample2.swift */,
@@ -297,6 +299,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ExampleiOSApp/ExampleiOSApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ExampleiOSApp/Preview Content\"";
@@ -315,6 +318,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yukiny.swiftyCreatives.ExampleiOSApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -328,6 +334,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ExampleiOSApp/ExampleiOSApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ExampleiOSApp/Preview Content\"";
@@ -346,6 +353,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yukiny.swiftyCreatives.ExampleiOSApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
