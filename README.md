@@ -13,12 +13,12 @@ Using Metal directly for rendering.
 ## Features
 - Geometry
     - 2D
-        - Rectangle
+        - Rectangle (with hit test)
         - Circle
         - Triangle
         - Line
     - 3D
-        - Box
+        - Box (with hit test)
         - 3D Model
     - Others
         - Image
