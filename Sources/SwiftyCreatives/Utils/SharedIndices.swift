@@ -7,12 +7,14 @@
 //
 // from Resources/Shaders/SharedIndices.h
 
+@usableFromInline
 enum VertexAttributeIndex: Int {
     case Position = 0
     case UV = 1
     case Normal = 2
 }
 
+@usableFromInline
 enum VertexBufferIndex: Int {
     case Position = 0
     case ModelPos = 1
@@ -27,6 +29,7 @@ enum VertexBufferIndex: Int {
     case CustomMatrix = 15
 }
 
+@usableFromInline
 enum FragmentBufferIndex: Int {
     case Material = 1
     case LightCount = 2
@@ -37,6 +40,7 @@ enum FragmentBufferIndex: Int {
     case FogColor = 17
 }
 
+@usableFromInline
 enum FragmentTextureIndex: Int {
     case MainTexture = 0
 }

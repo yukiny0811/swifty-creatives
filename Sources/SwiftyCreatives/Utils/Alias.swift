@@ -40,7 +40,7 @@ public typealias FontAlias = NSFont
 public typealias FontAlias = UIFont
 #endif
 
-// MARK: Color
+// MARK: - Color
 #if os(macOS)
 public typealias ColorAlias = NSColor
 #elseif os(iOS)

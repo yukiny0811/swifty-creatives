@@ -177,29 +177,12 @@ public extension Sketch {
         popMatrix()
     }
     
-    func drawNumberText(encoder: SCEncoder, factory: NumberTextFactory, text: String, spacing: Float = 1, scale: Float = 1) {
-        encoder.setVertexBytes(RectInfo.vertices, length: RectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
-        encoder.setVertexBytes([f3.one], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
-        encoder.setVertexBytes([f4.one], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
-        encoder.setVertexBytes(RectInfo.uvs, length: RectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        encoder.setVertexBytes(RectInfo.normals, length: RectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
-        encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
-        pushMatrix()
-        let characterCount: Float = Float(text.count - 1)
-        translate(-spacing * characterCount / 2, 0, 0)
-        for n in text {
-            let index = NumberTextFactory.indexDictionary[String(n)]!
-            encoder.setFragmentTexture(
-                factory.numberTexture[index],
-                index: FragmentTextureIndex.MainTexture.rawValue)
-            encoder.setVertexBytes([factory.sizes[index] * scale], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
-            encoder.drawPrimitives(type: TextObjectInfo.primitiveType, vertexStart: 0, vertexCount: TextObjectInfo.vertices.count)
-            translate(spacing, 0, 0)
-        }
-        popMatrix()
+    func drawNumberText<T: Numeric>(encoder: SCEncoder, factory: NumberTextFactory, number: T, spacing: Float = 1, scale: Float = 1) {
+        let text = String(describing: number)
+        drawGeneralText(encoder: encoder, factory: factory, text: text, spacing: spacing, scale: scale)
     }
     
-    func drawGeneralText(encoder: SCEncoder, factory: GeneralTextFactory, text: String, spacing: Float = 1, scale: Float = 1) {
+    func drawGeneralText(encoder: SCEncoder, factory: TextFactory, text: String, spacing: Float = 1, scale: Float = 1) {
         encoder.setVertexBytes(RectInfo.vertices, length: RectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes([f3.one], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes([f4.one], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
@@ -211,6 +194,7 @@ public extension Sketch {
         translate(-spacing * characterCount / 2, 0, 0)
         for n in text {
             guard let data = factory.registeredTextures[String(n)] else {
+                translate(spacing, 0, 0)
                 continue
             }
             encoder.setFragmentTexture(data.texture, index: FragmentTextureIndex.MainTexture.rawValue)

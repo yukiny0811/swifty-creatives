@@ -17,9 +17,9 @@ class ColoredHitTestableBox: HitTestableBox {
     func reset() {
         target = Float.random(in: 1...13)
     }
-    func update() {
+    func update(deltaTime: Float) {
         let diff = target - height
-        let changeValue = diff * 0.1
+        let changeValue = diff * deltaTime * 8
         height += changeValue
     }
 }
@@ -27,7 +27,7 @@ class ColoredHitTestableBox: HitTestableBox {
 final class Sample12: Sketch {
     
     let numberFactory = NumberTextFactory(font: NSFont.systemFont(ofSize: 60))
-    let textFactory = GeneralTextFactory(font: NSFont.systemFont(ofSize: 60), register: "日本語ですこんにちはやっほー")
+    let textFactory = GeneralTextFactory(font: NSFont.systemFont(ofSize: 60), register: "someTextFrameRate:" + GeneralTextFactory.Template.numerics)
     
     static let count = 6
     static let multiplier: Float = 5
@@ -53,12 +53,13 @@ final class Sample12: Sketch {
     override func update(camera: some MainCameraBase) {
         for x in 0...Self.count {
             for y in 0...Self.count {
-                boxes[x][y].update()
+                boxes[x][y].update(deltaTime: deltaTime)
             }
         }
     }
     
     override func draw(encoder: SCEncoder) {
+        pushMatrix()
         translate(-15, -15, -15)
         for x in 0...Self.count {
             for y in 0...Self.count {
@@ -68,12 +69,15 @@ final class Sample12: Sketch {
                 translate(0, boxes[x][y].scale.y, 0)
                 drawHitTestableBox(box: boxes[x][y])
                 translate(0, boxes[x][y].scale.y + 1, 0)
-                drawNumberText(encoder: encoder, factory: numberFactory, text: String( Float(Int(boxes[x][y].height*10))/10 ))
-                translate(0, 2, 0)
-                drawGeneralText(encoder: encoder, factory: textFactory, text: "日本語", spacing: 0.9, scale: 0.5)
+                drawNumberText(encoder: encoder, factory: numberFactory, number: Float(Int(boxes[x][y].height*10))/10)
+                translate(0, 1.5, 0)
+                drawGeneralText(encoder: encoder, factory: textFactory, text: "some Texts", spacing: 0.5, scale: 0.5)
                 popMatrix()
             }
         }
+        popMatrix()
+        translate(0, 15, 0)
+        drawGeneralText(encoder: encoder, factory: textFactory, text: "FrameRate: \(Int(frameRate))")
     }
     
     override func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
