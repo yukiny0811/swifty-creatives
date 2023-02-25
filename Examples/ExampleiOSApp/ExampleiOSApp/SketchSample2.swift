@@ -10,7 +10,7 @@ import UIKit
 
 final class SketchSample2: Sketch {
     
-    let postProcessor = PostProcessor(type: .plain)
+    let postProcessor = PostProcessor(type: .cornerRadius(100))
     
     var viewObj = UIViewObject()
     var r: Float = 0.0
@@ -19,7 +19,6 @@ final class SketchSample2: Sketch {
     override init() {
         super.init()
         let view: TestView = TestView.fromNib(type: TestView.self)
-        view.layer.cornerRadius = 36
         view.onHit = {
             self.rFinal += Float.pi / 2
         }
