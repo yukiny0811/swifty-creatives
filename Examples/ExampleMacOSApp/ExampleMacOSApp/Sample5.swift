@@ -20,6 +20,6 @@ final class Sample5: Sketch {
         camera.rotateAroundY(0.01)
     }
     override func draw(encoder: SCEncoder) {
-        object.draw(0, 0, 0, encoder)
+        object.draw(encoder)
     }
 }

@@ -10,7 +10,7 @@ import CoreImage.CIFilterBuiltins
 import CoreGraphics
 
 open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
-    private var texture: MTLTexture?
+    private(set) public var texture: MTLTexture?
     
     public override init() {
         super.init()
@@ -76,7 +76,12 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         #endif
         
         let im = ctx.makeImage()!
-        let tex = try! ShaderCore.textureLoader.newTexture(cgImage: im)
+        let tex = try! ShaderCore.textureLoader.newTexture(
+            cgImage: im,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
         self.texture = tex
         
         let longer: Float = Float(max(im.width, im.height))
@@ -111,8 +116,12 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         )!
         
         let outputImage = filter.outputImage!
-        let loader = MTKTextureLoader(device: ShaderCore.device)
-        let tex = try! loader.newTexture(cgImage: ShaderCore.context.createCGImage(outputImage, from: outputImage.extent)!)
+        let tex = try! ShaderCore.textureLoader.newTexture(
+            cgImage: ShaderCore.context.createCGImage(outputImage, from: outputImage.extent)!,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
         self.texture = tex
         
         let longer: Float = Float(max(outputImage.extent.width, outputImage.extent.height))

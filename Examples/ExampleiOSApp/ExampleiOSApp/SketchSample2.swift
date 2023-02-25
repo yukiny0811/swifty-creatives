@@ -10,6 +10,8 @@ import UIKit
 
 final class SketchSample2: Sketch {
     
+    let postProcessor = PostProcessor(type: .plain)
+    
     var viewObj = UIViewObject()
     var r: Float = 0.0
     var rFinal: Float = 0.0
@@ -34,6 +36,7 @@ final class SketchSample2: Sketch {
     override func draw(encoder: SCEncoder) {
         rotateZ(r)
         viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
+        postProcessor.postProcess(texture: viewObj.texture!)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {

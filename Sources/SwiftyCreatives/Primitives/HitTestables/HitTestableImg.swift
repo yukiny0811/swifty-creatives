@@ -9,11 +9,16 @@ import MetalKit
 
 open class HitTestableImg: RectanglePlanePrimitive<RectShapeInfo> {
     public override init() { super.init() }
-    private var texture: MTLTexture?
+    private(set) public var texture: MTLTexture?
     
     @discardableResult
     public func load(image: CGImage) -> Self {
-        let tex = try! ShaderCore.textureLoader.newTexture(cgImage: image)
+        let tex = try! ShaderCore.textureLoader.newTexture(
+            cgImage: image,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
         self.texture = tex
         let longer: Float = Float(max(image.width, image.height))
         self.setScale(

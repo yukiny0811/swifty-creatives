@@ -11,7 +11,7 @@ import MetalKit
 import UIKit
 
 open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
-    private var texture: MTLTexture?
+    private(set) public var texture: MTLTexture?
     
     public var viewObj: UIView?
     
@@ -27,8 +27,12 @@ open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
         
         let image = view.convertToImage().cgImage!
         
-        let loader = MTKTextureLoader(device: ShaderCore.device)
-        let tex = try! loader.newTexture(cgImage: image)
+        let tex = try! ShaderCore.textureLoader.newTexture(
+            cgImage: image,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
         self.texture = tex
         let longer: Float = Float(max(image.width, image.height))
         self.setScale(
