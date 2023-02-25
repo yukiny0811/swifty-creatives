@@ -15,7 +15,7 @@ open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
     
     public var viewObj: UIView?
     
-    public required init() {
+    public override init() {
         super.init()
         hasTexture = [true]
     }
@@ -41,14 +41,14 @@ open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
         return self
     }
     override public func draw(_ encoder: SCEncoder) {
-        encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
-        encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        encoder.setVertexBytes(UIViewObjectInfo.normals, length: UIViewObjectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
         encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         encoder.setFragmentTexture(self.texture, index: FragmentTextureIndex.MainTexture.rawValue)
-        encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertices.count)
+        encoder.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
     public func buttonTest(origin: f3, direction: f3, testDistance: Float = 3000) {
