@@ -32,17 +32,18 @@ public class TextFactory {
     }
     
     func createCharacterImage(attributedString: NSAttributedString) -> CIImage {
-        let filter = CIFilter(
-            name: "CIAttributedTextImageGenerator",
-            parameters: [
-                "inputText": attributedString,
-                "inputScaleFactor": 3.0
-            ]
-        )!
+        let filter = CIFilter.attributedTextImageGenerator()
+        filter.text = attributedString
+        filter.scaleFactor = 3.0
         return filter.outputImage!
     }
     
     func createCharacterTexture(image: CIImage) -> MTLTexture {
-        return try! ShaderCore.textureLoader.newTexture(cgImage: ShaderCore.context.createCGImage(image, from: image.extent)!)
+        return try! ShaderCore.textureLoader.newTexture(
+            cgImage: ShaderCore.context.createCGImage(image, from: image.extent)!,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
     }
 }

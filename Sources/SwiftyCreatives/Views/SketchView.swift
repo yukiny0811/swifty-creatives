@@ -41,7 +41,7 @@ public struct SketchView<
     }
     #elseif os(iOS)
     public func makeUIView(context: Context) -> MTKView {
-        let mtkView = TouchableMTKView<CameraConfig>(renderer: renderer)
+        let mtkView = TouchableMTKView<CameraConfig, DrawConfig>(renderer: renderer)
         return mtkView
     }
     public func updateUIView(_ uiView: MTKView, context: Context) {

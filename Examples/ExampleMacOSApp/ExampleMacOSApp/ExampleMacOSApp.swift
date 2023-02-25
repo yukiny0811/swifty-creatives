@@ -13,7 +13,7 @@ struct ExampleMacOSApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-//                SketchView<MainCameraConfig, MainDrawConfig>(Sample1())
+                SketchView<MainCameraConfig, MainDrawConfig>(Sample1())
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample2())
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample3())
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample4())
@@ -24,7 +24,7 @@ struct ExampleMacOSApp: App {
 //                SketchView<MainCameraConfig, Sample9DrawConfig>(Sample9())
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample10())
 //                SketchView<MainCameraConfig, MainDrawConfig>(Sample11())
-                SketchView<MainCameraConfig, MainDrawConfig>(Sample12())
+//                SketchView<MainCameraConfig, MainDrawConfig>(Sample12())
             }
             .background(.black)
         }
