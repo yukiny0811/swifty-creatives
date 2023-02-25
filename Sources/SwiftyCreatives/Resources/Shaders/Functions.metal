@@ -94,3 +94,7 @@ inline float4 createFog(float distance, float4 color, float density, float4 fogC
     float fog = 1.0 - clamp(exp(-density * distance), 0.0, 1.0);
     return mix(color, fogColor, fog);
 }
+
+inline float dist(float2 p1, float2 p2) {
+    return pow(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2), 0.5);
+}

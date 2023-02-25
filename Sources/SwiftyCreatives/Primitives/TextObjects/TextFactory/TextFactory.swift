@@ -16,10 +16,9 @@ public class TextFactory {
             let str = String(c)
             let attributedString = createAttributedString(character: str, font: font, color: .white)
             let characterImage = createCharacterImage(attributedString: attributedString)
-            let longer: Float = Float(max(characterImage.extent.width, characterImage.extent.height))
             registeredTextures[str] = TextFactory.TextureData(
                 texture: createCharacterTexture(image: characterImage),
-                size: f3(Float(characterImage.extent.width) / longer, Float(characterImage.extent.height) / longer, 1)
+                size: f3(Float(characterImage.extent.width / characterImage.extent.height), 1, 1)
             )
         }
     }
@@ -33,17 +32,18 @@ public class TextFactory {
     }
     
     func createCharacterImage(attributedString: NSAttributedString) -> CIImage {
-        let filter = CIFilter(
-            name: "CIAttributedTextImageGenerator",
-            parameters: [
-                "inputText": attributedString,
-                "inputScaleFactor": 3.0
-            ]
-        )!
+        let filter = CIFilter.attributedTextImageGenerator()
+        filter.text = attributedString
+        filter.scaleFactor = 3.0
         return filter.outputImage!
     }
     
     func createCharacterTexture(image: CIImage) -> MTLTexture {
-        return try! ShaderCore.textureLoader.newTexture(cgImage: ShaderCore.context.createCGImage(image, from: image.extent)!)
+        return try! ShaderCore.textureLoader.newTexture(
+            cgImage: ShaderCore.context.createCGImage(image, from: image.extent)!,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
     }
 }

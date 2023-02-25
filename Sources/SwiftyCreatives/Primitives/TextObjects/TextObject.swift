@@ -9,41 +9,12 @@ import MetalKit
 import CoreImage.CIFilterBuiltins
 import CoreGraphics
 
-public struct TextObjectInfo: PrimitiveInfo {
-    public static var vertices: [f3] = [
-        Self.VertexPoint.A,
-        Self.VertexPoint.B,
-        Self.VertexPoint.D,
-        Self.VertexPoint.C
-    ]
+open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
+    private(set) public var originalTexture: MTLTexture?
+    private(set) public var texture: MTLTexture?
+    private var textPostProcessor = TextPostProcessor()
     
-    public static var uvs: [f2] = [
-        f2(0, 0),
-        f2(0, 1),
-        f2(1, 0),
-        f2(1, 1)
-    ]
-    
-    public static var normals: [f3] = [
-        f3(0, 0, 1),
-        f3(0, 0, 1),
-        f3(0, 0, 1),
-        f3(0, 0, 1)
-    ]
-    
-    public final class VertexPoint {
-        static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
-        static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
-        static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
-        static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
-    }
-    public static let primitiveType: MTLPrimitiveType = .triangleStrip
-}
-
-open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
-    private var texture: MTLTexture?
-    
-    public required init() {
+    public override init() {
         super.init()
         hasTexture = [true]
     }
@@ -54,10 +25,10 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         return paragraphStyle
     }
     
-    func createAttributedString(text: String, font: FontAlias, color: ColorAlias, paragraphStyle: NSParagraphStyle) -> NSAttributedString {
+    func createAttributedString(text: String, font: FontAlias, paragraphStyle: NSParagraphStyle) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
-            .foregroundColor: color,
+            .foregroundColor: ColorAlias.white,
             .paragraphStyle: paragraphStyle
         ]
         let attributedString = NSAttributedString(string: text, attributes: attributes)
@@ -70,7 +41,7 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
     }
     
     @discardableResult
-    public func setDetailedText(_ text: String, font: FontAlias, color: ColorAlias, resolution: CGSize, framePath: CGPath? = nil) -> Self {
+    public func setDetailedText(_ text: String, font: FontAlias, resolution: CGSize, framePath: CGPath? = nil) -> Self {
         
         let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: MTLPixelFormat.rgba8Unorm,
@@ -78,19 +49,18 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
             height: Int(resolution.height),
             mipmapped: false)
         textureDescriptor.usage = [.shaderWrite, .shaderRead]
-        texture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)!
-        
+        originalTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)!
         #if os(iOS)
         UIGraphicsBeginImageContextWithOptions(resolution, false, 0)
         guard let ctx = UIGraphicsGetCurrentContext() else { return self }
         ctx.translateBy(x: 0, y: resolution.height)
         ctx.scaleBy(x: 1, y: -1)
         #elseif os(macOS)
-        let gContext = NSGraphicsContext.init(bitmapImageRep: NSBitmapImageRep(ciImage: CIImage(mtlTexture: texture!)!))!
+        let gContext = NSGraphicsContext.init(bitmapImageRep: NSBitmapImageRep(ciImage: CIImage(mtlTexture: originalTexture!)!))!
         let ctx = gContext.cgContext
         #endif
         let paragraphStyle = createParagraphStyle()
-        let attributedString = createAttributedString(text: text, font: font, color: color, paragraphStyle: paragraphStyle)
+        let attributedString = createAttributedString(text: text, font: font, paragraphStyle: paragraphStyle)
         let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
         if let framePath = framePath {
             let framesetterFrame = createFramesetterFrame(framesetter: framesetter, framePath: framePath)
@@ -107,8 +77,13 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         #endif
         
         let im = ctx.makeImage()!
-        let tex = try! ShaderCore.textureLoader.newTexture(cgImage: im)
-        self.texture = tex
+        originalTexture = try! ShaderCore.textureLoader.newTexture(
+            cgImage: im,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
+        self.texture = originalTexture
         
         let longer: Float = Float(max(im.width, im.height))
         self.setScale(f3(
@@ -133,18 +108,18 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         
         let attributedText = NSAttributedString(string: text, attributes: attributes)
         
-        let filter = CIFilter(
-            name: "CIAttributedTextImageGenerator",
-            parameters: [
-                "inputText": attributedText,
-                "inputScaleFactor": 3.0
-            ]
-        )!
+        let filter = CIFilter.attributedTextImageGenerator()
+        filter.text = attributedText
+        filter.scaleFactor = 3.0
         
         let outputImage = filter.outputImage!
-        let loader = MTKTextureLoader(device: ShaderCore.device)
-        let tex = try! loader.newTexture(cgImage: ShaderCore.context.createCGImage(outputImage, from: outputImage.extent)!)
-        self.texture = tex
+        originalTexture = try! ShaderCore.textureLoader.newTexture(
+            cgImage: ShaderCore.context.createCGImage(outputImage, from: outputImage.extent)!,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
+        self.texture = originalTexture
         
         let longer: Float = Float(max(outputImage.extent.width, outputImage.extent.height))
         
@@ -155,14 +130,15 @@ open class TextObject: RectanglePlanePrimitive<TextObjectInfo> {
         ))
         return self
     }
-    public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: SCEncoder) {
-        encoder.setVertexBytes(TextObjectInfo.vertices, length: TextObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+    public override func draw(_ encoder: SCEncoder) {
+        textPostProcessor.postProcessColor(originalTexture: originalTexture!, texture: self.texture!, color: self.color)
+        encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
-        encoder.setVertexBytes(TextObjectInfo.uvs, length: TextObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        encoder.setVertexBytes(TextObjectInfo.normals, length: TextObjectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
         encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         encoder.setFragmentTexture(self.texture, index: FragmentTextureIndex.MainTexture.rawValue)
-        encoder.drawPrimitives(type: TextObjectInfo.primitiveType, vertexStart: 0, vertexCount: TextObjectInfo.vertices.count)
+        encoder.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
 }

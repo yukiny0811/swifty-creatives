@@ -10,14 +10,11 @@ import MetalKit
 public class AddRenderer<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate, RendererBase {
+>: RendererBase<CameraConfig, DrawConfig> {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
-    var drawProcess: SketchBase
-    var camera: MainCamera<CameraConfig>
     let renderPipelineState: MTLRenderPipelineState
-    var savedDate: Date = Date()
 
     public init(sketch: SketchBase) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -35,36 +32,18 @@ public class AddRenderer<
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
-        
-        self.drawProcess = sketch
-        
-        camera = MainCamera()
-        
-        super.init()
-        
+        super.init(drawProcess: sketch)
         self.drawProcess.setupCamera(camera: camera)
-        
-        savedDate = Date()
     }
 
-    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    public override func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         guard view.frame.size != size else {
             return
         }
     }
 
-    public func draw(in view: MTKView) {
-        
-        calculateDeltaTime()
-        
-        view.drawableSize = CGSize(
-            width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
-            height: view.frame.size.height * CGFloat(DrawConfig.contentScaleFactor)
-        )
-        camera.setFrame(
-            width: Float(view.frame.size.width) * Float(DrawConfig.contentScaleFactor),
-            height: Float(view.frame.size.height) * Float(DrawConfig.contentScaleFactor)
-        )
+    public override func draw(in view: MTKView) {
+        super.draw(in: view)
         guard let drawable = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
             return
         }

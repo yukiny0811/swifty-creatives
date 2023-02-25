@@ -7,11 +7,14 @@
 
 import MetalKit
 
-public class TouchableMTKView<CameraConfig: CameraConfigBase>: MTKView {
+public class TouchableMTKView<
+    CameraConfig: CameraConfigBase,
+    DrawConfig: DrawConfigBase
+>: MTKView {
     
-    var renderer: any RendererBase
+    var renderer: RendererBase<CameraConfig, DrawConfig>
     
-    init(renderer: any RendererBase) {
+    init(renderer: RendererBase<CameraConfig, DrawConfig>) {
         self.renderer = renderer
         super.init(frame: .zero, device: ShaderCore.device)
         self.frame = .zero

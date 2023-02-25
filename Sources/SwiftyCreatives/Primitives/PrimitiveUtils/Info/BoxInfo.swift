@@ -1,8 +1,8 @@
 //
-//  Box.swift
+//  File.swift
+//  
 //
-//
-//  Created by Yuki Kuwashima on 2022/12/16.
+//  Created by Yuki Kuwashima on 2023/02/25.
 //
 
 import Metal
@@ -133,10 +133,4 @@ public struct BoxInfo: PrimitiveInfo {
         f3(0, -1, 0),
         f3(0, -1, 0)
     ]
-}
-
-open class Box: Primitive<BoxInfo> {
-    public required init() {
-        super.init()
-    }
 }

@@ -17,9 +17,9 @@ public class KitSketchView<
     DrawProcess: SketchBase,
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: TouchableMTKView<CameraConfig> {
+>: TouchableMTKView<CameraConfig, DrawConfig> {
     
-    var _renderer: any RendererBase
+    var _renderer: RendererBase<CameraConfig, DrawConfig>
     
     public init(_ sketch: SketchBase) {
         _renderer = DrawConfig.blendMode.getRenderer(

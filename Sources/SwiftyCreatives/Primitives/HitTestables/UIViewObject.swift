@@ -10,55 +10,29 @@
 import MetalKit
 import UIKit
 
-public struct UIViewObjectInfo: PrimitiveInfo {
-    public static var vertices: [f3] = [
-        Self.VertexPoint.A,
-        Self.VertexPoint.B,
-        Self.VertexPoint.D,
-        Self.VertexPoint.C
-    ]
-    
-    public static var uvs: [f2] = [
-        f2(0, 0),
-        f2(0, 1),
-        f2(1, 0),
-        f2(1, 1)
-    ]
-    
-    public static var normals: [f3] = [
-        f3(0, 0, 1),
-        f3(0, 0, 1),
-        f3(0, 0, 1),
-        f3(0, 0, 1)
-    ]
-    
-    public final class VertexPoint {
-        static let A: f3 = f3(x: -1.0, y:   1.0, z:   0.0)
-        static let B: f3 = f3(x: -1.0, y:  -1.0, z:   0.0)
-        static let C: f3 = f3(x:  1.0, y:  -1.0, z:   0.0)
-        static let D: f3 = f3(x:  1.0, y:   1.0, z:   0.0)
-    }
-    public static let primitiveType: MTLPrimitiveType = .triangleStrip
-}
-
-open class UIViewObject: RectanglePlanePrimitive<UIViewObjectInfo> {
-    private var texture: MTLTexture?
+open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
+    private(set) public var texture: MTLTexture?
     
     public var viewObj: UIView?
     
-    public required init() {
+    public override init() {
         super.init()
         hasTexture = [true]
     }
     
-    public func load(view: UIView) {
+    @discardableResult
+    public func load(view: UIView) -> Self {
         
         self.viewObj = view
         
         let image = view.convertToImage().cgImage!
         
-        let loader = MTKTextureLoader(device: ShaderCore.device)
-        let tex = try! loader.newTexture(cgImage: image)
+        let tex = try! ShaderCore.textureLoader.newTexture(
+            cgImage: image,
+            options: [
+                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+            ]
+        )
         self.texture = tex
         let longer: Float = Float(max(image.width, image.height))
         self.setScale(
@@ -68,16 +42,17 @@ open class UIViewObject: RectanglePlanePrimitive<UIViewObjectInfo> {
                 1
             )
         )
+        return self
     }
     override public func draw(_ encoder: SCEncoder) {
-        encoder.setVertexBytes(UIViewObjectInfo.vertices, length: UIViewObjectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
-        encoder.setVertexBytes(UIViewObjectInfo.uvs, length: UIViewObjectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        encoder.setVertexBytes(UIViewObjectInfo.normals, length: UIViewObjectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
         encoder.setFragmentBytes(self.hasTexture, length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         encoder.setFragmentTexture(self.texture, index: FragmentTextureIndex.MainTexture.rawValue)
-        encoder.drawPrimitives(type: UIViewObjectInfo.primitiveType, vertexStart: 0, vertexCount: UIViewObjectInfo.vertices.count)
+        encoder.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
     public func buttonTest(origin: f3, direction: f3, testDistance: Float = 3000) {

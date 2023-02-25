@@ -7,7 +7,7 @@
 
 import simd
 
-open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
+open class Primitive<Info: PrimitiveInfo> {
     
     open var hasTexture: [Bool] = [false]
     open var isActiveToLight: [Bool] = [false]
@@ -19,7 +19,7 @@ open class Primitive<Info: PrimitiveInfo>: PrimitiveBase {
     public var color: f4 { _color[0] }
     public var scale: f3 { _mScale[0] }
     
-    required public init() {}
+    init() {}
     
     @discardableResult
     public func setColor(_ value: f4) -> Self {

@@ -8,6 +8,7 @@
 import simd
 
 open class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<Info> {
+    override init() { super.init() }
     private func calculateHitTest(origin: f3, direction: f3, testDistance: Float) -> (globalPos: f3, localPos: f3)? {
         
         let model = f4x4.createIdentity()

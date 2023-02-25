@@ -1,8 +1,8 @@
 //
-//  Triangle.swift
+//  File.swift
+//  
 //
-//
-//  Created by Yuki Kuwashima on 2022/12/16.
+//  Created by Yuki Kuwashima on 2023/02/25.
 //
 
 import Metal
@@ -32,10 +32,4 @@ public struct TriangleInfo: PrimitiveInfo {
         f3(0, 0, 1),
         f3(0, 0, 1)
     ]
-}
-
-open class Triangle: Primitive<TriangleInfo> {
-    public required init() {
-        super.init()
-    }
 }

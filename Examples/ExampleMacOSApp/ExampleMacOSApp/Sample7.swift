@@ -45,6 +45,6 @@ final class Sample7: Sketch {
             boxes[i].draw(encoder)
             popMatrix()
         }
-        text.draw(0, 0, 0, encoder)
+        text.draw(encoder)
     }
 }

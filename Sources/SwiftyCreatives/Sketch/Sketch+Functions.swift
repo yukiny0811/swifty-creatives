@@ -6,6 +6,9 @@
 //
 
 import simd
+#if os(macOS)
+import AppKit
+#endif
 
 public extension Sketch {
     
@@ -26,11 +29,11 @@ public extension Sketch {
     func rect(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float) {
         privateEncoder?.setVertexBytes([f3(x, y, z)], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
         privateEncoder?.setVertexBytes([f3(scaleX, scaleY, 1)], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
-        privateEncoder?.setVertexBytes(RectInfo.vertices, length: RectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
-        privateEncoder?.setVertexBytes(RectInfo.uvs, length: RectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        privateEncoder?.setVertexBytes(RectInfo.normals, length: RectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        privateEncoder?.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        privateEncoder?.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        privateEncoder?.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
         privateEncoder?.setFragmentBytes([false], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
-        privateEncoder?.drawPrimitives(type: RectInfo.primitiveType, vertexStart: 0, vertexCount: RectInfo.vertices.count)
+        privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
     func circle(_ x: Float, _ y: Float, _ z: Float, _ radX: Float, _ radY: Float) {
@@ -182,26 +185,45 @@ public extension Sketch {
         drawGeneralText(encoder: encoder, factory: factory, text: text, spacing: spacing, scale: scale)
     }
     
-    func drawGeneralText(encoder: SCEncoder, factory: TextFactory, text: String, spacing: Float = 1, scale: Float = 1) {
-        encoder.setVertexBytes(RectInfo.vertices, length: RectInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+    func drawGeneralText(encoder: SCEncoder, factory: TextFactory, text: String, spacing: Float = 1, scale: Float = 1, spacer: Float = 1) {
+        encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes([f3.one], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes([f4.one], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
-        encoder.setVertexBytes(RectInfo.uvs, length: RectInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        encoder.setVertexBytes(RectInfo.normals, length: RectInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        encoder.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
         encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         pushMatrix()
-        let characterCount: Float = Float(text.count - 1)
-        translate(-spacing * characterCount / 2, 0, 0)
+        var totalLength: Float = 0
         for n in text {
             guard let data = factory.registeredTextures[String(n)] else {
-                translate(spacing, 0, 0)
+                totalLength += spacer
+                continue
+            }
+            totalLength += data.size.x * scale
+            totalLength += spacing
+        }
+        totalLength -= spacing
+        translate(-totalLength / 2, 0, 0)
+        for n in text {
+            guard let data = factory.registeredTextures[String(n)] else {
+                translate(spacer, 0, 0)
                 continue
             }
             encoder.setFragmentTexture(data.texture, index: FragmentTextureIndex.MainTexture.rawValue)
             encoder.setVertexBytes([data.size * scale], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
-            encoder.drawPrimitives(type: TextObjectInfo.primitiveType, vertexStart: 0, vertexCount: TextObjectInfo.vertices.count)
+            encoder.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
+            translate(data.size.x * scale, 0, 0)
             translate(spacing, 0, 0)
         }
         popMatrix()
     }
+    
+    #if os(macOS)
+    func mousePos(event: NSEvent, viewFrame: NSRect) -> f2 {
+        var location = event.locationInWindow
+        location.y = event.window!.contentRect(forFrameRect: event.window!.frame).height - location.y
+        location -= CGPoint(x: viewFrame.minX, y: viewFrame.minY)
+        return f2(Float(location.x), Float(location.y))
+    }
+    #endif
 }

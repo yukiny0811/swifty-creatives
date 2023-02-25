@@ -1,21 +1,14 @@
 //
-//  RendererBase.swift
+//  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2022/12/14.
+//  Created by Yuki Kuwashima on 2023/02/26.
 //
 
-import MetalKit
-import simd
-
-protocol RendererBase: MTKViewDelegate {
-    associatedtype Camera: MainCameraBase
-    var camera: Camera { get }
-    var drawProcess: any SketchBase { get set }
-    var savedDate: Date { get set }
-}
+import Metal
 
 extension RendererBase {
+    
     static func createVertexDescriptor() -> MTLVertexDescriptor {
         let vertexDescriptor = MTLVertexDescriptor()
         
@@ -45,6 +38,7 @@ extension RendererBase {
         
         return vertexDescriptor
     }
+    
     static func createDepthStencilDescriptor(compareFunc: MTLCompareFunction, writeDepth: Bool) -> MTLDepthStencilDescriptor {
         let depthStateDesc = MTLDepthStencilDescriptor()
         depthStateDesc.depthCompareFunction = compareFunc
@@ -70,12 +64,5 @@ extension RendererBase {
         
         encoder.setFragmentBytes([0.0], length: Float.memorySize, index: FragmentBufferIndex.FogDensity.rawValue)
         encoder.setFragmentBytes([f4.zero], length: f4.memorySize, index: FragmentBufferIndex.FogColor.rawValue)
-    }
-    
-    func calculateDeltaTime() {
-        let date = Date()
-        let elapsed: Float = Float(date.timeIntervalSince(savedDate))
-        drawProcess.deltaTime = elapsed
-        savedDate = date
     }
 }
