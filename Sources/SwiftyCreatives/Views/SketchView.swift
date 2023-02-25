@@ -19,7 +19,7 @@ public struct SketchView<
     DrawConfig: DrawConfigBase
 >: ViewRepresentable {
     
-    let renderer: any RendererBase
+    let renderer: RendererBase<CameraConfig, DrawConfig>
     
     let drawProcess: SketchBase
     
@@ -34,7 +34,7 @@ public struct SketchView<
     
     #if os(macOS)
     public func makeNSView(context: Context) -> MTKView {
-        let mtkView = TouchableMTKView<CameraConfig>(renderer: renderer)
+        let mtkView = TouchableMTKView<CameraConfig, DrawConfig>(renderer: renderer)
         return mtkView
     }
     public func updateNSView(_ nsView: MTKView, context: Context) {
