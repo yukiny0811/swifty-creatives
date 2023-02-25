@@ -124,7 +124,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         ))
         return self
     }
-    public func draw(_ x: Float, _ y: Float, _ z: Float, _ encoder: SCEncoder) {
+    public override func draw(_ encoder: SCEncoder) {
         encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
