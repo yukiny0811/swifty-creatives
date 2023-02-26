@@ -131,6 +131,12 @@ public class TouchableMTKView<
         renderer.drawProcess.viewDidEndLiveResize(camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func scrollWheel(with event: NSEvent) {
+        switch CameraConfig.easyCameraType {
+        case .manual:
+            break
+        case .easy(_), .flexible:
+            renderer.camera.translate(0, 0, Float(event.deltaY))
+        }
         renderer.drawProcess.scrollWheel(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     #endif
