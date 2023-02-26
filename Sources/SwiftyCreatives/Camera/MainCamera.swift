@@ -145,6 +145,66 @@ public class MainCamera<
         return (worldOrigin, worldDirection)
     }
     
+    public func screenToWorldDirection(screenPos: f2, width: Float, height: Float) -> (origin: f3, direction: f3) {
+
+        var x = screenPos.x - width/2
+        var y = -(screenPos.y - height/2)
+
+        x /= width
+        y /= height
+
+        x *= 2
+        y *= 2
+
+        let clipCoordinate = f4(x, y, 0, 1)
+
+        let projInv = simd_inverse(self.perspectiveMatrix[0])
+        let viewInv = simd_inverse(self.mainMatrix[0])
+
+        var cameraDirection = projInv * clipCoordinate
+        cameraDirection.z = -1
+        cameraDirection.w = 0
+
+        let temp = viewInv * cameraDirection
+        let worldDirection = normalize(f3(temp.x, temp.y, temp.z))
+
+        let cameraOrigin = f4(0, 0, 0, 1)
+        let temp2 = viewInv * cameraOrigin
+        let worldOrigin = f3(temp2.x, temp2.y, temp2.z)
+        
+        return (worldOrigin, worldDirection)
+    }
+    
+    public func screenToWorldDirection(screenPos: f2, viewSize: f2) -> (origin: f3, direction: f3) {
+
+        var x = screenPos.x - viewSize.x/2
+        var y = -(screenPos.y - viewSize.y/2)
+
+        x /= viewSize.x
+        y /= viewSize.y
+
+        x *= 2
+        y *= 2
+
+        let clipCoordinate = f4(x, y, 0, 1)
+
+        let projInv = simd_inverse(self.perspectiveMatrix[0])
+        let viewInv = simd_inverse(self.mainMatrix[0])
+
+        var cameraDirection = projInv * clipCoordinate
+        cameraDirection.z = -1
+        cameraDirection.w = 0
+
+        let temp = viewInv * cameraDirection
+        let worldDirection = normalize(f3(temp.x, temp.y, temp.z))
+
+        let cameraOrigin = f4(0, 0, 0, 1)
+        let temp2 = viewInv * cameraOrigin
+        let worldOrigin = f3(temp2.x, temp2.y, temp2.z)
+        
+        return (worldOrigin, worldDirection)
+    }
+    
     public func mock_rotateAroundVisibleX(_ rad: Float) -> f4x4 {
         let currentAxis = axisX * matrixR
         let mockMatrixR = matrixR * f4x4.createRotation(angle: rad, axis: f3(currentAxis.x, currentAxis.y, currentAxis.z))

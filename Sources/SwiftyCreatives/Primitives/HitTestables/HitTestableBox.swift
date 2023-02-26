@@ -58,7 +58,7 @@ open class HitTestableBox: PrimitiveBase {
         return self
     }
     
-    public func draw(_ encoder: SCEncoder) {}
+    internal func draw(_ encoder: SCEncoder) {}
     
 }
 
