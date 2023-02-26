@@ -25,5 +25,7 @@ public protocol MainCameraBase {
     
     func setFrame(width: Float, height: Float)
     func screenToWorldDirection(x: Float, y: Float, width: Float, height: Float) -> (origin: f3, direction: f3)
+    func screenToWorldDirection(screenPos: f2, width: Float, height: Float) -> (origin: f3, direction: f3)
+    func screenToWorldDirection(screenPos: f2, viewSize: f2) -> (origin: f3, direction: f3)
     func getCameraPos() -> f3
 }
