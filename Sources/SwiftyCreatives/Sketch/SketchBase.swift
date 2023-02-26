@@ -35,6 +35,7 @@ public protocol SketchBase: AnyObject {
     func viewWillStartLiveResize(camera: some MainCameraBase, viewFrame: CGRect)
     func resize(withOldSuperviewSize oldSize: NSSize, camera: some MainCameraBase, viewFrame: CGRect)
     func viewDidEndLiveResize(camera: some MainCameraBase, viewFrame: CGRect)
+    func scrollWheel(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)
     #endif
 
     #if os(iOS)
