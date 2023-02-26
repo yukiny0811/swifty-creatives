@@ -135,7 +135,8 @@ public class TouchableMTKView<
         case .manual:
             break
         case .easy(_), .flexible:
-            renderer.camera.translate(0, 0, Float(event.deltaY))
+            renderer.camera.translate(0, 0, Float(event.deltaY) * 0.1)
+            renderer.camera.translate(0, 0, -Float(event.deltaX) * 0.01)
         }
         renderer.drawProcess.scrollWheel(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
