@@ -57,6 +57,7 @@ open class Sketch: SketchBase {
     open func viewWillStartLiveResize(camera: some MainCameraBase, viewFrame: CGRect) {}
     open func resize(withOldSuperviewSize oldSize: NSSize, camera: some MainCameraBase, viewFrame: CGRect) {}
     open func viewDidEndLiveResize(camera: some MainCameraBase, viewFrame: CGRect) {}
+    open func scrollWheel(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
     #endif
     
     #if os(iOS)
