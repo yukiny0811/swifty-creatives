@@ -12,15 +12,9 @@ import simd
 
 class ColoredHitTestableBox: HitTestableBox {
     var saveColor: f4 = .zero
-    var height: Float = 0
-    var target: Float = 0
+    @Animatable var height: Float = 0
     func reset() {
-        target = Float.random(in: 1...13)
-    }
-    func update(deltaTime: Float) {
-        let diff = target - height
-        let changeValue = diff * deltaTime * 8
-        height += changeValue
+        height = Float.random(in: 1...13)
     }
 }
 
@@ -53,7 +47,7 @@ final class Sample12: Sketch {
     override func update(camera: some MainCameraBase) {
         for x in 0...Self.count {
             for y in 0...Self.count {
-                boxes[x][y].update(deltaTime: deltaTime)
+                boxes[x][y].$height.update(multiplier: deltaTime * 8)
             }
         }
     }
@@ -65,11 +59,11 @@ final class Sample12: Sketch {
             for y in 0...Self.count {
                 pushMatrix()
                 translate(Float(x) * Self.multiplier, 0, Float(y) * Self.multiplier)
-                boxes[x][y].setScale(f3(1.5, boxes[x][y].height, 1.5))
+                boxes[x][y].setScale(f3(1.5, boxes[x][y].$height.animationValue, 1.5))
                 translate(0, boxes[x][y].scale.y, 0)
                 drawHitTestableBox(box: boxes[x][y])
                 translate(0, boxes[x][y].scale.y + 1, 0)
-                drawNumberText(encoder: encoder, factory: numberFactory, number: Float(Int(boxes[x][y].height*10))/10)
+                drawNumberText(encoder: encoder, factory: numberFactory, number: Float(Int(boxes[x][y].$height.animationValue*10))/10)
                 translate(0, 1.5, 0)
                 drawGeneralText(encoder: encoder, factory: textFactory, text: "some Texts", spacing: 0.3, scale: 0.5, spacer: 0.7)
                 popMatrix()
