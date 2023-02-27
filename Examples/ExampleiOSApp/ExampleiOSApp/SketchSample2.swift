@@ -8,32 +8,31 @@
 import SwiftyCreatives
 import UIKit
 
+class RotatingViewObject: UIViewObject {
+    @SCAnimatable var rotation: Float = 0
+}
+
 final class SketchSample2: Sketch {
     
     let postProcessor = PostProcessor(type: .cornerRadius(100))
-    
-    var viewObj = UIViewObject()
-    var r: Float = 0.0
-    var rFinal: Float = 0.0
+    var viewObj = RotatingViewObject()
     
     override init() {
         super.init()
         let view: TestView = TestView.fromNib(type: TestView.self)
         view.onHit = {
-            self.rFinal += Float.pi / 2
+            self.viewObj.rotation += Float.pi / 2
         }
         viewObj.load(view: view)
         viewObj.multiplyScale(6)
     }
     
     override func update(camera: some MainCameraBase) {
-        if r < rFinal {
-            r += 0.06
-        }
+        viewObj.$rotation.update(multiplier: deltaTime * 5)
     }
     
     override func draw(encoder: SCEncoder) {
-        rotateZ(r)
+        rotateZ(viewObj.$rotation.animationValue)
         viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
         postProcessor.postProcess(texture: viewObj.texture!)
     }
