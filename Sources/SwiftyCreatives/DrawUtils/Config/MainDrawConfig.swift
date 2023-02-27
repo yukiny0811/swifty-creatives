@@ -10,4 +10,5 @@ public class MainDrawConfig: DrawConfigBase {
     public static let contentScaleFactor: Int = 3
     public static let blendMode: BlendMode = .alphaBlend
     public static let clearOnUpdate: Bool = true
+    public static let frameRate: Int = 120
 }

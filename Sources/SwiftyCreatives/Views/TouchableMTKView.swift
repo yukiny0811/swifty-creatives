@@ -22,7 +22,7 @@ public class TouchableMTKView<
         self.enableSetNeedsDisplay = false
         self.colorPixelFormat = .bgra8Unorm
         self.framebufferOnly = true
-        self.preferredFramesPerSecond = 120
+        self.preferredFramesPerSecond = DrawConfig.frameRate
         self.autoResizeDrawable = true
         self.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
         self.depthStencilPixelFormat = .depth32Float_stencil8
