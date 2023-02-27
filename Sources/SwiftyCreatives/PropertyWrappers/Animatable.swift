@@ -6,10 +6,10 @@
 //
 
 @propertyWrapper
-public class Animatable {
+public class SCAnimatable {
     private var value: Float
     private var targetValue: Float
-    public var projectedValue: Animatable { self }
+    public var projectedValue: SCAnimatable { self }
     public init (wrappedValue: Float) {
         value = 0
         targetValue = wrappedValue

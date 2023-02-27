@@ -12,7 +12,7 @@ import simd
 
 class ColoredHitTestableBox: HitTestableBox {
     var saveColor: f4 = .zero
-    @Animatable var height: Float = 0
+    @SCAnimatable var height: Float = 0
     func reset() {
         height = Float.random(in: 1...13)
     }
