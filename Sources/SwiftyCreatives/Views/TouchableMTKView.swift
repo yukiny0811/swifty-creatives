@@ -20,6 +20,7 @@ public class TouchableMTKView<
         self.frame = .zero
         self.delegate = renderer
         self.enableSetNeedsDisplay = false
+        self.isPaused = false
         self.colorPixelFormat = .bgra8Unorm
         self.framebufferOnly = false
         self.preferredFramesPerSecond = DrawConfig.frameRate

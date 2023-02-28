@@ -61,5 +61,7 @@ public class BloomPP: PostProcessorBase {
         commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
         commandBuffer.commit()
+        
+        commandBuffer.waitUntilCompleted()
     }
 }

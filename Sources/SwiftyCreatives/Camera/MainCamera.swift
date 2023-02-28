@@ -107,7 +107,7 @@ public class MainCamera<
     }
     
     public func getCameraPos() -> f3 {
-        let viewInv = simd_inverse(self.mainMatrix[0])
+        let viewInv = self.mainMatrix[0].inverse
         let cameraOrigin = f4(0, 0, 0, 1)
         let temp2 = viewInv * cameraOrigin
         let worldOrigin = f3(temp2.x, temp2.y, temp2.z)
@@ -128,8 +128,8 @@ public class MainCamera<
 
         let clipCoordinate = f4(x, y, 0, 1)
 
-        let projInv = simd_inverse(self.perspectiveMatrix[0])
-        let viewInv = simd_inverse(self.mainMatrix[0])
+        let projInv = self.perspectiveMatrix[0].inverse
+        let viewInv = self.mainMatrix[0].inverse
 
         var cameraDirection = projInv * clipCoordinate
         cameraDirection.z = -1
@@ -158,8 +158,8 @@ public class MainCamera<
 
         let clipCoordinate = f4(x, y, 0, 1)
 
-        let projInv = simd_inverse(self.perspectiveMatrix[0])
-        let viewInv = simd_inverse(self.mainMatrix[0])
+        let projInv = self.perspectiveMatrix[0].inverse
+        let viewInv = self.mainMatrix[0].inverse
 
         var cameraDirection = projInv * clipCoordinate
         cameraDirection.z = -1
@@ -188,8 +188,8 @@ public class MainCamera<
 
         let clipCoordinate = f4(x, y, 0, 1)
 
-        let projInv = simd_inverse(self.perspectiveMatrix[0])
-        let viewInv = simd_inverse(self.mainMatrix[0])
+        let projInv = self.perspectiveMatrix[0].inverse
+        let viewInv = self.mainMatrix[0].inverse
 
         var cameraDirection = projInv * clipCoordinate
         cameraDirection.z = -1
