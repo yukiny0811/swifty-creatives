@@ -22,7 +22,7 @@ open class PostProcessorBase {
         return self
     }
     
-    private static func createComputePipelineState(functionName: String, slowFunctionName: String, bundle: Bundle) -> MTLComputePipelineState {
+    public static func createComputePipelineState(functionName: String, slowFunctionName: String, bundle: Bundle) -> MTLComputePipelineState {
         switch ShaderCore.device.readWriteTextureSupport {
         case .tier1, .tier2:
             switch bundle {
