@@ -127,10 +127,14 @@ class TransparentRenderer<
         // MARK: - end encoding
         renderEncoder.setRenderPipelineState(resolveState)
         renderEncoder.dispatchThreadsPerTile(optimalTileSize)
+        
         renderEncoder.endEncoding()
         
         // MARK: - commit buffer
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
+        commandBuffer.waitUntilCompleted()
+        
+        drawProcess.afterDraw(texture: view.currentDrawable!.texture)
     }
 }

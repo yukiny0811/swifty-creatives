@@ -13,6 +13,8 @@ final class SketchSample1: Sketch {
     var boxes: [MyBox] = []
     var elapsed: Float = 0.0
     
+    let bloomProcessor = BloomPP()
+    
     override init() {
         super.init()
         for _ in 0...100 {

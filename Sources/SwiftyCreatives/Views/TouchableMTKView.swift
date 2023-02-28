@@ -21,7 +21,7 @@ public class TouchableMTKView<
         self.delegate = renderer
         self.enableSetNeedsDisplay = false
         self.colorPixelFormat = .bgra8Unorm
-        self.framebufferOnly = true
+        self.framebufferOnly = false
         self.preferredFramesPerSecond = DrawConfig.frameRate
         self.autoResizeDrawable = true
         self.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
