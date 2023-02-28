@@ -1,8 +1,8 @@
 //
-//  File.swift
+//  SketchView.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/02/28.
+//  Created by Yuki Kuwashima on 2022/12/08.
 //
 
 import MetalKit
@@ -14,10 +14,10 @@ import AppKit
 import UIKit
 #endif
 
-public struct SketchView: ViewRepresentable {
-    
-    typealias CameraConfig = MainCameraConfig
-    typealias DrawConfig = MainDrawConfig
+public struct ConfigurableSketchView<
+    CameraConfig: CameraConfigBase,
+    DrawConfig: DrawConfigBase
+>: ViewRepresentable {
     
     let renderer: RendererBase<CameraConfig, DrawConfig>
     

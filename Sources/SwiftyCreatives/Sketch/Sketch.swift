@@ -22,6 +22,10 @@ open class Sketch: SketchBase {
     public var deltaTime: Float = 0
     public var frameRate: Float { 1 / deltaTime }
     
+    public var packet: SCPacket {
+        SCPacket(privateEncoder: privateEncoder!, customMatrix: customMatrix)
+    }
+    
     public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0), color: f3.one, brightness: 1, ambientIntensity: 1, diffuseIntensity: 1, specularIntensity: 50)]
     
     public init() {}
