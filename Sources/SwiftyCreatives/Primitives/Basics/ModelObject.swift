@@ -81,7 +81,6 @@ open class ModelObject: Primitive<ModelObjectInfo> {
         guard let meshes = self.mesh as? [MTKMesh] else { return }
         
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
-        encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
         
         for mesh in meshes {
             
@@ -98,7 +97,12 @@ open class ModelObject: Primitive<ModelObjectInfo> {
                 }
             }
             for s in mesh.submeshes {
-                encoder.setFragmentTexture(texture, index: FragmentTextureIndex.MainTexture.rawValue)
+                if texture != nil {
+                    encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+                    encoder.setFragmentTexture(texture, index: FragmentTextureIndex.MainTexture.rawValue)
+                } else {
+                    encoder.setFragmentBytes([false], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+                }
                 encoder.drawIndexedPrimitives(type: s.primitiveType, indexCount: s.indexCount, indexType: s.indexType, indexBuffer: s.indexBuffer.buffer, indexBufferOffset: s.indexBuffer.offset)
             }
         }
