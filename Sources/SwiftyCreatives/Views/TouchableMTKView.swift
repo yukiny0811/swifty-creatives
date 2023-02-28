@@ -22,7 +22,7 @@ public class TouchableMTKView<
         self.enableSetNeedsDisplay = false
         self.colorPixelFormat = .bgra8Unorm
         self.framebufferOnly = true
-        self.preferredFramesPerSecond = 120
+        self.preferredFramesPerSecond = DrawConfig.frameRate
         self.autoResizeDrawable = true
         self.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
         self.depthStencilPixelFormat = .depth32Float_stencil8
@@ -144,7 +144,14 @@ public class TouchableMTKView<
     
     #if os(iOS)
     @objc func onScroll(recognizer: UIPanGestureRecognizer) {
-        let delta = recognizer.translation(in: self)
+        let delta = recognizer.velocity(in: self)
+        switch CameraConfig.easyCameraType {
+        case .manual:
+            break
+        case .easy(_), .flexible:
+            renderer.camera.translate(0, 0, Float(delta.y) * 0.001)
+            renderer.camera.translate(0, 0, -Float(delta.x) * 0.0001)
+        }
         renderer.drawProcess.onScroll(delta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
     }
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

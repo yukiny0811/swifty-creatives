@@ -22,8 +22,9 @@ public class SCAnimatable {
         get { value }
     }
     public func update(multiplier: Float) {
+        let clampedMultiplier = multiplier.clamp(0...1)
         let diff = targetValue - value
-        let changeValue = diff * multiplier
+        let changeValue = diff * clampedMultiplier
         value += changeValue
     }
 }

@@ -8,13 +8,13 @@
 import MetalKit
 
 class AssetUtil {
-    static let defaultMTLTexture: MTLTexture = try! ShaderCore.textureLoader.newTexture(
-        name: "mtl-default",
-        scaleFactor: 1,
-        bundle: .module,
-        options: [
-            .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue),
-            .textureStorageMode : NSNumber(value: MTLStorageMode.private.rawValue)
-        ]
+    private static let defaultMTLTextureDescriptor: MTLTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: MTLPixelFormat.bgra8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
     )
+    static let defaultMTLTexture: MTLTexture = ShaderCore.device.makeTexture(
+        descriptor: defaultMTLTextureDescriptor
+    )!
 }

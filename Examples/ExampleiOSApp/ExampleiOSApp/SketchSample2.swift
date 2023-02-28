@@ -14,7 +14,7 @@ class RotatingViewObject: UIViewObject {
 
 final class SketchSample2: Sketch {
     
-    let postProcessor = PostProcessor(type: .cornerRadius(100))
+    let postProcessor = CornerRadiusPP().radius(100)
     var viewObj = RotatingViewObject()
     
     override init() {

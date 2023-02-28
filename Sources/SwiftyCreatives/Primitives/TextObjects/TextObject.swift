@@ -44,7 +44,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
     public func setDetailedText(_ text: String, font: FontAlias, resolution: CGSize, framePath: CGPath? = nil) -> Self {
         
         let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
-            pixelFormat: MTLPixelFormat.rgba8Unorm,
+            pixelFormat: MTLPixelFormat.bgra8Unorm,
             width: Int(resolution.width),
             height: Int(resolution.height),
             mipmapped: false)
