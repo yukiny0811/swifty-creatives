@@ -42,10 +42,14 @@ public class BloomPP: PostProcessorBase {
         commandEncoder.endEncoding()
         commandBuffer.commit()
         
+        commandBuffer.waitUntilCompleted()
+        
         commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         let blurFunc = MPSImageGaussianBlur(device: ShaderCore.device, sigma: intensity)
         blurFunc.encode(commandBuffer: commandBuffer, sourceTexture: savedTexture!, destinationTexture: finalTexture!)
         commandBuffer.commit()
+        
+        commandBuffer.waitUntilCompleted()
         
         commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         commandEncoder = commandBuffer.makeComputeCommandEncoder()!
@@ -57,5 +61,7 @@ public class BloomPP: PostProcessorBase {
         commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
         commandBuffer.commit()
+        
+        commandBuffer.waitUntilCompleted()
     }
 }

@@ -86,10 +86,17 @@ public class AddRenderer<
         drawProcess.draw(encoder: renderCommandEncoder!)
         
         renderCommandEncoder?.endEncoding()
-        commandBuffer?.present(drawable)
         commandBuffer?.commit()
         commandBuffer?.waitUntilCompleted()
         
-        drawProcess.afterDraw(texture: drawable.texture)
+        self.drawProcess.afterDraw(texture: renderPassDescriptor.colorAttachments[0].texture!)
+        
+        let afterBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
+        let afterEncoder = afterBuffer.makeBlitCommandEncoder()!
+        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
+        afterEncoder.endEncoding()
+        afterBuffer.present(view.currentDrawable!)
+        afterBuffer.commit()
+        afterBuffer.waitUntilCompleted()
     }
 }
