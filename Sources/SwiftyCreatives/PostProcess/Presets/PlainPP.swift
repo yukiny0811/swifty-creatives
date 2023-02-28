@@ -7,7 +7,7 @@
 
 public class PlainPP: PostProcessor {
     public init() {
-        super.init(functionName: "plainPostProcess", slowFunctionName: "plainPostProcess_Slow")
+        super.init(functionName: "plainPostProcess", slowFunctionName: "plainPostProcess_Slow", bundle: .module)
         args = [0]
     }
 }

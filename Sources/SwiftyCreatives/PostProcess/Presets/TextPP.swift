@@ -10,7 +10,7 @@ import Metal
 public class TextPostProcessor: PostProcessorBase {
     
     public init() {
-        super.init(functionName: "textColorPostProcess", slowFunctionName: "textColorPostProcess")
+        super.init(functionName: "textColorPostProcess", slowFunctionName: "textColorPostProcess", bundle: .module)
     }
     
     public func postProcessColor(originalTexture: MTLTexture, texture: MTLTexture, color: f4) {

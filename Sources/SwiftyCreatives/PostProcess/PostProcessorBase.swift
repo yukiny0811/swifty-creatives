@@ -13,18 +13,39 @@ open class PostProcessorBase {
     public var savedTexture: MTLTexture?
     public var args: [Float] = [0]
     
-    public init(functionName: String, slowFunctionName: String) {
-        pipelineState = Self.createComputePipelineState(functionName: functionName, slowFunctionName: slowFunctionName)
+    public init(functionName: String, slowFunctionName: String, bundle: Bundle) {
+        pipelineState = Self.createComputePipelineState(functionName: functionName, slowFunctionName: slowFunctionName, bundle: bundle)
     }
     
-    private static func createComputePipelineState(functionName: String, slowFunctionName: String) -> MTLComputePipelineState {
+    public func setArgs(args: [Float]) -> Self {
+        self.args = args
+        return self
+    }
+    
+    private static func createComputePipelineState(functionName: String, slowFunctionName: String, bundle: Bundle) -> MTLComputePipelineState {
         switch ShaderCore.device.readWriteTextureSupport {
         case .tier1, .tier2:
-            let function = ShaderCore.library.makeFunction(name: functionName)!
-            return try! ShaderCore.device.makeComputePipelineState(function: function)
+            switch bundle {
+            case .module:
+                let function = ShaderCore.library.makeFunction(name: functionName)!
+                return try! ShaderCore.device.makeComputePipelineState(function: function)
+            default:
+                guard let function = ShaderCore.mainLibrary?.makeFunction(name: functionName)! else {
+                    fatalError("could not make MTLFunction \(functionName)")
+                }
+                return try! ShaderCore.device.makeComputePipelineState(function: function)
+            }
         default:
-            let function = ShaderCore.library.makeFunction(name: slowFunctionName)!
-            return try! ShaderCore.device.makeComputePipelineState(function: function)
+            switch bundle {
+            case .module:
+                let function = ShaderCore.library.makeFunction(name: slowFunctionName)!
+                return try! ShaderCore.device.makeComputePipelineState(function: function)
+            default:
+                guard let function = ShaderCore.mainLibrary?.makeFunction(name: slowFunctionName)! else {
+                    fatalError("could not make MTLFunction \(functionName)")
+                }
+                return try! ShaderCore.device.makeComputePipelineState(function: function)
+            }
         }
     }
 }

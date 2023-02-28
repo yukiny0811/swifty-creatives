@@ -9,8 +9,8 @@ import Metal
 
 open class PostProcessor: PostProcessorBase {
     
-    public override init(functionName: String, slowFunctionName: String) {
-        super.init(functionName: functionName, slowFunctionName: slowFunctionName)
+    public override init(functionName: String, slowFunctionName: String, bundle: Bundle) {
+        super.init(functionName: functionName, slowFunctionName: slowFunctionName, bundle: bundle)
     }
     
     //true if read_write enabled

@@ -9,7 +9,7 @@ import Metal
 
 public class CornerRadiusPP: PostProcessor {
     public init() {
-        super.init(functionName: "cornerRadiusPostProcess", slowFunctionName: "cornerRadiusPostProcess_Slow")
+        super.init(functionName: "cornerRadiusPostProcess", slowFunctionName: "cornerRadiusPostProcess_Slow", bundle: .module)
     }
     public func radius(_ rad: Float) -> Self {
         args = [rad]
