@@ -11,41 +11,22 @@ Using Metal directly for rendering.
 ![ExampleMacOSApp 2022年-12月-16日 18 08 41](https://user-images.githubusercontent.com/28947703/208063423-3ad00c20-1d1c-48b8-8996-2d43e1365fe4.gif)
 
 ## Features
-- Geometry
-    - 2D
-        - Rectangle (with hit test)
-        - Circle
-        - Triangle
-        - Line
-    - 3D
-        - Box (with hit test)
-        - 3D Model
-    - Others
-        - Image
-        - Text
-        - UIViewObject(3d view with interactive button)
-- Camera
-    - Perspective
-    - Orthographic
-- Blend Mode
-    - normal
-    - add
-    - alpha
-- Lighting
-    - Phong's reflection model
-- Functions
-    - set color
-    - set scale
-    - push / pop matrix
-- View
-    - can be used as UIView / NSView
-    - can be used as SwiftUI View
-- Utils
-    - Post Processing
+|Geometry|Other Features|
+|-|-|
+|Rectangle (with hit test)|Perspective Camera|
+|Circle|Orthographic Camera|
+|Triangle|BlendMode(normal, add, alphaBlend)|
+|Line|Lighting|
+|Box (with hit test)|push/pop matrix|
+|3D Model|can be used as UIView / NSView|
+|Image (with hit test)|can be used as SwiftUI View|
+|Text|Post Processing|
+|UIViewObject (3d view with interactive button)|User-defined shaders|
+
 
 ![ExampleMacOSApp 2023年-02月-24日 17 11 06](https://user-images.githubusercontent.com/28947703/221126530-c362018e-325c-4747-8e57-c5e18ab7085d.gif)
 
-![ExampleMacOSApp 2023年-02月-02日 0 23 56](https://user-images.githubusercontent.com/28947703/216084840-585d4f38-dfb3-48bf-8f16-f8bc92badbb5.gif)
+![CheckMacOS 2023年-03月-01日 6 46 57](https://user-images.githubusercontent.com/28947703/221993495-7840a9e0-4de7-4c6c-8fef-ef3b9f53677f.gif)
 
 ![QuickTime Player - 画面収録 2023-02-10 1 53 14 mov 2023年-02月-10日 2 55 14](https://user-images.githubusercontent.com/28947703/217897685-7a83bedf-5624-45e2-b566-9a05aab7c103.gif)
 
