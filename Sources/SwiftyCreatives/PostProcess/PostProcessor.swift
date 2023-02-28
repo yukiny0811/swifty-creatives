@@ -7,25 +7,10 @@
 
 import Metal
 
-public enum PostProcessType {
-    case plain
-    case cornerRadius(Float)
-}
-
-public class PostProcessor {
-    private var pipelineState: MTLComputePipelineState
-    private(set) public var type: PostProcessType
-    private(set) public var savedTexture: MTLTexture?
-    private var args: [Float] = [0]
-    public init(type: PostProcessType) {
-        self.type = type
-        switch self.type {
-        case .plain:
-            self.pipelineState = Self.createComputePipelineState(functionName: "plain")
-        case .cornerRadius(let radius):
-            self.pipelineState = Self.createComputePipelineState(functionName: "cornerRadius")
-            args[0] = radius
-        }
+open class PostProcessor: PostProcessorBase {
+    
+    public override init(functionName: String, slowFunctionName: String) {
+        super.init(functionName: functionName, slowFunctionName: slowFunctionName)
     }
     
     //true if read_write enabled
@@ -56,16 +41,6 @@ public class PostProcessor {
             commandEncoder.endEncoding()
             commandBuffer.commit()
             return false
-        }
-    }
-    private static func createComputePipelineState(functionName: String) -> MTLComputePipelineState {
-        switch ShaderCore.device.readWriteTextureSupport {
-        case .tier1, .tier2:
-            let function = ShaderCore.library.makeFunction(name: functionName + "PostProcess")!
-            return try! ShaderCore.device.makeComputePipelineState(function: function)
-        default:
-            let function = ShaderCore.library.makeFunction(name: functionName + "PostProcess_Slow")!
-            return try! ShaderCore.device.makeComputePipelineState(function: function)
         }
     }
 }

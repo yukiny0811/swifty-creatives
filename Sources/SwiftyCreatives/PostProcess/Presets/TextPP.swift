@@ -7,14 +7,12 @@
 
 import Metal
 
-public class TextPostProcessor {
-    private var pipelineState: MTLComputePipelineState
-    private(set) public var savedTexture: MTLTexture?
+public class TextPostProcessor: PostProcessorBase {
+    
     public init() {
-        self.pipelineState = Self.createComputePipelineState(functionName: "textColor")
+        super.init(functionName: "textColorPostProcess", slowFunctionName: "textColorPostProcess")
     }
     
-    //true if read_write enabled
     public func postProcessColor(originalTexture: MTLTexture, texture: MTLTexture, color: f4) {
         let threadsPerThreadgroup = MTLSize(width: 16, height: 16, depth: 1)
         let threadGroupCount = MTLSize(
@@ -30,10 +28,5 @@ public class TextPostProcessor {
         commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
         commandBuffer.commit()
-    }
-    
-    private static func createComputePipelineState(functionName: String) -> MTLComputePipelineState {
-        let function = ShaderCore.library.makeFunction(name: functionName + "PostProcess")!
-        return try! ShaderCore.device.makeComputePipelineState(function: function)
     }
 }
