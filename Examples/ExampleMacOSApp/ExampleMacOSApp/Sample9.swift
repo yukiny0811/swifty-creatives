@@ -11,6 +11,7 @@ final class Sample9DrawConfig: DrawConfigBase {
     static var contentScaleFactor: Int = 3
     static var blendMode: SwiftyCreatives.BlendMode = .normalBlend
     static var clearOnUpdate: Bool = true
+    static var frameRate: Int = 120
 }
 
 final class Sample9: Sketch {
