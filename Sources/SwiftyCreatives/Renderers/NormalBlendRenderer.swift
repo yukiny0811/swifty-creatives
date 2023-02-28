@@ -94,5 +94,9 @@ public class NormalBlendRenderer<
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
         
+        commandBuffer?.waitUntilCompleted()
+        
+        drawProcess.afterDraw(texture: drawable.texture)
+        
     }
 }

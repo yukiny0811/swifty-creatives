@@ -88,5 +88,8 @@ public class AddRenderer<
         renderCommandEncoder?.endEncoding()
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
+        commandBuffer?.waitUntilCompleted()
+        
+        drawProcess.afterDraw(texture: drawable.texture)
     }
 }

@@ -36,6 +36,8 @@ open class Sketch: SketchBase {
         self.privateEncoder = encoder
     }
     
+    open func afterDraw(texture: MTLTexture) {}
+    
     public func getCustomMatrix() -> f4x4 {
         return customMatrix.reduce(f4x4.createIdentity(), *)
     }
