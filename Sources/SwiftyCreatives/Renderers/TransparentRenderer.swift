@@ -131,10 +131,11 @@ class TransparentRenderer<
         renderEncoder.endEncoding()
         
         // MARK: - commit buffer
+        commandBuffer.addScheduledHandler { handler in
+            self.drawProcess.afterDraw(texture: view.currentDrawable!.texture)
+        }
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
-        
-        drawProcess.afterDraw(texture: view.currentDrawable!.texture)
     }
 }

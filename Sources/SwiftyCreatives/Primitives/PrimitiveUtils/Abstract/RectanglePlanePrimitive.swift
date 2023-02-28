@@ -12,7 +12,7 @@ open class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<In
     private func calculateHitTest(origin: f3, direction: f3, testDistance: Float) -> (globalPos: f3, localPos: f3)? {
         
         let model = f4x4.createIdentity()
-        let customModel = simd_transpose(cachedCustomMatrix)
+        let customModel = cachedCustomMatrix.transpose
         
         
         var selfPos_f4 = f4(0, 0, 0, 1) * model
@@ -42,8 +42,8 @@ open class RectanglePlanePrimitive<Info: PrimitiveInfo>: HitTestablePrimitive<In
         let ttt = abs(PAdotN) / (abs(PAdotN)+abs(PBdotN))
         let x = A + (B-A) * ( ttt )
         
-        let inverseModel = simd_inverse(model)
-        let inverseCustomModel = simd_inverse(customModel)
+        let inverseModel = model.inverse
+        let inverseCustomModel = customModel.inverse
         var processedLocalPos = f4(x.x, x.y, x.z, 1) * inverseCustomModel
         processedLocalPos.w = 1
         processedLocalPos = processedLocalPos * inverseModel

@@ -25,9 +25,6 @@ kernel void bloomAddPostProcess(texture2d<float, access::read> texRead [[texture
                                   ushort2 gid [[thread_position_in_grid]]) {
     float4 color = texRead.read(gid);
     float4 bloomColor = bloomTex.read(gid);
-    float4 resultColor = float4(color.r + bloomColor.r,
-                                color.g + bloomColor.g,
-                                color.b + bloomColor.b,
-                                color.a);
+    float4 resultColor = color + bloomColor;
     texWrite.write(resultColor, gid);
 }
