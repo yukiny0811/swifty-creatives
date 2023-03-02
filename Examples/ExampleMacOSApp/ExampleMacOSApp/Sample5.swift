@@ -14,6 +14,7 @@ final class Sample5: Sketch {
         super.init()
         object
             .setText("Swifty Creatives", font: NSFont.systemFont(ofSize: 60), color: .white)
+            .setColor(f4.one)
             .multiplyScale(18)
     }
     override func update(camera: some MainCameraBase) {

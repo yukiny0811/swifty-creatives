@@ -32,8 +32,7 @@ final class Sample11: Sketch {
     }
     
     override func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
-        var location = event.locationInWindow
-        location.y = viewFrame.height - location.y
+        let location = mousePos(event: event, viewFrame: viewFrame)
         let ray = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
         if let hitPos = box.hitTest(origin: ray.origin, direction: ray.direction) {
             box.setColor(f4(0, 0, 1, 1))
