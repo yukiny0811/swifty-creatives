@@ -7,7 +7,7 @@
 
 import simd
 
-open class HitTestableBox: PrimitiveBase {
+open class HitTestableBox {
     
     internal let front = HitTestableRect()
     internal let back = HitTestableRect()

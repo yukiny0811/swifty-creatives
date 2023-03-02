@@ -7,7 +7,7 @@
 
 import simd
 
-open class Primitive<Info: PrimitiveInfo> {
+open class Primitive<Info: PrimitiveInfo>: ScaleSettable, ColorSettable {
     
     open var hasTexture: [Bool] = [false]
     open var isActiveToLight: [Bool] = [false]
