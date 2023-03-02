@@ -43,6 +43,8 @@ public extension Sketch {
     }
     
     func drawHitTestableBox(box: HitTestableBox) {
+        privateEncoder?.setVertexBytes([f3.zero], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        
         pushMatrix()
         translate(0, 0, box.scale.z)
         box.front.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))

@@ -8,6 +8,12 @@
 import SwiftyCreatives
 import UIKit
 
+struct MyBox {
+    var pos: f3 = f3.random(in: -7...7)
+    var color: f4 = f4.randomPoint(0...1)
+    var scale: f3 = f3.one * Float.random(in: 0.3...0.5)
+}
+
 final class SketchSample1: Sketch {
     
     var boxes: [MyBox] = []
@@ -16,28 +22,21 @@ final class SketchSample1: Sketch {
     override init() {
         super.init()
         for _ in 0...100 {
-            let box = MyBox()
-                .setColor(f4.randomPoint(0...1))
-                .setScale(f3.one * Float.random(in: 0.3...0.5))
-            box.pos = f3.random(in: -7...7)
-            boxes.append(box)
+            boxes.append(MyBox())
         }
     }
     
     override func update(camera: some MainCameraBase) {
-        camera.rotateAroundY(0.01)
-        elapsed += 0.01
-        let elapsedSin = sin(elapsed)
-        for b in boxes {
-            b.setColor(f4(elapsedSin, b.color.y, b.color.z, b.color.w))
-        }
+        camera.rotateAroundY(deltaTime)
+        elapsed += deltaTime
     }
     
     override func draw(encoder: SCEncoder) {
+        let elapsedSin = sin(elapsed)
         for b in boxes {
+            color(elapsedSin, b.color.y, b.color.z, b.color.w)
             pushMatrix()
-            translate(b.pos.x, b.pos.y, b.pos.z)
-            b.draw(encoder)
+            box(b.pos, b.scale)
             popMatrix()
         }
     }
@@ -50,14 +49,10 @@ final class SketchSample1: Sketch {
         let direction = processed.direction
         let finalPos = origin + direction * 20
         
-        let box = MyBox()
-        box.setColor(f4(1, 1, 1, 1))
+        var box = MyBox()
+        box.color = f4.one
         box.pos = finalPos
-        box.setScale(f3.one * 0.2)
+        box.scale = f3.one * 0.2
         boxes.append(box)
     }
-}
-
-class MyBox: Box {
-    var pos: f3 = .zero
 }

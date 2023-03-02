@@ -8,17 +8,14 @@
 import SwiftyCreatives
 
 final class Sample4: Sketch {
-    var object = Triangle()
     override init() {
         super.init()
-        object
-            .setScale(f3.one * 5)
-            .setColor(f4.randomPoint(0...1))
     }
     override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)
     }
     override func draw(encoder: SCEncoder) {
-        object.draw(encoder)
+        color(f4.randomPoint(0...1))
+        triangle(5)
     }
 }

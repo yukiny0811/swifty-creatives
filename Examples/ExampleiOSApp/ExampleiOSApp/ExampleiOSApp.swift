@@ -12,9 +12,9 @@ import SwiftyCreatives
 struct ExampleiOSApp: App {
     var body: some Scene {
         WindowGroup {
-            ZStack {
+            VStack {
                 SketchView(SketchSample1())
-//                SketchView(SketchSample2())
+                SketchView(SketchSample2())
             }
             .background(.black)
         }

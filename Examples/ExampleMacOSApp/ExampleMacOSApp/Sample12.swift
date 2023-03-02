@@ -33,7 +33,6 @@ final class Sample12: Sketch {
             for _ in 0...Self.count {
                 let box = ColoredHitTestableBox()
                 box.saveColor = f4(0.0, Float.random(in: 0.1...0.7), Float.random(in: 0.1...0.7), 1)
-                box.setColor(box.saveColor)
                 array.append(box)
             }
             boxes.append(array)
@@ -61,6 +60,7 @@ final class Sample12: Sketch {
                 translate(Float(x) * Self.multiplier, 0, Float(y) * Self.multiplier)
                 boxes[x][y].setScale(f3(1.5, boxes[x][y].$height.animationValue, 1.5))
                 translate(0, boxes[x][y].scale.y, 0)
+                color(boxes[x][y].saveColor)
                 drawHitTestableBox(box: boxes[x][y])
                 translate(0, boxes[x][y].scale.y + 1, 0)
                 drawNumberText(encoder: encoder, factory: numberFactory, number: Float(Int(boxes[x][y].$height.animationValue*10))/10)
@@ -88,11 +88,10 @@ final class Sample12: Sketch {
                         savedIndex = (i, j)
                     }
                 }
-                boxes[i][j].setColor(boxes[i][j].saveColor)
             }
         }
         if let savedIndex = savedIndex {
-            boxes[savedIndex.0][savedIndex.1].setColor(f4(1, 1, 0, 1))
+            boxes[savedIndex.0][savedIndex.1].saveColor = f4(1, 1, 0, 1)
         }
     }
     
