@@ -29,9 +29,7 @@ open class UIViewObject: RectanglePlanePrimitive<RectShapeInfo> {
         
         let tex = try! ShaderCore.textureLoader.newTexture(
             cgImage: image,
-            options: [
-                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
-            ]
+            options: ShaderCore.defaultTextureLoaderOptions
         )
         self.texture = tex
         let longer: Float = Float(max(image.width, image.height))
