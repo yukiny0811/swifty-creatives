@@ -45,7 +45,7 @@ final class SampleSketch: Sketch {
             pushMatrix()
             rotateY(Float.pi * 2 / Float(count) * Float(i))
             translate(10, 0, 0)
-            box(0, 0, 0, 1, 1, 1)
+            box(1, 1, 1)
             popMatrix()
         }
     }
@@ -55,7 +55,7 @@ final class SampleSketch: Sketch {
 ### You can use SketchView as SwiftUI View
 ```View.swift
 ZStack {
-    SketchView<MainCameraConfig, MainDrawConfig>(SampleSketch())
+    SketchView(SampleSketch())
 }
 .background(.black)
 ```
