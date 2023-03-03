@@ -43,7 +43,7 @@ public extension Sketch {
     }
     
     func drawHitTestableBox(box: HitTestableBox) {
-        pushMatrix()
+        privateEncoder?.setVertexBytes([f3.zero], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
         
         pushMatrix()
         translate(0, 0, box.scale.z)
@@ -77,8 +77,6 @@ public extension Sketch {
         rotateX(Float.pi/2)
         translate(0, 0, -box.scale.y)
         box.bottom.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
-        popMatrix()
-        
         popMatrix()
     }
     

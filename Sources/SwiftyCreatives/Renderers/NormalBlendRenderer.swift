@@ -48,7 +48,7 @@ public class NormalBlendRenderer<
 
     public override func draw(in view: MTKView) {
         super.draw(in: view)
-        guard let drawable = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
+        guard let _ = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
             return
         }
         

@@ -14,4 +14,11 @@ public enum ShaderCore {
     public static let commandQueue: MTLCommandQueue = ShaderCore.device.makeCommandQueue()!
     public static let context: CIContext = CIContext(mtlDevice: device)
     public static let textureLoader: MTKTextureLoader = MTKTextureLoader(device: ShaderCore.device)
+    public static let defaultTextureLoaderOptions: [MTKTextureLoader.Option: Any] = [
+        .textureUsage: NSNumber(
+            value: MTLTextureUsage.shaderRead.rawValue |
+            MTLTextureUsage.shaderWrite.rawValue |
+            MTLTextureUsage.renderTarget.rawValue
+        )
+    ]
 }

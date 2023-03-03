@@ -7,7 +7,7 @@
 
 import simd
 
-open class HitTestableBox: PrimitiveBase {
+open class HitTestableBox {
     
     internal let front = HitTestableRect()
     internal let back = HitTestableRect()
@@ -16,28 +16,13 @@ open class HitTestableBox: PrimitiveBase {
     internal let top = HitTestableRect()
     internal let bottom = HitTestableRect()
     
-    public var color: f4 { _color[0] }
     public var scale: f3 { _mScale[0] }
     
-    internal var _color: [f4] = [f4.zero]
     internal var _mScale: [f3] = [f3.one]
     internal var _material: [Material] = [Material(ambient: f3(1, 1, 1), diffuse: f3(1, 1, 1), specular: f3.one, shininess: 50)]
     
     public required init() {
-        setColor(color)
         setScale(scale)
-    }
-    
-    @discardableResult
-    public func setColor(_ value: f4) -> Self {
-        _color[0] = value
-        front.setColor(color)
-        back.setColor(color)
-        l.setColor(color)
-        r.setColor(color)
-        top.setColor(color)
-        bottom.setColor(color)
-        return self
     }
     
     @discardableResult

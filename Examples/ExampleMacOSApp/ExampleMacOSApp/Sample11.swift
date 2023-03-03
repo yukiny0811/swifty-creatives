@@ -12,8 +12,7 @@ import AppKit
 final class Sample11: Sketch {
     
     let box = HitTestableBox().setScale(f3(2, 3, 4))
-    let testBox = Box().setColor(f4(1, 0, 0, 1)).setScale(f3.one * 0.1)
-    
+    var boxColor: f4 = .one
     var testBoxPos: f3 = .zero
     
     override func setupCamera(camera: some MainCameraBase) {
@@ -21,25 +20,21 @@ final class Sample11: Sketch {
     }
     
     override func draw(encoder: SCEncoder) {
-        
-        pushMatrix()
-        translate(testBoxPos.x, testBoxPos.y, testBoxPos.z)
-        testBox.draw(encoder)
-        popMatrix()
-        
+        color(1, 0, 0, 1)
+        box(testBoxPos, f3.one * 0.1)
         translate(0, 3, 0)
+        color(boxColor)
         drawHitTestableBox(box: box)
     }
     
     override func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
-        var location = event.locationInWindow
-        location.y = viewFrame.height - location.y
+        let location = mousePos(event: event, viewFrame: viewFrame)
         let ray = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
         if let hitPos = box.hitTest(origin: ray.origin, direction: ray.direction) {
-            box.setColor(f4(0, 0, 1, 1))
+            boxColor = f4(0, 1, 0, 1)
             testBoxPos = hitPos
         } else {
-            box.setColor(f4.one)
+            boxColor = .one
         }
     }
 }

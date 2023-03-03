@@ -13,7 +13,8 @@ final class Sample5: Sketch {
     override init() {
         super.init()
         object
-            .setText("Swifty Creatives", font: NSFont.systemFont(ofSize: 60), color: .white)
+            .setText("Swifty Creatives", font: NSFont.systemFont(ofSize: 60))
+            .setColor(f4.one)
             .multiplyScale(18)
     }
     override func update(camera: some MainCameraBase) {

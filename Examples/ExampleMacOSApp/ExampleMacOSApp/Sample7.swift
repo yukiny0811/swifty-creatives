@@ -10,39 +10,35 @@ import SwiftyCreatives
 
 final class Sample7: Sketch {
     
-    var boxes: [Box] = []
+    var colors: [f4] = []
+    var scales: [f3] = []
     var elapsed: Float = 0.0
     var text = TextObject()
     
     override init() {
         for _ in 0...8 {
-            let box = Box()
-                .setColor(f4.randomPoint(0...1))
-                .setScale(f3.one * Float.random(in: 0.1...0.5))
-            boxes.append(box)
+            colors.append(f4.randomPoint(0...1))
+            scales.append(f3.one * Float.random(in: 0.1...0.5))
         }
         text
-            .setText("Loading...", font: NSFont.systemFont(ofSize: 120), color: .white)
-            .multiplyScale(7)
+            .setText("Loading...", font: NSFont.systemFont(ofSize: 120))
+            .multiplyScale(5)
+            .setColor(f4.one)
         
     }
     override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.03)
-        for i in 0..<boxes.count {
-            let elapsedSin = sin(elapsed * Float(i+1))
-            boxes[i]
-                .setColor(f4(elapsedSin, boxes[i].color.y, boxes[i].color.z, 1))
-        }
         elapsed += 0.01
     }
     
     override func draw(encoder: SCEncoder) {
-        for i in 0..<boxes.count {
-            pushMatrix()
+        for i in 0..<8 {
             let elapsedSin = sin(elapsed * Float(i+1))
             let elapsedCos = cos(elapsed * Float(i+1))
+            color(elapsedSin, colors[i].y, colors[i].z)
+            pushMatrix()
             translate(elapsedCos * 5, elapsedSin * 5, 0)
-            boxes[i].draw(encoder)
+            box(scales[i])
             popMatrix()
         }
         text.draw(encoder)

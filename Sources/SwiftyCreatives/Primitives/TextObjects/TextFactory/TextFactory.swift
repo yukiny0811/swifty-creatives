@@ -41,9 +41,7 @@ public class TextFactory {
     func createCharacterTexture(image: CIImage) -> MTLTexture {
         return try! ShaderCore.textureLoader.newTexture(
             cgImage: ShaderCore.context.createCGImage(image, from: image.extent)!,
-            options: [
-                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
-            ]
+            options: ShaderCore.defaultTextureLoaderOptions
         )
     }
 }

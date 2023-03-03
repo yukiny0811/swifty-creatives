@@ -14,6 +14,20 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
     private(set) public var texture: MTLTexture?
     private var textPostProcessor = TextPostProcessor()
     
+    public var color: f4?
+    
+    @discardableResult
+    public func setColor(_ value: f4) -> Self {
+        self.color = value
+        return self
+    }
+    
+    @discardableResult
+    public func setColor(_ r: Float, _ g: Float, _ b: Float, _ a: Float) -> Self {
+        self.color = f4(r, g, b, a)
+        return self
+    }
+    
     public override init() {
         super.init()
         hasTexture = [true]
@@ -80,7 +94,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         originalTexture = try! ShaderCore.textureLoader.newTexture(
             cgImage: im,
             options: [
-                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
+                .textureUsage: ShaderCore.defaultTextureLoaderOptions
             ]
         )
         self.texture = originalTexture
@@ -95,14 +109,14 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
     }
     
     @discardableResult
-    public func setText(_ text: String, font: FontAlias, color: ColorAlias) -> Self {
+    public func setText(_ text: String, font: FontAlias) -> Self {
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
-            .foregroundColor: color,
+            .foregroundColor: ColorAlias.white,
             .paragraphStyle: paragraphStyle
         ]
         
@@ -115,9 +129,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         let outputImage = filter.outputImage!
         originalTexture = try! ShaderCore.textureLoader.newTexture(
             cgImage: ShaderCore.context.createCGImage(outputImage, from: outputImage.extent)!,
-            options: [
-                .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue | MTLTextureUsage.shaderWrite.rawValue | MTLTextureUsage.renderTarget.rawValue)
-            ]
+            options: ShaderCore.defaultTextureLoaderOptions
         )
         self.texture = originalTexture
         
@@ -131,10 +143,11 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         return self
     }
     public override func draw(_ encoder: SCEncoder) {
-        textPostProcessor.postProcessColor(originalTexture: originalTexture!, texture: self.texture!, color: self.color)
+        if let color = color {
+            textPostProcessor.postProcessColor(originalTexture: originalTexture!, texture: self.texture!, color: color)
+        }
         encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
-        encoder.setVertexBytes(_color, length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
         encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
         encoder.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
         encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)

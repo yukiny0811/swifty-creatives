@@ -122,6 +122,7 @@ void OITFragmentFunction(RasterizerData in,
     const float depth = in.position.z / in.position.w;
     
     half4 fragmentColor = half4(in.color);
+    fragmentColor.rgb *= (fragmentColor.a);
     
     if (uniformHasTexture.value) {
         constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
