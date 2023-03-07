@@ -2,12 +2,12 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/02/26.
+//  Created by Yuki Kuwashima on 2023/03/07.
 //
 
 import simd
 
-public extension SCPacket {
+public extension FunctionBase {
     
     func translate(_ x: Float, _ y: Float, _ z: Float) {
         let translateMatrix = f4x4.createTransform(x, y, z)

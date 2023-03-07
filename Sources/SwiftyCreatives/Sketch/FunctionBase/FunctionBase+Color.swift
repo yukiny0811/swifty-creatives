@@ -2,12 +2,12 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/02/26.
+//  Created by Yuki Kuwashima on 2023/03/07.
 //
 
 import simd
 
-public extension Sketch {
+public extension FunctionBase {
     
     func color(_ r: Float, _ g: Float, _ b: Float, _ a: Float) {
         privateEncoder?.setVertexBytes([f4(r, g, b, a)], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)

@@ -2,12 +2,12 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/02/26.
+//  Created by Yuki Kuwashima on 2023/03/07.
 //
 
 import simd
 
-public extension SCPacket {
+public extension FunctionBase {
     
     func line(_ x1: Float, _ y1: Float, _ z1: Float, _ x2: Float, _ y2: Float, _ z2: Float) {
         privateEncoder?.setVertexBytes([f3.zero], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)

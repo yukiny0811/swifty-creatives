@@ -2,13 +2,13 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/03/03.
+//  Created by Yuki Kuwashima on 2023/03/07.
 //
 
 import Metal
 import simd
 
-public extension SCPacket {
+public extension FunctionBase {
     func img(texture: MTLTexture, with option: ImageAdjustOption) {
         let adjustedScale = ImageAdjuster.adjustedScale(width: Float(texture.width), height: Float(texture.height), with: option)
         privateEncoder?.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)

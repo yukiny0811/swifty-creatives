@@ -2,12 +2,12 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/02/26.
+//  Created by Yuki Kuwashima on 2023/03/07.
 //
 
 import simd
 
-public extension SCPacket {
+public extension FunctionBase {
     
     func circle(_ x: Float, _ y: Float, _ z: Float, _ radX: Float, _ radY: Float) {
         privateEncoder?.setVertexBytes([f3(x, y, z)], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
