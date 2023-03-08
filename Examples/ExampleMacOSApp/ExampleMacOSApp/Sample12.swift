@@ -75,8 +75,7 @@ final class Sample12: Sketch {
     }
     
     override func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
-        var location = event.locationInWindow
-        location.y = viewFrame.height - location.y
+        var location = mousePos(event: event, viewFrame: viewFrame)
         let ray = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
         var savedIndex: (Int, Int)? = nil
         var closestDistance: Float = 10000

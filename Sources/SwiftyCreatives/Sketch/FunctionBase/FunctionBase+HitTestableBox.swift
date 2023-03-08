@@ -9,6 +9,8 @@ import simd
 
 public extension FunctionBase {
     func drawHitTestableBox(box: HitTestableBox) {
+        privateEncoder?.setVertexBytes([f3.zero], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        
         pushMatrix()
         
         pushMatrix()
