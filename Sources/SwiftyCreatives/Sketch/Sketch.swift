@@ -19,6 +19,8 @@ open class Sketch: SketchBase, FunctionBase {
     
     public var privateEncoder: SCEncoder?
     
+    public let textPostProcessor: TextPostProcessor = TextPostProcessor()
+    
     public var deltaTime: Float = 0
     public var frameRate: Float { 1 / deltaTime }
     

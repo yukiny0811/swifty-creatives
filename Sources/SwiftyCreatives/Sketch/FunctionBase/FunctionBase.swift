@@ -10,4 +10,5 @@ import Metal
 public protocol FunctionBase: AnyObject {
     var privateEncoder: SCEncoder? { get set }
     var customMatrix: [f4x4] { get set }
+    var textPostProcessor: TextPostProcessor { get }
 }
