@@ -31,6 +31,16 @@ func ^(left: Int, right: Float) -> Float {
 func ^(left: Int, right: Double) -> Double {
     return pow(Double(left), right)
 }
+func ^(left: Int, right: Int) -> Float {
+    return pow(Float(left), Float(right))
+}
+func ^(left: Float, right: Int) -> Float {
+    return pow(left, Float(right))
+}
+func ^(left: Double, right: Int) -> Double {
+    return pow(left, Double(right))
+}
+
 
 infix operator .+ : AdditionPrecedence
 func .+(left: Float, right: simd_float2x2) -> simd_float2x2 {
