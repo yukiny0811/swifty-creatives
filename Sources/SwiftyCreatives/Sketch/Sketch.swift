@@ -13,11 +13,13 @@ import UIKit
 
 import simd
 
-open class Sketch: SketchBase {
+open class Sketch: SketchBase, FunctionBase {
     
-    var customMatrix: [f4x4] = [f4x4.createIdentity()]
+    public var customMatrix: [f4x4] = [f4x4.createIdentity()]
     
-    private(set) var privateEncoder: SCEncoder?
+    public var privateEncoder: SCEncoder?
+    
+    public let textPostProcessor: TextPostProcessor = TextPostProcessor()
     
     public var deltaTime: Float = 0
     public var frameRate: Float { 1 / deltaTime }

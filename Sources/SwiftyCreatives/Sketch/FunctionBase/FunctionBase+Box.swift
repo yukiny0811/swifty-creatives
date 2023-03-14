@@ -2,13 +2,10 @@
 //  File.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/02/26.
+//  Created by Yuki Kuwashima on 2023/03/07.
 //
 
-import simd
-
-public extension SCPacket {
-    
+public extension FunctionBase {
     func box(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float, _ scaleZ: Float) {
         privateEncoder?.setVertexBytes([f3(x, y, z)], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
         privateEncoder?.setVertexBytes([f3(scaleX, scaleY, scaleZ)], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
