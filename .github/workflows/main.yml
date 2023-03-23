@@ -29,8 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS Example
-        run: cd Examples/ExampleMacOSApp
-        run: xcodebuild -scheme ExampleMacOSApp build -destination "generic/platform=macOS"
+        run: cd Examples/ExampleMacOSApp && xcodebuild -scheme ExampleMacOSApp build -destination "generic/platform=macOS"
       - name: Build iOS Example
-        run: cd Examples/ExampleiOSApp
-        run: xcodebuild -scheme ExampleiOSApp build -destination "generic/platform=iOS"
+        run: cd Examples/ExampleiOSApp && xcodebuild -scheme ExampleiOSApp build -destination "generic/platform=iOS"
