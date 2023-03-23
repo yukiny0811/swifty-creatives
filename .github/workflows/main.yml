@@ -24,3 +24,13 @@ jobs:
         run: xcodebuild -scheme SwiftyCreatives test -destination "platform=macOS,arch=x86_64"
       - name: Test iOS
         run: xcodebuild -scheme SwiftyCreatives test -destination "name=iPhone 14 Pro"
+  build-examples:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build macOS Example
+        run: cd Examples/ExampleMacOSApp
+        run: xcodebuild -scheme ExampleMacOSApp build -destination "generic/platform=macOS"
+      - name: Build iOS Example
+        run: cd Examples/ExampleiOSApp
+        run: xcodebuild -scheme ExampleiOSApp build -destination "generic/platform=iOS"
