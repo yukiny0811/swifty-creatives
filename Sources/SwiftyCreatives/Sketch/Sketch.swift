@@ -37,6 +37,10 @@ open class Sketch: SketchBase, FunctionBase {
     open func update(camera: some MainCameraBase) {}
     open func draw(encoder: SCEncoder) {}
     
+    #if canImport(XCTest)
+    open func afterCommit() {}
+    #endif
+    
     public func beforeDraw(encoder: SCEncoder) {
         self.customMatrix = [f4x4.createIdentity()]
         self.privateEncoder = encoder
