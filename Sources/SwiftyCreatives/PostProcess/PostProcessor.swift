@@ -15,13 +15,12 @@ open class PostProcessor: PostProcessorBase {
     
     //true if read_write enabled
     @discardableResult
-    public func postProcess(texture: MTLTexture) -> Bool {
+    public func postProcess(commandBuffer: MTLCommandBuffer, texture: MTLTexture) -> Bool {
         let threadsPerThreadgroup = MTLSize(width: 16, height: 16, depth: 1)
         let threadGroupCount = MTLSize(
             width: Int(ceilf(Float(texture.width) / Float(threadsPerThreadgroup.width))),
             height: Int(ceilf(Float(texture.height) / Float(threadsPerThreadgroup.height))),
             depth: 1)
-        let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
         commandEncoder.setComputePipelineState(pipelineState)
         switch ShaderCore.device.readWriteTextureSupport {
@@ -30,7 +29,6 @@ open class PostProcessor: PostProcessorBase {
             commandEncoder.setBytes(args, length: Float.memorySize * args.count, index: 0)
             commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
             commandEncoder.endEncoding()
-            commandBuffer.commit()
             return true
         default:
             savedTexture = texture
@@ -39,7 +37,6 @@ open class PostProcessor: PostProcessorBase {
             commandEncoder.setBytes(args, length: Float.memorySize * args.count, index: 0)
             commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
             commandEncoder.endEncoding()
-            commandBuffer.commit()
             return false
         }
     }
