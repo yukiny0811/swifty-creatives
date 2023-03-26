@@ -13,13 +13,12 @@ public class TextPostProcessor: PostProcessorBase {
         super.init(functionName: "textColorPostProcess", slowFunctionName: "textColorPostProcess", bundle: .module)
     }
     
-    public func postProcessColor(originalTexture: MTLTexture, texture: MTLTexture, color: f4) {
+    public func postProcessColor(commandBuffer: MTLCommandBuffer, originalTexture: MTLTexture, texture: MTLTexture, color: f4) {
         let threadsPerThreadgroup = MTLSize(width: 16, height: 16, depth: 1)
         let threadGroupCount = MTLSize(
             width: Int(ceilf(Float(texture.width) / Float(threadsPerThreadgroup.width))),
             height: Int(ceilf(Float(texture.height) / Float(threadsPerThreadgroup.height))),
             depth: 1)
-        let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         let commandEncoder = commandBuffer.makeComputeCommandEncoder()!
         commandEncoder.setComputePipelineState(pipelineState)
         commandEncoder.setBytes([color], length: f4.memorySize, index: 0)
@@ -27,6 +26,5 @@ public class TextPostProcessor: PostProcessorBase {
         commandEncoder.setTexture(texture, index: 1)
         commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
-        commandBuffer.commit()
     }
 }

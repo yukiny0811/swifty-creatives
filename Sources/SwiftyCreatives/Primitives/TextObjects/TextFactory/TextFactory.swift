@@ -11,10 +11,10 @@ public class TextFactory {
     
     var registeredTextures: [String: TextFactory.TextureData] = [:]
     
-    init(font: FontAlias, register characters: String) {
+    init(font: FontAlias, register characters: String, color: ColorAlias) {
         for c in characters {
             let str = String(c)
-            let attributedString = createAttributedString(character: str, font: font, color: .white)
+            let attributedString = createAttributedString(character: str, font: font, color: color)
             let characterImage = createCharacterImage(attributedString: attributedString)
             registeredTextures[str] = TextFactory.TextureData(
                 texture: createCharacterTexture(image: characterImage),

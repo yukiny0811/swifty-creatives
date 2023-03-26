@@ -18,7 +18,7 @@ public class BloomPP: PostProcessorBase {
         super.init(functionName: "bloomPostProcess", slowFunctionName: "bloomPostProcess", bundle: .module)
     }
     
-    public func postProcess(texture: MTLTexture, threshold: Float, intensity: Float) {
+    public func postProcess(commandBuffer: MTLCommandBuffer, texture: MTLTexture, threshold: Float, intensity: Float) {
         let descriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: texture.pixelFormat,
                                                                   width: texture.width,
                                                                   height: texture.height,
@@ -32,7 +32,6 @@ public class BloomPP: PostProcessorBase {
             width: Int(ceilf(Float(texture.width) / Float(threadsPerThreadgroup.width))),
             height: Int(ceilf(Float(texture.height) / Float(threadsPerThreadgroup.height))),
             depth: 1)
-        var commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         var commandEncoder = commandBuffer.makeComputeCommandEncoder()!
         commandEncoder.setComputePipelineState(pipelineState)
         commandEncoder.setBytes([threshold], length: Float.memorySize, index: 0)
@@ -40,18 +39,10 @@ public class BloomPP: PostProcessorBase {
         commandEncoder.setTexture(savedTexture, index: 1)
         commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
-        commandBuffer.commit()
         
-        commandBuffer.waitUntilCompleted()
-        
-        commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         let blurFunc = MPSImageGaussianBlur(device: ShaderCore.device, sigma: intensity)
         blurFunc.encode(commandBuffer: commandBuffer, sourceTexture: savedTexture!, destinationTexture: finalTexture!)
-        commandBuffer.commit()
         
-        commandBuffer.waitUntilCompleted()
-        
-        commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         commandEncoder = commandBuffer.makeComputeCommandEncoder()!
         commandEncoder.setComputePipelineState(addPipelineState!)
         commandEncoder.setBytes([threshold], length: Float.memorySize, index: 0)
@@ -60,8 +51,5 @@ public class BloomPP: PostProcessorBase {
         commandEncoder.setTexture(texture, index: 2)
         commandEncoder.dispatchThreadgroups(threadGroupCount, threadsPerThreadgroup: threadsPerThreadgroup)
         commandEncoder.endEncoding()
-        commandBuffer.commit()
-        
-        commandBuffer.waitUntilCompleted()
     }
 }

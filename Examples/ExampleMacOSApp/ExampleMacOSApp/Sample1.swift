@@ -22,6 +22,6 @@ final class Sample1: Sketch {
         }
     }
     override func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
-        bloomPP.postProcess(texture: texture, threshold: 0.1, intensity: 25)
+        bloomPP.postProcess(commandBuffer: commandBuffer, texture: texture, threshold: 0.1, intensity: 25)
     }
 }

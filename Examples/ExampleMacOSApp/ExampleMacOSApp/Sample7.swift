@@ -23,7 +23,6 @@ final class Sample7: Sketch {
         text
             .setText("Loading...", font: NSFont.systemFont(ofSize: 120))
             .multiplyScale(5)
-            .setColor(f4.one)
         
     }
     override func update(camera: some MainCameraBase) {

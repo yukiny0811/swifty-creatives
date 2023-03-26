@@ -14,8 +14,10 @@ final class Sample5: Sketch {
         super.init()
         object
             .setText("Swifty Creatives", font: NSFont.systemFont(ofSize: 60))
-            .setColor(f4.one)
             .multiplyScale(18)
+    }
+    override func preProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
+        object.setColor(commandBuffer: commandBuffer, f4(1, 0, 1, 1))
     }
     override func update(camera: some MainCameraBase) {
         camera.rotateAroundY(0.01)

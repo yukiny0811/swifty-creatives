@@ -130,18 +130,12 @@ class TransparentRenderer<
         
         renderEncoder.endEncoding()
         
-        // MARK: - commit buffer
-        commandBuffer.commit()
-        commandBuffer.waitUntilCompleted()
-        
         self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer)
         
-        let afterBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
-        let afterEncoder = afterBuffer.makeBlitCommandEncoder()!
+        let afterEncoder = commandBuffer.makeBlitCommandEncoder()!
         afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
         afterEncoder.endEncoding()
-        afterBuffer.present(view.currentDrawable!)
-        afterBuffer.commit()
-        afterBuffer.waitUntilCompleted()
+        commandBuffer.present(view.currentDrawable!)
+        commandBuffer.commit()
     }
 }

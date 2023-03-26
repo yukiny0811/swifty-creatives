@@ -17,14 +17,14 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
     public var color: f4?
     
     @discardableResult
-    public func setColor(_ value: f4) -> Self {
-        self.color = value
+    public func setColor(commandBuffer: MTLCommandBuffer, _ value: f4) -> Self {
+        textPostProcessor.postProcessColor(commandBuffer: commandBuffer, originalTexture: originalTexture!, texture: self.texture!, color: value)
         return self
     }
     
     @discardableResult
-    public func setColor(_ r: Float, _ g: Float, _ b: Float, _ a: Float) -> Self {
-        self.color = f4(r, g, b, a)
+    public func setColor(commandBuffer: MTLCommandBuffer, _ r: Float, _ g: Float, _ b: Float, _ a: Float) -> Self {
+        textPostProcessor.postProcessColor(commandBuffer: commandBuffer, originalTexture: originalTexture!, texture: self.texture!, color: f4(r, g, b, a))
         return self
     }
     
@@ -143,9 +143,6 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         return self
     }
     public override func draw(_ encoder: SCEncoder) {
-        if let color = color {
-            textPostProcessor.postProcessColor(originalTexture: originalTexture!, texture: self.texture!, color: color)
-        }
         encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)

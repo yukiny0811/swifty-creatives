@@ -39,9 +39,7 @@ public extension FunctionBase {
                 translate(spacer, 0, 0)
                 continue
             }
-            let coloredTexture = data.texture
-            textPostProcessor.postProcessColor(originalTexture: data.texture, texture: coloredTexture, color: color)
-            encoder.setFragmentTexture(coloredTexture, index: FragmentTextureIndex.MainTexture.rawValue)
+            encoder.setFragmentTexture(data.texture, index: FragmentTextureIndex.MainTexture.rawValue)
             encoder.setVertexBytes([data.size * scale], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
             encoder.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
             translate(data.size.x * scale, 0, 0)
