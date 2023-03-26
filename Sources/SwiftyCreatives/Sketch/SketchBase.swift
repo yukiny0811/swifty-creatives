@@ -22,7 +22,7 @@ public protocol SketchBase: AnyObject {
     
     func updateAndDrawLight(encoder: SCEncoder)
     func beforeDraw(encoder: SCEncoder)
-    func preProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer)
+    func preProcess(commandBuffer: MTLCommandBuffer)
     func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer)
     
     #if canImport(XCTest)

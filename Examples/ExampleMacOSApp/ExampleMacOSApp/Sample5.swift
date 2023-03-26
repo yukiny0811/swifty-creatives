@@ -16,7 +16,7 @@ final class Sample5: Sketch {
             .setText("Swifty Creatives", font: NSFont.systemFont(ofSize: 60))
             .multiplyScale(18)
     }
-    override func preProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
+    override func preProcess(commandBuffer: MTLCommandBuffer) {
         object.setColor(commandBuffer: commandBuffer, f4(1, 0, 1, 1))
     }
     override func update(camera: some MainCameraBase) {
