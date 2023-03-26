@@ -16,6 +16,7 @@ final class RectTests: XCTestCase {
     
     @MainActor
     func testRectIsDrawed() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation
@@ -47,6 +48,7 @@ final class RectTests: XCTestCase {
     
     @MainActor
     func testRectPosWorking() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation
@@ -78,6 +80,7 @@ final class RectTests: XCTestCase {
     
     @MainActor
     func testRectColorWorking() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation

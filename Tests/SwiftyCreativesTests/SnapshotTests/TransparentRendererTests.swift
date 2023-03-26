@@ -23,6 +23,7 @@ final class TransparentRendererTests: XCTestCase {
     
     @MainActor
     func testTransparentRendering() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation

@@ -16,6 +16,7 @@ final class TriangleTests: XCTestCase {
     
     @MainActor
     func testTriangleIsDrawed() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation
@@ -47,6 +48,7 @@ final class TriangleTests: XCTestCase {
     
     @MainActor
     func testTrianglePosWorking() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation
@@ -78,6 +80,7 @@ final class TriangleTests: XCTestCase {
     
     @MainActor
     func testTriangleColorWorking() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation

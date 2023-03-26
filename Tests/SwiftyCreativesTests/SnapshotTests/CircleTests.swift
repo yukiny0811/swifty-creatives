@@ -16,6 +16,7 @@ final class CircleTests: XCTestCase {
     
     @MainActor
     func testCircleIsDrawed() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation
@@ -47,6 +48,7 @@ final class CircleTests: XCTestCase {
     
     @MainActor
     func testCircleParameterWorking() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation
@@ -78,6 +80,7 @@ final class CircleTests: XCTestCase {
     
     @MainActor
     func testCircleColorWorking() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation

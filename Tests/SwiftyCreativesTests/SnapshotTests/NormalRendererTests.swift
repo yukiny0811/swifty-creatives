@@ -23,6 +23,7 @@ final class NormalRendererTests: XCTestCase {
     
     @MainActor
     func testNormalRendering() async throws {
+        try SnapshotTestUtil.testGPU()
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation
