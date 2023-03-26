@@ -89,7 +89,7 @@ public class AddRenderer<
         commandBuffer?.commit()
         commandBuffer?.waitUntilCompleted()
         
-        self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!)
+        self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer!)
         
         let afterBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         let afterEncoder = afterBuffer.makeBlitCommandEncoder()!

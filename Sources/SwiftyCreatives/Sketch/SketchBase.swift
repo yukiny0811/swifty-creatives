@@ -22,7 +22,8 @@ public protocol SketchBase: AnyObject {
     
     func updateAndDrawLight(encoder: SCEncoder)
     func beforeDraw(encoder: SCEncoder)
-    func postProcess(texture: MTLTexture)
+    func preProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer)
+    func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer)
     
     #if os(macOS)
     func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect)

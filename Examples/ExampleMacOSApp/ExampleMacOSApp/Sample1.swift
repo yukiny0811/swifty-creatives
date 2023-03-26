@@ -21,7 +21,7 @@ final class Sample1: Sketch {
             popMatrix()
         }
     }
-    override func postProcess(texture: MTLTexture) {
+    override func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
         bloomPP.postProcess(texture: texture, threshold: 0.1, intensity: 25)
     }
 }
