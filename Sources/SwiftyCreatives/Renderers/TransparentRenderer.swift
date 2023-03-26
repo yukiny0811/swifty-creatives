@@ -87,6 +87,8 @@ class TransparentRenderer<
             renderPassDescriptor.colorAttachments[0].loadAction = .load
         }
         
+        drawProcess.preProcess(commandBuffer: commandBuffer)
+        
         // MARK: - render encoder
         let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         
@@ -133,7 +135,6 @@ class TransparentRenderer<
         self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer)
         
         if cachedTexture == nil || cachedTexture!.width != view.currentDrawable!.texture.width || cachedTexture!.height != view.currentDrawable!.texture.height {
-            print("test")
             let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
                 pixelFormat: view.colorPixelFormat,
                 width: view.currentDrawable!.texture.width,

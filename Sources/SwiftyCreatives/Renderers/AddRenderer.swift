@@ -56,6 +56,8 @@ public class AddRenderer<
         
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
+        drawProcess.preProcess(commandBuffer: commandBuffer!)
+        
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
         Self.setDefaultBuffers(encoder: renderCommandEncoder!)

@@ -25,7 +25,7 @@ struct ExampleMacOSApp: App {
 //                }
 //                VStack {
 //                    HStack {
-//                        SketchView(Sample5())
+                        SketchView(Sample5())
 //                        SketchView(Sample6())
 //                    }
 //                    HStack {
@@ -40,7 +40,7 @@ struct ExampleMacOSApp: App {
                     }
                     HStack {
 //                        SketchView(Sample11())
-                        SketchView(Sample12())
+//                        SketchView(Sample12())
                     }
                 }
             }.background(.black)

@@ -46,7 +46,7 @@ open class Sketch: SketchBase, FunctionBase {
         self.privateEncoder = encoder
     }
     
-    open func preProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {}
+    open func preProcess(commandBuffer: MTLCommandBuffer) {}
     open func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {}
     
     public func getCustomMatrix() -> f4x4 {
