@@ -23,6 +23,6 @@ final class Sample5: Sketch {
         camera.rotateAroundY(0.01)
     }
     override func draw(encoder: SCEncoder) {
-        object.draw(encoder)
+        text(object)
     }
 }

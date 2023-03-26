@@ -40,6 +40,6 @@ final class Sample7: Sketch {
             box(scales[i])
             popMatrix()
         }
-        text.draw(encoder)
+        text(text)
     }
 }
