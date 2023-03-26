@@ -16,6 +16,7 @@ public class RendererBase<
     var camera: MainCamera<CameraConfig>
     var drawProcess: SketchBase
     var savedDate: Date
+    public var cachedTexture: MTLTexture?
     
     public init(drawProcess: SketchBase) {
         self.camera = MainCamera()

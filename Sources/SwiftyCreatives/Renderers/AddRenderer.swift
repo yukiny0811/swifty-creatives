@@ -68,6 +68,11 @@ public class AddRenderer<
         renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: FragmentTextureIndex.MainTexture.rawValue)
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
+        
+        drawProcess.beforeDraw(encoder: renderCommandEncoder!)
+        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
+        drawProcess.update(camera: camera)
+        drawProcess.draw(encoder: renderCommandEncoder!)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(
@@ -80,19 +85,30 @@ public class AddRenderer<
             )
         )
         
-        drawProcess.beforeDraw(encoder: renderCommandEncoder!)
-        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
-        drawProcess.update(camera: camera)
-        drawProcess.draw(encoder: renderCommandEncoder!)
-        
         renderCommandEncoder?.endEncoding()
         
         self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer!)
         
+        if cachedTexture == nil || cachedTexture!.width != view.currentDrawable!.texture.width || cachedTexture!.height != view.currentDrawable!.texture.height {
+            let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+                pixelFormat: view.colorPixelFormat,
+                width: view.currentDrawable!.texture.width,
+                height: view.currentDrawable!.texture.height,
+                mipmapped: false)
+            textureDescriptor.usage = [.shaderRead]
+            cachedTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)
+        }
+        
         let afterEncoder = commandBuffer!.makeBlitCommandEncoder()!
+        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: cachedTexture!)
         afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
         afterEncoder.endEncoding()
         commandBuffer!.present(view.currentDrawable!)
         commandBuffer!.commit()
+        
+        #if canImport(XCTest)
+        commandBuffer!.waitUntilCompleted()
+        self.drawProcess.afterCommit()
+        #endif
     }
 }

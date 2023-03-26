@@ -132,10 +132,27 @@ class TransparentRenderer<
         
         self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer)
         
+        if cachedTexture == nil || cachedTexture!.width != view.currentDrawable!.texture.width || cachedTexture!.height != view.currentDrawable!.texture.height {
+            print("test")
+            let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+                pixelFormat: view.colorPixelFormat,
+                width: view.currentDrawable!.texture.width,
+                height: view.currentDrawable!.texture.height,
+                mipmapped: false)
+            textureDescriptor.usage = [.shaderRead]
+            cachedTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)
+        }
+        
         let afterEncoder = commandBuffer.makeBlitCommandEncoder()!
+        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: cachedTexture!)
         afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
         afterEncoder.endEncoding()
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
+        
+        #if canImport(XCTest)
+        commandBuffer.waitUntilCompleted()
+        self.drawProcess.afterCommit()
+        #endif
     }
 }
