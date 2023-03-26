@@ -11,7 +11,7 @@ import SwiftUI
 import SnapshotTesting
 import MetalKit
 
-#if os(macOS)
+#if os(iOS)
 final class TransparentRendererTests: XCTestCase {
     
     class TestDrawConfig: DrawConfigBase {
@@ -71,7 +71,7 @@ final class TransparentRendererTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
         
         let cgimage = swiftuiView.renderer.cachedTexture!.cgImage!
-        let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
+        let finalimage = UIImage(cgImage: cgimage)
         assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording)
     }
 }
