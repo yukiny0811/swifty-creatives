@@ -15,7 +15,7 @@ struct ExampleMacOSApp: App {
             ZStack {
 //                VStack {
 //                    HStack {
-//                        SketchView(Sample1())
+                        SketchView(Sample1())
 //                        SketchView(Sample2())
 //                    }
 //                    HStack {
@@ -33,16 +33,16 @@ struct ExampleMacOSApp: App {
 //                        SketchView(Sample8())
 //                    }
 //                }
-                VStack {
-                    HStack {
-                        ConfigurableSketchView<MainCameraConfig, Sample9DrawConfig>(Sample9())
-                        SketchView(Sample10())
-                    }
-                    HStack {
-                        SketchView(Sample11())
-                        SketchView(Sample12())
-                    }
-                }
+//                VStack {
+//                    HStack {
+//                        ConfigurableSketchView<MainCameraConfig, Sample9DrawConfig>(Sample9())
+//                        SketchView(Sample10())
+//                    }
+//                    HStack {
+//                        SketchView(Sample11())
+//                        SketchView(Sample12())
+//                    }
+//                }
             }.background(.black)
         }
     }

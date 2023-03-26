@@ -94,7 +94,7 @@ public class NormalBlendRenderer<
         commandBuffer?.commit()
         commandBuffer?.waitUntilCompleted()
         
-        self.drawProcess.afterDraw(texture: renderPassDescriptor.colorAttachments[0].texture!)
+        self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!)
         
         let afterBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         let afterEncoder = afterBuffer.makeBlitCommandEncoder()!

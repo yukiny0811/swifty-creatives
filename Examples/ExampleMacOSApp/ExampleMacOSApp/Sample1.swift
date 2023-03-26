@@ -6,8 +6,10 @@
 //
 
 import SwiftyCreatives
+import Metal
 
 final class Sample1: Sketch {
+    let bloomPP = BloomPP()
     override func draw(encoder: SCEncoder) {
         let count = 20
         for i in 0..<count {
@@ -18,5 +20,8 @@ final class Sample1: Sketch {
             box(0, 0, 0, 1, 1, 1)
             popMatrix()
         }
+    }
+    override func postProcess(texture: MTLTexture) {
+        bloomPP.postProcess(texture: texture, threshold: 0.1, intensity: 25)
     }
 }
