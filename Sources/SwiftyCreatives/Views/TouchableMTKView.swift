@@ -11,9 +11,7 @@ public class TouchableMTKView<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: MTKView {
-    
     var renderer: RendererBase<CameraConfig, DrawConfig>
-    
     init(renderer: RendererBase<CameraConfig, DrawConfig>) {
         self.renderer = renderer
         super.init(frame: .zero, device: ShaderCore.device)
@@ -68,6 +66,7 @@ public class TouchableMTKView<
     }
     #endif
     
+    @available(*, unavailable)
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

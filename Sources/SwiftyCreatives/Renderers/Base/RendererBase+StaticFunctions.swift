@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  RendererBase+StaticFunctions.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2023/02/26.

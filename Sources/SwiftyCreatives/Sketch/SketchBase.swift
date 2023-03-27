@@ -12,14 +12,12 @@ import UIKit
 #endif
 
 public protocol SketchBase: AnyObject {
-    
     var deltaTime: Float { get set }
     
     // MARK: functions
     func setupCamera(camera: some MainCameraBase)
     func update(camera: some MainCameraBase)
     func draw(encoder: SCEncoder)
-    
     func updateAndDrawLight(encoder: SCEncoder)
     func beforeDraw(encoder: SCEncoder)
     func preProcess(commandBuffer: MTLCommandBuffer)

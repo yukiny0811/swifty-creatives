@@ -11,11 +11,9 @@ public class AddRenderer<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: RendererBase<CameraConfig, DrawConfig> {
-    
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
     let renderPipelineState: MTLRenderPipelineState
-
     public init(sketch: SketchBase) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
@@ -35,13 +33,11 @@ public class AddRenderer<
         super.init(drawProcess: sketch)
         self.drawProcess.setupCamera(camera: camera)
     }
-
     public override func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         guard view.frame.size != size else {
             return
         }
     }
-
     public override func draw(in view: MTKView) {
         super.draw(in: view)
         guard let _ = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {

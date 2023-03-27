@@ -1,4 +1,3 @@
-
 #include <metal_stdlib>
 #include "../Functions.metal"
 using namespace metal;

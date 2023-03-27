@@ -13,19 +13,19 @@ struct ExampleMacOSApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
+                VStack {
+                    HStack {
+                        SketchView(Sample1())
+                        SketchView(Sample2())
+                    }
+                    HStack {
+                        SketchView(Sample3())
+                        SketchView(Sample4())
+                    }
+                }
 //                VStack {
 //                    HStack {
-//                        SketchView(Sample1())
-//                        SketchView(Sample2())
-//                    }
-//                    HStack {
-//                        SketchView(Sample3())
-//                        SketchView(Sample4())
-//                    }
-//                }
-//                VStack {
-//                    HStack {
-                        SketchView(Sample5())
+//                        SketchView(Sample5())
 //                        SketchView(Sample6())
 //                    }
 //                    HStack {
