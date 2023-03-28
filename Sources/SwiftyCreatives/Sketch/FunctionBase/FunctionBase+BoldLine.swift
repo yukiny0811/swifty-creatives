@@ -20,6 +20,12 @@ public extension FunctionBase {
             let corner3 = f3(x2 - width, y2, z2)
             let corner4 = f3(x2 + width, y2, z2)
             privateEncoder?.setVertexBytes([corner1, corner2, corner3, corner4], length: f3.memorySize * 4, index: VertexBufferIndex.Position.rawValue)
+        } else if diffY <= 0.00001 {
+            let corner1 = f3(x1, y1 - width, z1)
+            let corner2 = f3(x1, y1 + width, z1)
+            let corner3 = f3(x2, y2 - width, z2)
+            let corner4 = f3(x2, y2 + width, z2)
+            privateEncoder?.setVertexBytes([corner1, corner2, corner3, corner4], length: f3.memorySize * 4, index: VertexBufferIndex.Position.rawValue)
         } else {
             let a_xy = diffY / diffX
             let inv_a = 1 / a_xy
@@ -54,6 +60,12 @@ public extension FunctionBase {
             let corner2 = f3(x1 + width, y1, z1)
             let corner3 = f3(x2 - width, y2, z2)
             let corner4 = f3(x2 + width, y2, z2)
+            privateEncoder?.setVertexBytes([corner1, corner2, corner3, corner4], length: f3.memorySize * 4, index: VertexBufferIndex.Position.rawValue)
+        } else if diffY <= 0.00001 {
+            let corner1 = f3(x1, y1 - width, z1)
+            let corner2 = f3(x1, y1 + width, z1)
+            let corner3 = f3(x2, y2 - width, z2)
+            let corner4 = f3(x2, y2 + width, z2)
             privateEncoder?.setVertexBytes([corner1, corner2, corner3, corner4], length: f3.memorySize * 4, index: VertexBufferIndex.Position.rawValue)
         } else {
             let a_xy = diffY / diffX
