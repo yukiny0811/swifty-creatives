@@ -12,11 +12,11 @@ final class Sample1: Sketch {
         let count = 20
         for i in 0..<count {
             color(1, Float(i) / 40, 0, 0.5)
-            pushMatrix()
-            rotateY(Float.pi * 2 / Float(count) * Float(i))
-            translate(10, 0, 0)
-            box(0, 0, 0, 1, 1, 1)
-            popMatrix()
+            push {
+                rotateY(Float.pi * 2 / Float(count) * Float(i))
+                translate(10, 0, 0)
+                box(0, 0, 0, 1, 1, 1)
+            }
         }
     }
 }
