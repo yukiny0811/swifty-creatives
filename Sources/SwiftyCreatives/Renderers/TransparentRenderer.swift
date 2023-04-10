@@ -87,6 +87,8 @@ class TransparentRenderer<
             renderPassDescriptor.colorAttachments[0].loadAction = .load
         }
         
+        drawProcess.preProcess(commandBuffer: commandBuffer)
+        
         // MARK: - render encoder
         let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         
@@ -130,18 +132,28 @@ class TransparentRenderer<
         
         renderEncoder.endEncoding()
         
-        // MARK: - commit buffer
-        commandBuffer.commit()
-        commandBuffer.waitUntilCompleted()
+        self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer)
         
-        self.drawProcess.afterDraw(texture: renderPassDescriptor.colorAttachments[0].texture!)
+        if cachedTexture == nil || cachedTexture!.width != view.currentDrawable!.texture.width || cachedTexture!.height != view.currentDrawable!.texture.height {
+            let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+                pixelFormat: view.colorPixelFormat,
+                width: view.currentDrawable!.texture.width,
+                height: view.currentDrawable!.texture.height,
+                mipmapped: false)
+            textureDescriptor.usage = [.shaderRead]
+            cachedTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)
+        }
         
-        let afterBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
-        let afterEncoder = afterBuffer.makeBlitCommandEncoder()!
+        let afterEncoder = commandBuffer.makeBlitCommandEncoder()!
+        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: cachedTexture!)
         afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
         afterEncoder.endEncoding()
-        afterBuffer.present(view.currentDrawable!)
-        afterBuffer.commit()
-        afterBuffer.waitUntilCompleted()
+        commandBuffer.present(view.currentDrawable!)
+        commandBuffer.commit()
+        
+        #if canImport(XCTest)
+        commandBuffer.waitUntilCompleted()
+        self.drawProcess.afterCommit()
+        #endif
     }
 }

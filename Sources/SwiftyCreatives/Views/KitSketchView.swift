@@ -18,19 +18,13 @@ public class KitSketchView<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: TouchableMTKView<CameraConfig, DrawConfig> {
-    
-    var _renderer: RendererBase<CameraConfig, DrawConfig>
-    
+    var thisRenderer: RendererBase<CameraConfig, DrawConfig>
     public init(_ sketch: SketchBase) {
-        _renderer = DrawConfig.blendMode.getRenderer(
+        thisRenderer = DrawConfig.blendMode.getRenderer(
             c: CameraConfig.self,
             d: DrawConfig.self,
             sketch: sketch
         )
-        super.init(renderer: _renderer)
-    }
-
-    required init(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(renderer: thisRenderer)
     }
 }

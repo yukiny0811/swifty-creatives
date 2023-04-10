@@ -1,17 +1,16 @@
 //
-//  File.swift
+//  SCAnimatable.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2023/02/27.
 //
 
-public enum SCAnimationType {
-    case linear
-    case easeOut
-}
-
 @propertyWrapper
 public class SCAnimatable {
+    public enum SCAnimationType {
+        case linear
+        case easeOut
+    }
     private var value: Float
     private var targetValue: Float
     public var projectedValue: SCAnimatable { self }

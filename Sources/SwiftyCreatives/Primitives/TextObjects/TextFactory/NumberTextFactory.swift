@@ -9,7 +9,7 @@ import MetalKit
 import CoreGraphics
 
 public class NumberTextFactory: TextFactory {
-    public init(font: FontAlias) {
-        super.init(font: font, register: TextFactory.Template.numerics)
+    public init(font: FontAlias, color: ColorAlias) {
+        super.init(font: font, register: TextFactory.Template.numerics, color: color)
     }
 }

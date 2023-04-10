@@ -14,40 +14,38 @@ import UIKit
 import simd
 
 open class Sketch: SketchBase, FunctionBase {
-    
-    public var customMatrix: [f4x4] = [f4x4.createIdentity()]
-    
-    public var privateEncoder: SCEncoder?
-    
     public let textPostProcessor: TextPostProcessor = TextPostProcessor()
-    
+    public var customMatrix: [f4x4] = [f4x4.createIdentity()]
+    public var privateEncoder: SCEncoder?
     public var deltaTime: Float = 0
     public var frameRate: Float { 1 / deltaTime }
-    
     public var packet: SCPacket {
-        SCPacket(privateEncoder: privateEncoder!, customMatrix: customMatrix)
+        SCPacket(privateEncoder: privateEncoder!, customMatrix: getCustomMatrix())
     }
-    
-    public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0), color: f3.one, brightness: 1, ambientIntensity: 1, diffuseIntensity: 1, specularIntensity: 50)]
-    
+    public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0),
+                                  color: f3.one,
+                                  brightness: 1,
+                                  ambientIntensity: 1,
+                                  diffuseIntensity: 1,
+                                  specularIntensity: 50)]
     public init() {}
-    
-    // MARK: functions
     open func setupCamera(camera: some MainCameraBase) {}
     open func update(camera: some MainCameraBase) {}
     open func draw(encoder: SCEncoder) {}
+    
+    #if canImport(XCTest)
+    open func afterCommit() {}
+    #endif
     
     public func beforeDraw(encoder: SCEncoder) {
         self.customMatrix = [f4x4.createIdentity()]
         self.privateEncoder = encoder
     }
-    
-    open func afterDraw(texture: MTLTexture) {}
-    
+    open func preProcess(commandBuffer: MTLCommandBuffer) {}
+    open func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {}
     public func getCustomMatrix() -> f4x4 {
         return customMatrix.reduce(f4x4.createIdentity(), *)
     }
-    
     open func updateAndDrawLight(encoder: SCEncoder) {
         encoder.setFragmentBytes([LIGHTS.count], length: Int.memorySize, index: FragmentBufferIndex.LightCount.rawValue)
         encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: FragmentBufferIndex.Lights.rawValue)

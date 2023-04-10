@@ -7,7 +7,7 @@
 
 import simd
 
-open class HitTestableBox {
+open class HitTestableBox: ScaleSettable {
     
     internal let front = HitTestableRect()
     internal let back = HitTestableRect()
@@ -19,7 +19,6 @@ open class HitTestableBox {
     public var scale: f3 { _mScale[0] }
     
     internal var _mScale: [f3] = [f3.one]
-    internal var _material: [Material] = [Material(ambient: f3(1, 1, 1), diffuse: f3(1, 1, 1), specular: f3.one, shininess: 50)]
     
     public required init() {
         setScale(scale)
@@ -36,15 +35,6 @@ open class HitTestableBox {
         bottom     .setScale(f3(scale.x, scale.z, 0))
         return self
     }
-    
-    @discardableResult
-    public func setMaterial(_ material: Material) -> Self {
-        _material[0] = material
-        return self
-    }
-    
-    internal func draw(_ encoder: SCEncoder) {}
-    
 }
 
 extension HitTestableBox {

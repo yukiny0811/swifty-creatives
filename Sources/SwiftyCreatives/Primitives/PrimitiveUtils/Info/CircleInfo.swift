@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CircleInfo.swift
 //  
 //
 //  Created by Yuki Kuwashima on 2023/02/25.
@@ -8,9 +8,9 @@
 import Metal
 
 public struct CircleInfo: PrimitiveInfo {
-    private static let edgeCount: Float = 30.0
-    private static let portion: Float = Float.pi * 2 / Self.edgeCount
-    public static var vertices: [f3] = [
+    private static let edgeCount: Int = 30
+    private static let portion: Float = Float.pi * 2 / Float(Self.edgeCount)
+    public static var vertices: [f3] {[
         f3(cos(portion * 0 ), sin(portion * 0), 0),
         f3( cos(portion*1), sin(portion*1), 0 ),
         f3( cos(portion*2), sin(portion*2), 0 ),
@@ -21,7 +21,7 @@ public struct CircleInfo: PrimitiveInfo {
         f3( cos(portion*7), sin(portion*7), 0 ),
         f3( cos(portion*8), sin(portion*8), 0 ),
         f3( cos(portion*9), sin(portion*9), 0 ),
-
+        
         f3( cos(portion*10), sin(portion*10), 0 ),
         f3( cos(portion*11), sin(portion*11), 0 ),
         f3( cos(portion*12), sin(portion*12), 0 ),
@@ -32,7 +32,7 @@ public struct CircleInfo: PrimitiveInfo {
         f3( cos(portion*17), sin(portion*17), 0 ),
         f3( cos(portion*18), sin(portion*18), 0 ),
         f3( cos(portion*19), sin(portion*19), 0 ),
-
+        
         f3( cos(portion*20), sin(portion*20), 0 ),
         f3( cos(portion*21), sin(portion*21), 0 ),
         f3( cos(portion*22), sin(portion*22), 0 ),
@@ -43,7 +43,7 @@ public struct CircleInfo: PrimitiveInfo {
         f3( cos(portion*27), sin(portion*27), 0 ),
         f3( cos(portion*28), sin(portion*28), 0 ),
         f3( cos(portion*29), sin(portion*29), 0 )
-    ]
+    ]}
     
     public static var uvs: [f2] = [
         f2.zero, f2.zero, f2.zero, f2.zero, f2.zero,
