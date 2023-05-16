@@ -12,19 +12,16 @@ public class RendererBase<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: NSObject, MTKViewDelegate {
-    
     var camera: MainCamera<CameraConfig>
     var drawProcess: SketchBase
     var savedDate: Date
-    
+    public var cachedTexture: MTLTexture?
     public init(drawProcess: SketchBase) {
         self.camera = MainCamera()
         self.drawProcess = drawProcess
         self.savedDate = Date()
     }
-    
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
-    
     public func draw(in view: MTKView) {
         calculateDeltaTime()
         view.drawableSize = CGSize(

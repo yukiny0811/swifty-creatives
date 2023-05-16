@@ -14,32 +14,29 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
     private(set) public var texture: MTLTexture?
     private var textPostProcessor = TextPostProcessor()
     
-    public var color: f4?
-    
     @discardableResult
-    public func setColor(_ value: f4) -> Self {
-        self.color = value
+    public func setColor(commandBuffer: MTLCommandBuffer, _ value: f4) -> Self {
+        textPostProcessor.postProcessColor(commandBuffer: commandBuffer, originalTexture: originalTexture!, texture: self.texture!, color: value)
         return self
     }
     
     @discardableResult
-    public func setColor(_ r: Float, _ g: Float, _ b: Float, _ a: Float) -> Self {
-        self.color = f4(r, g, b, a)
+    public func setColor(commandBuffer: MTLCommandBuffer, _ r: Float, _ g: Float, _ b: Float, _ a: Float) -> Self {
+        textPostProcessor.postProcessColor(commandBuffer: commandBuffer, originalTexture: originalTexture!, texture: self.texture!, color: f4(r, g, b, a))
         return self
     }
     
     public override init() {
         super.init()
-        hasTexture = [true]
     }
     
-    func createParagraphStyle() -> NSParagraphStyle {
+    private func createParagraphStyle() -> NSParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         return paragraphStyle
     }
     
-    func createAttributedString(text: String, font: FontAlias, paragraphStyle: NSParagraphStyle) -> NSAttributedString {
+    private func createAttributedString(text: String, font: FontAlias, paragraphStyle: NSParagraphStyle) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: ColorAlias.white,
@@ -49,7 +46,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         return attributedString
     }
     
-    func createFramesetterFrame(framesetter: CTFramesetter, framePath: CGPath) -> CTFrame {
+    private func createFramesetterFrame(framesetter: CTFramesetter, framePath: CGPath) -> CTFrame {
         let frame = CTFramesetterCreateFrame(framesetter, CFRange(), framePath, nil)
         return frame
     }
@@ -93,9 +90,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         let im = ctx.makeImage()!
         originalTexture = try! ShaderCore.textureLoader.newTexture(
             cgImage: im,
-            options: [
-                .textureUsage: ShaderCore.defaultTextureLoaderOptions
-            ]
+            options: ShaderCore.defaultTextureLoaderOptions
         )
         self.texture = originalTexture
         
@@ -142,16 +137,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
         ))
         return self
     }
-    public override func draw(_ encoder: SCEncoder) {
-        if let color = color {
-            textPostProcessor.postProcessColor(originalTexture: originalTexture!, texture: self.texture!, color: color)
-        }
-        encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
-        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
-        encoder.setVertexBytes(RectShapeInfo.uvs, length: RectShapeInfo.uvs.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
-        encoder.setVertexBytes(RectShapeInfo.normals, length: RectShapeInfo.normals.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
-        encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
-        encoder.setFragmentTexture(self.texture, index: FragmentTextureIndex.MainTexture.rawValue)
-        encoder.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
-    }
+    
+    @available(*, unavailable, message: "Use text() in Sketch instead.")
+    public override func draw(_ encoder: SCEncoder) {}
 }

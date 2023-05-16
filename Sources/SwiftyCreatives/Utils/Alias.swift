@@ -32,6 +32,7 @@ public typealias UISketchView = KitSketchView
 // MARK: - Metal
 import Metal
 public typealias SCEncoder = MTLRenderCommandEncoder
+public typealias SCCommandBuffer = MTLCommandBuffer
 
 // MARK: - Font
 #if os(macOS)

@@ -13,7 +13,7 @@ public enum BlendMode {
     func getRenderer<
         C: CameraConfigBase,
         D: DrawConfigBase
-    >(c: C.Type, d: D.Type, sketch: SketchBase) -> RendererBase<C, D> {
+    >(sketch: SketchBase) -> RendererBase<C, D> {
         switch self {
         case .normalBlend:
             return NormalBlendRenderer<C, D>(sketch: sketch)

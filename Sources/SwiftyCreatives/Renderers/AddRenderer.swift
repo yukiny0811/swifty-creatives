@@ -11,11 +11,9 @@ public class AddRenderer<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: RendererBase<CameraConfig, DrawConfig> {
-    
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
     let renderPipelineState: MTLRenderPipelineState
-
     public init(sketch: SketchBase) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
@@ -35,13 +33,11 @@ public class AddRenderer<
         super.init(drawProcess: sketch)
         self.drawProcess.setupCamera(camera: camera)
     }
-
     public override func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         guard view.frame.size != size else {
             return
         }
     }
-
     public override func draw(in view: MTKView) {
         super.draw(in: view)
         guard let _ = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
@@ -56,6 +52,8 @@ public class AddRenderer<
         
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
+        drawProcess.preProcess(commandBuffer: commandBuffer!)
+        
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
         Self.setDefaultBuffers(encoder: renderCommandEncoder!)
@@ -68,6 +66,11 @@ public class AddRenderer<
         renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: FragmentTextureIndex.MainTexture.rawValue)
         
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
+        
+        drawProcess.beforeDraw(encoder: renderCommandEncoder!)
+        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
+        drawProcess.update(camera: camera)
+        drawProcess.draw(encoder: renderCommandEncoder!)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(
@@ -80,23 +83,30 @@ public class AddRenderer<
             )
         )
         
-        drawProcess.beforeDraw(encoder: renderCommandEncoder!)
-        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
-        drawProcess.update(camera: camera)
-        drawProcess.draw(encoder: renderCommandEncoder!)
-        
         renderCommandEncoder?.endEncoding()
-        commandBuffer?.commit()
-        commandBuffer?.waitUntilCompleted()
         
-        self.drawProcess.afterDraw(texture: renderPassDescriptor.colorAttachments[0].texture!)
+        self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer!)
         
-        let afterBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
-        let afterEncoder = afterBuffer.makeBlitCommandEncoder()!
+        if cachedTexture == nil || cachedTexture!.width != view.currentDrawable!.texture.width || cachedTexture!.height != view.currentDrawable!.texture.height {
+            let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+                pixelFormat: view.colorPixelFormat,
+                width: view.currentDrawable!.texture.width,
+                height: view.currentDrawable!.texture.height,
+                mipmapped: false)
+            textureDescriptor.usage = [.shaderRead]
+            cachedTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)
+        }
+        
+        let afterEncoder = commandBuffer!.makeBlitCommandEncoder()!
+        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: cachedTexture!)
         afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
         afterEncoder.endEncoding()
-        afterBuffer.present(view.currentDrawable!)
-        afterBuffer.commit()
-        afterBuffer.waitUntilCompleted()
+        commandBuffer!.present(view.currentDrawable!)
+        commandBuffer!.commit()
+        
+        #if canImport(XCTest)
+        commandBuffer!.waitUntilCompleted()
+        self.drawProcess.afterCommit()
+        #endif
     }
 }

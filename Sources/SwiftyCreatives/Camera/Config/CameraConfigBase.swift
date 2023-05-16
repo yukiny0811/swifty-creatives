@@ -17,6 +17,7 @@ public protocol CameraConfigBase {
     /// far clipping distance
     static var far: Float { get }
     
+    /// easy camera type
     static var easyCameraType: EasyCameraType { get }
     
     /// perspective or orthographic camera.
