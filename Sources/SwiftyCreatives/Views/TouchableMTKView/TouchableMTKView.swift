@@ -15,56 +15,9 @@ public class TouchableMTKView<
     init(renderer: RendererBase<CameraConfig, DrawConfig>) {
         self.renderer = renderer
         super.init(frame: .zero, device: ShaderCore.device)
-        self.frame = .zero
-        self.delegate = renderer
-        self.enableSetNeedsDisplay = false
-        self.isPaused = false
-        self.colorPixelFormat = .bgra8Unorm
-        self.framebufferOnly = false
-        self.preferredFramesPerSecond = DrawConfig.frameRate
-        self.autoResizeDrawable = true
-        self.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
-        self.depthStencilPixelFormat = .depth32Float_stencil8
-        self.sampleCount = 1
-        self.clearDepth = 1.0
-        
-        #if os(macOS)
-        self.layer?.isOpaque = false
-        #elseif os(iOS)
-        self.layer.isOpaque = false
-        #endif
-        
-        #if os(macOS)
-        configureMacOS()
-        #endif
-        
-        #if os(iOS)
-        configureiOS()
-        #endif
+        initializeView()
+        configure()
     }
-    
-    
-    #if os(macOS)
-    func configureMacOS() {
-        let options: NSTrackingArea.Options = [
-            .mouseMoved,
-            .activeAlways,
-            .inVisibleRect
-        ]
-        let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
-        self.addTrackingArea(trackingArea)
-    }
-    #endif
-    
-    #if os(iOS)
-    func configureiOS() {
-        let scrollGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(onScroll))
-        scrollGestureRecognizer.allowedScrollTypesMask = .continuous
-        scrollGestureRecognizer.minimumNumberOfTouches = 2
-        scrollGestureRecognizer.maximumNumberOfTouches = 2
-        self.addGestureRecognizer(scrollGestureRecognizer)
-    }
-    #endif
     
     @available(*, unavailable)
     required init(coder: NSCoder) {
@@ -72,13 +25,7 @@ public class TouchableMTKView<
     }
     
     deinit {
-        #if os(iOS)
-        if let recognizers = self.gestureRecognizers {
-            for recognizer in recognizers {
-                self.removeGestureRecognizer(recognizer)
-            }
-        }
-        #endif
+        deinitView()
     }
     
     #if os(macOS)
@@ -183,13 +130,4 @@ public class TouchableMTKView<
         renderer.drawProcess.touchesCancelled(touches, with: event, camera: renderer.camera, view: self)
     }
     #endif
-    
-    private func checkIfExceedsPolarSpacing(rad: Float, polarSpacing: Float) -> Bool {
-        let mockedMainMatrix = renderer.camera.mock_rotateAroundVisibleX(rad)
-        let detectionValue = mockedMainMatrix.columns.1.y
-        if detectionValue < polarSpacing {
-            return true
-        }
-        return false
-    }
 }
