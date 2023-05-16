@@ -1,11 +1,11 @@
 //
-//  UInt16+.swift
+//  Numeric+.swift
 //  
 //
-//  Created by Yuki Kuwashima on 2023/02/10.
+//  Created by Yuki Kuwashima on 2023/05/16.
 //
 
-extension UInt16 {
+extension Numeric {
     static var memorySize: Int {
         return MemoryLayout<Self>.stride
     }

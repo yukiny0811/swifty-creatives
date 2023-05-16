@@ -22,8 +22,6 @@ public struct SketchView: ViewRepresentable {
     public init(_ sketch: SketchBase) {
         self.drawProcess = sketch
         self.renderer = DrawConfig.blendMode.getRenderer(
-            c: CameraConfig.self,
-            d: DrawConfig.self,
             sketch: self.drawProcess
         )
     }

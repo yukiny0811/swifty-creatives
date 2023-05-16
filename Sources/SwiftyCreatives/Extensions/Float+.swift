@@ -12,7 +12,4 @@ extension Float {
     public func degreesToRadians() -> Self {
         return Self(self / 360 * Float.pi * 2)
     }
-    static var memorySize: Int {
-        return MemoryLayout<Self>.stride
-    }
 }
