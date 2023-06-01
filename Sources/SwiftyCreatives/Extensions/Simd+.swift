@@ -55,6 +55,14 @@ public extension f4x4 {
             simd_quatf(angle: angle, axis: axis)
         )
     }
+    static func createScale(_ x: Float, _ y: Float, _ z: Float) -> f4x4 {
+        return Self.init(
+            f4(x, 0, 0, 0),
+            f4(0, y, 0, 0),
+            f4(0, 0, z, 0),
+            f4(0, 0, 0, 1)
+        )
+    }
     static func createPerspective(fov: Float, aspect: Float, near: Float, far: Float) -> f4x4 {
         let f: Float = 1.0 / (tan(fov / 2.0))
         return Self.init(
