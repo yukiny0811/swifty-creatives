@@ -28,8 +28,24 @@ final class BoxTests: XCTestCase {
                 color(1)
                 box(3)
             }
-            override func afterCommit() {
+            override func afterCommit(texture: MTLTexture?) {
                 self.expectation.fulfill()
+                let desc = MTLTextureDescriptor()
+                desc.width = texture!.width
+                desc.height = texture!.height
+                desc.textureType = .type2D
+                let tex = ShaderCore.device.makeTexture(descriptor: desc)!
+                
+                let cb = ShaderCore.commandQueue.makeCommandBuffer()!
+                let blitEncoder = cb.makeBlitCommandEncoder()!
+                blitEncoder.copy(from: texture!, to: tex)
+                blitEncoder.endEncoding()
+                cb.commit()
+                cb.waitUntilCompleted()
+                
+                let cgimage = tex.cgImage!
+                let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
+                assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording, testName: "testBoxIsDrawed")
             }
         }
         
@@ -40,10 +56,6 @@ final class BoxTests: XCTestCase {
         swiftuiView.renderer.draw(in: mtkView)
         
         await fulfillment(of: [expectation], timeout: 5.0)
-        
-        let cgimage = swiftuiView.renderer.cachedTexture!.cgImage!
-        let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
-        assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording)
     }
     
     @MainActor
@@ -60,8 +72,24 @@ final class BoxTests: XCTestCase {
                 color(1, 0.5, 0.2, 0.8)
                 box(3)
             }
-            override func afterCommit() {
+            override func afterCommit(texture: MTLTexture?) {
                 self.expectation.fulfill()
+                let desc = MTLTextureDescriptor()
+                desc.width = texture!.width
+                desc.height = texture!.height
+                desc.textureType = .type2D
+                let tex = ShaderCore.device.makeTexture(descriptor: desc)!
+                
+                let cb = ShaderCore.commandQueue.makeCommandBuffer()!
+                let blitEncoder = cb.makeBlitCommandEncoder()!
+                blitEncoder.copy(from: texture!, to: tex)
+                blitEncoder.endEncoding()
+                cb.commit()
+                cb.waitUntilCompleted()
+                
+                let cgimage = tex.cgImage!
+                let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
+                assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording, testName: "testBoxColorWorking")
             }
         }
         
@@ -72,10 +100,6 @@ final class BoxTests: XCTestCase {
         swiftuiView.renderer.draw(in: mtkView)
         
         await fulfillment(of: [expectation], timeout: 5.0)
-        
-        let cgimage = swiftuiView.renderer.cachedTexture!.cgImage!
-        let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
-        assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording)
     }
     
     @MainActor
@@ -94,8 +118,24 @@ final class BoxTests: XCTestCase {
                 rotateY(0.5)
                 box(3)
             }
-            override func afterCommit() {
+            override func afterCommit(texture: MTLTexture?) {
                 self.expectation.fulfill()
+                let desc = MTLTextureDescriptor()
+                desc.width = texture!.width
+                desc.height = texture!.height
+                desc.textureType = .type2D
+                let tex = ShaderCore.device.makeTexture(descriptor: desc)!
+                
+                let cb = ShaderCore.commandQueue.makeCommandBuffer()!
+                let blitEncoder = cb.makeBlitCommandEncoder()!
+                blitEncoder.copy(from: texture!, to: tex)
+                blitEncoder.endEncoding()
+                cb.commit()
+                cb.waitUntilCompleted()
+                
+                let cgimage = tex.cgImage!
+                let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
+                assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording, testName: "testBoxRotationWorking")
             }
         }
         
@@ -106,10 +146,6 @@ final class BoxTests: XCTestCase {
         swiftuiView.renderer.draw(in: mtkView)
         
         await fulfillment(of: [expectation], timeout: 5.0)
-        
-        let cgimage = swiftuiView.renderer.cachedTexture!.cgImage!
-        let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
-        assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording)
     }
 }
 #endif
