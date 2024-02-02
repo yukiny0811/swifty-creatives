@@ -6,13 +6,60 @@
 //
 
 import MetalKit
-import simd
+import Spatial
+import CompositorServices
 
 #if os(visionOS)
 public class RendererBase {
+    
     var drawProcess: Sketch
-    public init(drawProcess: Sketch) {
-        self.drawProcess = drawProcess
+    
+    let arSession: ARKitSession
+    let worldTracking: WorldTrackingProvider
+    let layerRenderer: LayerRenderer
+    
+    public init(sketch: Sketch, layerRenderer: LayerRenderer) {
+        self.drawProcess = sketch
+        self.layerRenderer = layerRenderer
+        worldTracking = WorldTrackingProvider()
+        arSession = ARKitSession()
+        
+        
+    }
+    
+    public func startRenderLoop() {
+        Task {
+            do {
+                try await arSession.run([worldTracking])
+            } catch {
+                fatalError("Failed to initialize ARSession")
+            }
+            
+            let renderThread = Thread {
+                self.renderLoop()
+            }
+            renderThread.name = "Render Thread"
+            renderThread.start()
+        }
+    }
+    
+    func renderLoop() {
+        while true {
+            if layerRenderer.state == .invalidated {
+                print("Layer is invalidated")
+                return
+            } else if layerRenderer.state == .paused {
+                layerRenderer.waitUntilRunning()
+                continue
+            } else {
+                autoreleasepool {
+                    self.renderFrame()
+                }
+            }
+        }
+    }
+    func renderFrame() {
+        
     }
 }
 #else

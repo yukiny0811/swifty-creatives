@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2024/02/02.
 //
@@ -11,7 +11,7 @@ import MetalKit
 import Spatial
 import CompositorServices
 
-public class NormalBlendRendererVision: RendererBase {
+public class AddBlendRendererVision: RendererBase {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
@@ -25,8 +25,8 @@ public class NormalBlendRendererVision: RendererBase {
         renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
         renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
         
-        renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "normal_vertex")
-        renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "normal_fragment")
+        renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "add_vertex")
+        renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "add_fragment")
         
         vertexDescriptor = Self.createVertexDescriptor()
         
