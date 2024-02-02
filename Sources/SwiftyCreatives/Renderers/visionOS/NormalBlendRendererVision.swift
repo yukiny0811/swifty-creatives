@@ -40,7 +40,7 @@ public class NormalBlendRendererVision: RendererBase {
         renderPipelineDescriptor.vertexDescriptor = vertexDescriptor
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
-        let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
+        let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .greater, writeDepth: true)
         self.depthStencilState = ShaderCore.device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
         
         super.init(drawProcess: sketch)
@@ -106,10 +106,14 @@ public class NormalBlendRendererVision: RendererBase {
         
         let renderPassDescriptor = MTLRenderPassDescriptor()
         renderPassDescriptor.colorAttachments[0].texture = drawable.colorTextures[0]
-        renderPassDescriptor.depthAttachment.texture = drawable.depthTextures[0]
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
         renderPassDescriptor.colorAttachments[0].storeAction = .store
         renderPassDescriptor.colorAttachments[0].clearColor = .init(red: 0, green: 0, blue: 0, alpha: 0)
+        renderPassDescriptor.depthAttachment.texture = drawable.depthTextures[0]
+        renderPassDescriptor.depthAttachment.loadAction = .clear
+        renderPassDescriptor.depthAttachment.storeAction = .store
+        renderPassDescriptor.depthAttachment.clearDepth = 0.0
+        renderPassDescriptor.rasterizationRateMap = drawable.rasterizationRateMaps.first
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
         Self.setDefaultBuffers(encoder: renderCommandEncoder!)
