@@ -61,7 +61,7 @@ open class TextObject: RectanglePlanePrimitive<RectShapeInfo> {
             mipmapped: false)
         textureDescriptor.usage = [.shaderWrite, .shaderRead]
         originalTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)!
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         UIGraphicsBeginImageContextWithOptions(resolution, false, 0)
         guard let ctx = UIGraphicsGetCurrentContext() else { return self }
         ctx.translateBy(x: 0, y: resolution.height)

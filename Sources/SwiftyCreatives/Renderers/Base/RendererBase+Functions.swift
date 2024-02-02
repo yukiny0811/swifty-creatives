@@ -7,6 +7,8 @@
 
 import Foundation
 
+#if !os(visionOS)
+
 extension RendererBase {
     func calculateDeltaTime() {
         let date = Date()
@@ -15,3 +17,5 @@ extension RendererBase {
         savedDate = date
     }
 }
+
+#endif

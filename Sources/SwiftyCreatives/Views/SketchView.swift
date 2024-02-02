@@ -8,6 +8,8 @@
 import MetalKit
 import SwiftUI
 
+#if !os(visionOS)
+
 #if os(macOS)
 import AppKit
 #elseif os(iOS)
@@ -40,3 +42,5 @@ public struct SketchView: ViewRepresentable {
     public func updateUIView(_ uiView: MTKView, context: Context) {}
     #endif
 }
+
+#endif

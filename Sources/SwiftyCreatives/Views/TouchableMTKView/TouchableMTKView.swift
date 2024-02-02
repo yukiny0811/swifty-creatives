@@ -7,6 +7,8 @@
 
 import MetalKit
 
+#if !os(visionOS)
+
 public class TouchableMTKView<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
@@ -131,3 +133,5 @@ public class TouchableMTKView<
     }
     #endif
 }
+
+#endif

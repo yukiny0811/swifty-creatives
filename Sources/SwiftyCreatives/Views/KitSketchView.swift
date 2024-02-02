@@ -7,6 +7,8 @@
 
 import MetalKit
 
+#if !os(visionOS)
+
 #if os(macOS)
 import AppKit
 #elseif os(iOS)
@@ -25,3 +27,5 @@ public class KitSketchView<
         super.init(renderer: thisRenderer)
     }
 }
+
+#endif

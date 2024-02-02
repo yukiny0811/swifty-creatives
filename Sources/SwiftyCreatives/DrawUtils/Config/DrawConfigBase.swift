@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2022/12/09.
 //
 
+#if !os(visionOS)
+
 /// Config base for draw config.
 public protocol DrawConfigBase {
     static var contentScaleFactor: Int { get }
@@ -12,3 +14,5 @@ public protocol DrawConfigBase {
     static var clearOnUpdate: Bool { get }
     static var frameRate: Int { get }
 }
+
+#endif

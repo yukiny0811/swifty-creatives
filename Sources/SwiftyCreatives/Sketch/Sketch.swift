@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import simd
+import MetalKit
 
 open class Sketch: SketchBase, FunctionBase {
     public let textPostProcessor: TextPostProcessor = TextPostProcessor()
@@ -29,8 +30,13 @@ open class Sketch: SketchBase, FunctionBase {
                                   diffuseIntensity: 1,
                                   specularIntensity: 50)]
     public init() {}
+    
+    #if !os(visionOS)
     open func setupCamera(camera: some MainCameraBase) {}
     open func update(camera: some MainCameraBase) {}
+    #else
+    open func update() {}
+    #endif
     open func draw(encoder: SCEncoder) {}
     
     #if canImport(XCTest)

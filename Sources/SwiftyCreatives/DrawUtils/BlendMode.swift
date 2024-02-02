@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2022/12/09.
 //
 
+#if !os(visionOS)
+
 public enum BlendMode {
     case normalBlend
     case add
@@ -32,3 +34,5 @@ public enum BlendMode {
         }
     }
 }
+
+#endif
