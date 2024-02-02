@@ -17,6 +17,7 @@ final class TransparentRendererTests: XCTestCase {
     @MainActor
     func testTransparentRendering() async throws {
         try SnapshotTestUtil.testGPU()
+        try XCTSkipIf(ShaderCore.device.supportsFamily(.apple3) == false)
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation

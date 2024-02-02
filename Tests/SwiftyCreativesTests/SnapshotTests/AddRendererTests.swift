@@ -17,6 +17,7 @@ final class AddRendererTests: XCTestCase {
     @MainActor
     func testAddRendering() async throws {
         try SnapshotTestUtil.testGPU()
+        try XCTSkipIf(ShaderCore.device.supportsFamily(.apple3) == false)
         
         class TestSketch: Sketch {
             let expectation: XCTestExpectation

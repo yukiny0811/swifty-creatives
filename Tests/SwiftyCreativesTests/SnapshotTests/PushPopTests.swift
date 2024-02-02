@@ -56,7 +56,7 @@ final class PushPopTests: XCTestCase {
         
         let expectation = XCTestExpectation()
         let sketch = TestSketch(expectation)
-        let swiftuiView = SketchView(sketch)
+        let swiftuiView = SketchView(sketch, blendMode: .normalBlend)
         let mtkView = MTKView(frame: CGRect(x: 0, y: 0, width: 100, height: 100), device: ShaderCore.device)
         swiftuiView.renderer.draw(in: mtkView)
         
@@ -110,7 +110,7 @@ final class PushPopTests: XCTestCase {
         
         let expectation = XCTestExpectation()
         let sketch = TestSketch(expectation)
-        let swiftuiView = SketchView(sketch)
+        let swiftuiView = SketchView(sketch, blendMode: .normalBlend)
         let mtkView = MTKView(frame: CGRect(x: 0, y: 0, width: 100, height: 100), device: ShaderCore.device)
         swiftuiView.renderer.draw(in: mtkView)
         

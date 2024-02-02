@@ -7,6 +7,7 @@
 
 import XCTest
 import Metal
+@testable import SwiftyCreatives
 
 enum SnapshotTestUtil {
     static let isRecording = false
