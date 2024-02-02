@@ -66,7 +66,7 @@ open class ModelObject: Primitive<ModelObjectInfo> {
                         options: options)
                     texture = tex
                 } else if baseColorProperty.type == .string {
-                    #if os(iOS) || os(visionOS)
+                    #if os(iOS) || os(visionOS) || os(tvOS)
                     let tex = try? textureLoader.newTexture(cgImage: UIImage(named: baseColorProperty.stringValue!)!.cgImage!)
                     #elseif os(macOS)
                     let tex = try? textureLoader.newTexture(cgImage: NSImage(named: baseColorProperty.stringValue!)!.cgImage(forProposedRect: nil, context: nil, hints: nil)!)

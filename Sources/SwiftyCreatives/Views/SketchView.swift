@@ -39,7 +39,7 @@ public struct SketchView: ViewRepresentable {
         return mtkView
     }
     public func updateNSView(_ nsView: MTKView, context: Context) {}
-    #elseif os(iOS)
+    #elseif os(iOS) || os(tvOS)
     public func makeUIView(context: Context) -> MTKView {
         let mtkView = TouchableMTKView(renderer: renderer)
         return mtkView
