@@ -69,7 +69,6 @@ public class AddRenderer<
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
         
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
-        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
 

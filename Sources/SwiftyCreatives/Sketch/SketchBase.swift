@@ -24,7 +24,6 @@ public protocol SketchBase: AnyObject {
     func update()
     #endif
     func draw(encoder: SCEncoder)
-    func updateAndDrawLight(encoder: SCEncoder)
     func beforeDraw(encoder: SCEncoder)
     func preProcess(commandBuffer: MTLCommandBuffer)
     func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer)

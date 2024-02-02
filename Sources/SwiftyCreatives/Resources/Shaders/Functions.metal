@@ -9,42 +9,6 @@
 #include "Types.metal"
 using namespace metal;
 
-inline float3 calculatePhongIntensity(
-                                      RasterizerData rd,
-                                      const device Material &material,
-                                      const device int &lightCount,
-                                      const device Light *lights
-                                      ) {
-    float3 totalAmbient = float3(0, 0, 0);
-    float3 totalDiffuse = float3(0, 0, 0);
-    float3 totalSpecular = float3(0, 0, 0);
-    
-    float3 unitNormal = normalize(rd.surfaceNormal);
-    float3 unitToCameraVector = normalize(rd.toCameraVector);
-    
-    for (int i = 0; i < lightCount; i++) {
-        float3 unitToLightVector = normalize(lights[i].position - rd.worldPosition);
-        float3 unitReflectionVector = normalize(reflect(-unitToLightVector, unitNormal));
-        
-        float3 ambientColor = clamp(material.ambient * lights[i].ambientIntensity * lights[i].brightness * lights[i].color, 0.0, 1.0);
-        totalAmbient += ambientColor;
-        
-        float3 diffuseness = material.diffuse * lights[i].diffuseIntensity;
-        float nDotL = max(dot(unitNormal, unitToLightVector), 0.0);
-        float3 diffuseColor = clamp(diffuseness * nDotL * lights[i].brightness * lights[i].color, 0.0, 1.0);
-        totalDiffuse += diffuseColor;
-        
-        float3 specularness = material.specular * lights[i].specularIntensity;
-        float rDotV = max(dot(unitReflectionVector, unitToCameraVector), 0.0);
-        float specularExponential = pow(rDotV, material.shininess);
-        float3 specularColor = clamp(specularness * specularExponential * lights[i].brightness * lights[i].color, 0.0, 1.0);
-        totalSpecular += specularColor;
-    }
-    float3 phongIntensity = totalAmbient + totalDiffuse + totalSpecular;
-    
-    return phongIntensity;
-}
-
 inline float4x4 createModelMatrix(
     Vertex vIn,
     const device FrameUniforms_ModelPos& uniformModelPos,

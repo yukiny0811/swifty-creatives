@@ -23,12 +23,7 @@ open class Sketch: SketchBase, FunctionBase {
     public var packet: SCPacket {
         SCPacket(privateEncoder: privateEncoder!, customMatrix: getCustomMatrix())
     }
-    public var LIGHTS: [Light] = [Light(position: f3(0, 10, 0),
-                                  color: f3.one,
-                                  brightness: 1,
-                                  ambientIntensity: 1,
-                                  diffuseIntensity: 1,
-                                  specularIntensity: 50)]
+    
     public init() {}
     
     #if !os(visionOS)
@@ -51,10 +46,6 @@ open class Sketch: SketchBase, FunctionBase {
     open func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {}
     public func getCustomMatrix() -> f4x4 {
         return customMatrix.reduce(f4x4.createIdentity(), *)
-    }
-    open func updateAndDrawLight(encoder: SCEncoder) {
-        encoder.setFragmentBytes([LIGHTS.count], length: Int.memorySize, index: FragmentBufferIndex.LightCount.rawValue)
-        encoder.setFragmentBytes(LIGHTS, length: Light.memorySize * LIGHTS.count, index: FragmentBufferIndex.Lights.rawValue)
     }
     
     #if os(macOS)

@@ -42,11 +42,7 @@ vertex RasterizerData add_vertex (const Vertex vIn [[ stage_in ]],
 
 fragment half4 add_fragment (RasterizerData rd [[stage_in]],
                              half4 c [[color(0)]],
-                             const device Material &material [[ buffer(FragmentBuffer_Material) ]],
-                             const device int &lightCount [[ buffer(FragmentBuffer_LightCount) ]],
-                             const device Light *lights [[ buffer(FragmentBuffer_Lights) ]],
                              const device FrameUniforms_HasTexture &uniformHasTexture [[ buffer(FragmentBuffer_HasTexture) ]],
-                             const device FrameUniforms_IsActiveToLight &isActiveToLight [[ buffer(FragmentBuffer_IsActiveToLight) ]],
                              const device FrameUniforms_FogDensity &fogDensity [[ buffer(FragmentBuffer_FogDensity) ]],
                              const device FrameUniforms_FogColor &fogColor [[ buffer(FragmentBuffer_FogColor) ]],
                              texture2d<half, access::sample> tex [[ texture(FragmentTexture_MainTexture) ]]) {
@@ -59,11 +55,6 @@ fragment half4 add_fragment (RasterizerData rd [[stage_in]],
         resultColor = colorSample;
     } else {
         resultColor = half4(rd.color);
-    }
-    
-    if (isActiveToLight.value) {
-        float3 phongIntensity = calculatePhongIntensity(rd, material, lightCount, lights);
-        resultColor = half4(float4(resultColor) * float4(phongIntensity, 1));
     }
     
     resultColor = half4(createFog(rd.position.z / rd.position.w,

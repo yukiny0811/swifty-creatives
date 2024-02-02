@@ -112,7 +112,6 @@ class TransparentRenderer<
         
         // MARK: - draw primitive
         drawProcess.beforeDraw(encoder: renderEncoder)
-        drawProcess.updateAndDrawLight(encoder: renderEncoder)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderEncoder)
         

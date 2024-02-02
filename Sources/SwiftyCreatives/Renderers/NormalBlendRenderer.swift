@@ -78,7 +78,6 @@ public class NormalBlendRenderer<
         renderCommandEncoder?.setFragmentTexture(AssetUtil.defaultMTLTexture, index: FragmentTextureIndex.MainTexture.rawValue)
         
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
-        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
         
