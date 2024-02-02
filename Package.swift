@@ -3,12 +3,58 @@
 
 import PackageDescription
 
+extension Target {
+    var asDependency: Target.Dependency {
+        Target.Dependency(stringLiteral: self.name)
+    }
+}
+
+let dependencies: [Package.Dependency] = [
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.15.2"),
+    .package(url: "https://github.com/yukiny0811/SimpleSimdSwift", from: "1.0.1"),
+    .package(url: "https://github.com/yukiny0811/FontVertexBuilder", from: "1.0.0"),
+]
+
+enum CorePackage {
+    static let SnapshotTesting = Target.Dependency.product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+    static let SimpleSimdSwift = Target.Dependency.product(name: "SimpleSimdSwift", package: "SimpleSimdSwift")
+    static let FontVertexBuilder = Target.Dependency.product(name: "FontVertexBuilder", package: "FontVertexBuilder")
+}
+
+let SwiftyCreativesSound = Target.target(
+    name: "SwiftyCreativesSound",
+    dependencies: [],
+    path: "Sources/SwiftyCreativesSound"
+)
+
+let SwiftyCreatives = Target.target(
+    name: "SwiftyCreatives",
+    dependencies: [
+        CorePackage.SimpleSimdSwift,
+        CorePackage.FontVertexBuilder,
+        SwiftyCreativesSound.asDependency,
+    ],
+    path: "Sources/SwiftyCreatives",
+    resources: [
+        .process("Resources")
+    ]
+)
+
+let SwiftyCreativesTests = Target.testTarget(
+    name: "SwiftyCreativesTests",
+    dependencies: [
+        SwiftyCreatives.asDependency,
+        CorePackage.SnapshotTesting,
+    ],
+    path: "Tests/SwiftyCreativesTests"
+)
+
 let package = Package(
     name: "SwiftyCreatives",
     platforms: [
-        .iOS(.v15),
-        .macOS(.v12),
-        .visionOS(.v1)
+        .iOS(.v17),
+        .macOS(.v14),
+        .visionOS(.v1),
     ],
     products: [
         .library(
@@ -16,21 +62,10 @@ let package = Package(
             targets: ["SwiftyCreatives"]
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.15.2")
-    ],
+    dependencies: dependencies,
     targets: [
-        .target(
-            name: "SwiftyCreatives",
-            dependencies: [],
-            resources: [.process("Resources")]
-        ),
-        .testTarget(
-            name: "SwiftyCreativesTests",
-            dependencies: [
-                "SwiftyCreatives",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
-            ]
-        )
+        SwiftyCreativesSound,
+        SwiftyCreatives,
+        SwiftyCreativesTests,
     ]
 )

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/ExampleVisionOS/ExampleVisionOS.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/ExampleMacOSApp/ExampleMacOSApp.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/ExampleiOSApp/ExampleiOSApp.xcodeproj">
+   </FileRef>
+</Workspace>

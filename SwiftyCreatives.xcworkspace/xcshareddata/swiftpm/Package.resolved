@@ -1,0 +1,50 @@
+{
+  "pins" : [
+    {
+      "identity" : "fontvertexbuilder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yukiny0811/FontVertexBuilder",
+      "state" : {
+        "revision" : "b34c94e079cd95b03e44ad0bec962f7526e26530",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "simplesimdswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yukiny0811/SimpleSimdSwift",
+      "state" : {
+        "revision" : "4a0b195450e42f8a46b0a77f183b1ff116696697",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "state" : {
+        "revision" : "8e68404f641300bfd0e37d478683bb275926760c",
+        "version" : "1.15.2"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "43c802fb7f96e090dde015344a94b5e85779eff1",
+        "version" : "509.1.0"
+      }
+    },
+    {
+      "identity" : "swiftycoretext",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yukiny0811/SwiftyCoreText",
+      "state" : {
+        "revision" : "ed0583f3ecc5c4e4d3ec56c8a9752d6e9a1e9b86",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 2
+}
