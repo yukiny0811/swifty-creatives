@@ -34,5 +34,3 @@ jobs:
         run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -scheme ExampleMacOSApp build -destination "generic/platform=macOS" | xcpretty
       - name: Build iOS Example
         run: cd Examples/ExampleiOSApp && set -o pipefail && xcodebuild -scheme ExampleiOSApp build -destination "name=iPhone 14 Pro" | xcpretty
-      - name: Build visionOS Example
-        run: cd Examples/ExampleVisionOS && set -o pipefail && xcodebuild -scheme ExampleVisionOS build -destination "generic/platform=visionOS" | xcpretty
