@@ -27,7 +27,7 @@ final class SketchSample2: Sketch {
         viewObj.multiplyScale(6)
     }
     
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         viewObj.$rotation.update(multiplier: deltaTime * 5)
     }
     
@@ -40,7 +40,7 @@ final class SketchSample2: Sketch {
         postProcessor.postProcess(commandBuffer: commandBuffer, texture: viewObj.texture!)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {
         let touch = touches.first!
         let location = touch.location(in: view)
         let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))

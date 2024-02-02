@@ -20,8 +20,8 @@ class ColoredHitTestableBox: HitTestableBox {
 
 final class Sample12: Sketch {
     
-    let numberFactory = NumberTextFactory(font: NSFont.systemFont(ofSize: 60), color: .white)
-    let textFactory = GeneralTextFactory(font: NSFont.systemFont(ofSize: 60), register: "someTextFrameRate:" + TextFactory.Template.numerics, color: .white)
+    let numberFactory = NumberImageTextFactory(font: NSFont.systemFont(ofSize: 60), color: .white)
+    let textFactory = GeneralImageTextFactory(font: NSFont.systemFont(ofSize: 60), register: "someTextFrameRate:" + ImageTextFactory.Template.numerics, color: .white)
     
     static let count = 6
     static let multiplier: Float = 5
