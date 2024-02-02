@@ -15,13 +15,13 @@ import AppKit
 import UIKit
 #endif
 
-public class KitSketchView<
-    DrawConfig: DrawConfigBase
->: TouchableMTKView<DrawConfig> {
-    var thisRenderer: RendererBase<DrawConfig>
-    public init(_ sketch: SketchBase) {
-        thisRenderer = DrawConfig.blendMode.getRenderer(
-            sketch: sketch
+public class KitSketchView: TouchableMTKView {
+    var thisRenderer: RendererBase
+    public init(_ sketch: SketchBase, blendMode: BlendMode, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
+        thisRenderer = blendMode.getRenderer(
+            sketch: sketch,
+            cameraConfig: cameraConfig,
+            drawConfig: drawConfig
         )
         super.init(renderer: thisRenderer)
     }

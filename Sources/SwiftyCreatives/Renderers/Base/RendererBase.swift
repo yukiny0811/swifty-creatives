@@ -16,15 +16,15 @@ public class RendererBase {
     }
 }
 #else
-public class RendererBase<
-    DrawConfig: DrawConfigBase
->: NSObject, MTKViewDelegate {
+public class RendererBase: NSObject, MTKViewDelegate {
     var camera: MainCamera
     var drawProcess: SketchBase
     var savedDate: Date
+    var drawConfig: DrawConfig
     public var cachedTexture: MTLTexture?
-    public init(drawProcess: SketchBase) {
-        self.camera = MainCamera()
+    public init(drawProcess: SketchBase, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
+        self.camera = MainCamera(config: cameraConfig)
+        self.drawConfig = drawConfig
         self.drawProcess = drawProcess
         self.savedDate = Date()
     }
@@ -32,12 +32,12 @@ public class RendererBase<
     public func draw(in view: MTKView) {
         calculateDeltaTime()
         view.drawableSize = CGSize(
-            width: view.frame.size.width * CGFloat(DrawConfig.contentScaleFactor),
-            height: view.frame.size.height * CGFloat(DrawConfig.contentScaleFactor)
+            width: view.frame.size.width * CGFloat(drawConfig.contentScaleFactor),
+            height: view.frame.size.height * CGFloat(drawConfig.contentScaleFactor)
         )
         camera.setFrame(
-            width: Float(view.frame.size.width) * Float(DrawConfig.contentScaleFactor),
-            height: Float(view.frame.size.height) * Float(DrawConfig.contentScaleFactor)
+            width: Float(view.frame.size.width) * Float(drawConfig.contentScaleFactor),
+            height: Float(view.frame.size.height) * Float(drawConfig.contentScaleFactor)
         )
     }
 }

@@ -16,9 +16,7 @@ import MetalKit
 
 #if !os(visionOS)
     
-class TransparentRenderer<
-    DrawConfig: DrawConfigBase
->: RendererBase<DrawConfig> {
+class TransparentRenderer: RendererBase {
     
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState
@@ -28,7 +26,7 @@ class TransparentRenderer<
     
     let optimalTileSize = MTLSize(width: 32, height: 16, depth: 1)
     
-    public init(sketch: SketchBase) {
+    public init(sketch: SketchBase, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         
         // MARK: - functions
         let constantValue = MTLFunctionConstantValues()
@@ -66,7 +64,7 @@ class TransparentRenderer<
         let depthStateDesc = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: false)
         depthState = ShaderCore.device.makeDepthStencilState(descriptor: depthStateDesc)!
         
-        super.init(drawProcess: sketch)
+        super.init(drawProcess: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
         
         self.drawProcess.setupCamera(camera: camera)
     }
@@ -82,11 +80,7 @@ class TransparentRenderer<
         renderPassDescriptor.tileHeight = optimalTileSize.height
         renderPassDescriptor.imageblockSampleLength = resolveState.imageblockSampleLength
         
-        if DrawConfig.clearOnUpdate {
-            renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        } else {
-            renderPassDescriptor.colorAttachments[0].loadAction = .load
-        }
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
         
         drawProcess.preProcess(commandBuffer: commandBuffer)
         
@@ -119,8 +113,8 @@ class TransparentRenderer<
             MTLViewport(
                 originX: 0,
                 originY: 0,
-                width: Double(view.bounds.width) * Double(DrawConfig.contentScaleFactor),
-                height: Double(view.bounds.height) * Double(DrawConfig.contentScaleFactor),
+                width: Double(view.bounds.width) * Double(drawConfig.contentScaleFactor),
+                height: Double(view.bounds.height) * Double(drawConfig.contentScaleFactor),
                 znear: -1,
                 zfar: 1
             )

@@ -8,27 +8,26 @@
 #if !os(visionOS)
 
 public enum BlendMode {
+    
     case normalBlend
     case add
     case alphaBlend
     
-    func getRenderer<
-        D: DrawConfigBase
-    >(sketch: SketchBase) -> RendererBase<D> {
+    func getRenderer(sketch: SketchBase, cameraConfig: CameraConfig, drawConfig: DrawConfig) -> RendererBase {
         switch self {
         case .normalBlend:
-            return NormalBlendRenderer<D>(sketch: sketch)
+            return NormalBlendRenderer(sketch: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
         case .add:
             if ShaderCore.device.supportsFamily(.apple3) {
-                return AddRenderer<D>(sketch: sketch)
+                return AddRenderer(sketch: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
             } else {
-                return NormalBlendRenderer<D>(sketch: sketch)
+                return NormalBlendRenderer(sketch: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
             }
         case .alphaBlend:
             if ShaderCore.device.supportsFamily(.apple4) {
-                return TransparentRenderer<D>(sketch: sketch)
+                return TransparentRenderer(sketch: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
             } else {
-                return NormalBlendRenderer<D>(sketch: sketch)
+                return NormalBlendRenderer(sketch: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
             }
         }
     }

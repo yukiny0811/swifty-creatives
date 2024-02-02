@@ -9,16 +9,14 @@
 
 import MetalKit
 
-public class NormalBlendRenderer<
-    DrawConfig: DrawConfigBase
->: RendererBase<DrawConfig> {
+public class NormalBlendRenderer: RendererBase {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
     
-    public init(sketch: SketchBase) {
+    public init(sketch: SketchBase, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
@@ -36,7 +34,7 @@ public class NormalBlendRenderer<
         let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
         self.depthStencilState = ShaderCore.device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
         
-        super.init(drawProcess: sketch)
+        super.init(drawProcess: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
         
         self.drawProcess.setupCamera(camera: camera)
     }
@@ -53,11 +51,7 @@ public class NormalBlendRenderer<
             return
         }
         
-        if DrawConfig.clearOnUpdate {
-            renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        } else {
-            renderPassDescriptor.colorAttachments[0].loadAction = .load
-        }
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
         
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
@@ -85,8 +79,8 @@ public class NormalBlendRenderer<
             MTLViewport(
                 originX: 0,
                 originY: 0,
-                width: Double(view.bounds.width) * Double(DrawConfig.contentScaleFactor),
-                height: Double(view.bounds.height) * Double(DrawConfig.contentScaleFactor),
+                width: Double(view.bounds.width) * Double(drawConfig.contentScaleFactor),
+                height: Double(view.bounds.height) * Double(drawConfig.contentScaleFactor),
                 znear: -1,
                 zfar: 1
             )

@@ -17,7 +17,7 @@ extension TouchableMTKView {
         self.isPaused = false
         self.colorPixelFormat = .bgra8Unorm
         self.framebufferOnly = false
-        self.preferredFramesPerSecond = DrawConfig.frameRate
+        self.preferredFramesPerSecond = renderer.drawConfig.frameRate
         self.autoResizeDrawable = true
         self.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
         self.depthStencilPixelFormat = .depth32Float_stencil8

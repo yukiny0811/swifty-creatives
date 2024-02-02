@@ -9,13 +9,11 @@
 
 import MetalKit
 
-public class AddRenderer<
-    DrawConfig: DrawConfigBase
->: RendererBase<DrawConfig> {
+public class AddRenderer: RendererBase {
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
     let renderPipelineState: MTLRenderPipelineState
-    public init(sketch: SketchBase) {
+    public init(sketch: SketchBase, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
@@ -31,7 +29,7 @@ public class AddRenderer<
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
-        super.init(drawProcess: sketch)
+        super.init(drawProcess: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
         self.drawProcess.setupCamera(camera: camera)
     }
     public override func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -45,11 +43,7 @@ public class AddRenderer<
             return
         }
         
-        if DrawConfig.clearOnUpdate {
-            renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        } else {
-            renderPassDescriptor.colorAttachments[0].loadAction = .load
-        }
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
         
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
@@ -76,8 +70,8 @@ public class AddRenderer<
             MTLViewport(
                 originX: 0,
                 originY: 0,
-                width: Double(view.bounds.width) * Double(DrawConfig.contentScaleFactor),
-                height: Double(view.bounds.height) * Double(DrawConfig.contentScaleFactor),
+                width: Double(view.bounds.width) * Double(drawConfig.contentScaleFactor),
+                height: Double(view.bounds.height) * Double(drawConfig.contentScaleFactor),
                 znear: -1,
                 zfar: 1
             )

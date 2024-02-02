@@ -25,7 +25,7 @@ public class MainCamera {
     public var config: CameraConfig
     
     public init(
-        config: CameraConfig = DefaultPerspectiveConfig()
+        config: CameraConfig
     ) {
         self.config = config
         matrixR = f4x4.createIdentity()

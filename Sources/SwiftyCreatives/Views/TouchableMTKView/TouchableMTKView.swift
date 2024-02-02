@@ -9,11 +9,9 @@ import MetalKit
 
 #if !os(visionOS)
 
-public class TouchableMTKView<
-    DrawConfig: DrawConfigBase
->: MTKView {
-    var renderer: RendererBase<DrawConfig>
-    init(renderer: RendererBase<DrawConfig>) {
+public class TouchableMTKView: MTKView {
+    var renderer: RendererBase
+    init(renderer: RendererBase) {
         self.renderer = renderer
         super.init(frame: .zero, device: ShaderCore.device)
         initializeView()
