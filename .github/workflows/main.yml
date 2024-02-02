@@ -53,8 +53,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS Example
-        run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -scheme ExampleMacOSApp build -destination "generic/platform=macOS" | xcpretty
+        run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -scheme ExampleMacOSApp build -destination "platform=macOS" | xcpretty
       - name: Build iOS Example
-        run: cd Examples/ExampleiOSApp && set -o pipefail && xcodebuild -scheme ExampleiOSApp build -destination "platform=iOS,name=iPhone 15 Pro" | xcpretty
+        run: cd Examples/ExampleiOSApp && set -o pipefail && xcodebuild -scheme ExampleiOSApp build -destination "platform=iOS" | xcpretty
       - name: Build visionOS Example
-        run: cd Examples/ExampleVisionOS && set -o pipefail && xcodebuild -scheme ExampleVisionOS build -destination "generic/platform=visionOS" | xcpretty
+        run: cd Examples/ExampleVisionOS && set -o pipefail && xcodebuild -scheme ExampleVisionOS build -destination "platform=visionOS" | xcpretty
