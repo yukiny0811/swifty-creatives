@@ -8,6 +8,14 @@
 import MetalKit
 import simd
 
+#if os(visionOS)
+public class RendererBase {
+    var drawProcess: SketchBase
+    public init(drawProcess: SketchBase) {
+        self.drawProcess = drawProcess
+    }
+}
+#else
 public class RendererBase<
     CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
@@ -34,3 +42,4 @@ public class RendererBase<
         )
     }
 }
+#endif

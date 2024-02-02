@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2022/12/08.
 //
 
+#if !os(visionOS)
+
 import MetalKit
 import SwiftUI
 
@@ -41,3 +43,5 @@ public struct ConfigurableSketchView<
     public func updateUIView(_ uiView: MTKView, context: Context) {}
     #endif
 }
+
+#endif

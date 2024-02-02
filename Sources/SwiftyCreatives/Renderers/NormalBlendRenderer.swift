@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2022/12/16.
 //
 
+#if !os(visionOS)
+
 import MetalKit
 
 public class NormalBlendRenderer<
@@ -120,3 +122,5 @@ public class NormalBlendRenderer<
         
     }
 }
+
+#endif

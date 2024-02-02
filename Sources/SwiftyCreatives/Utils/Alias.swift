@@ -10,7 +10,7 @@ import SwiftUI
 
 #if os(macOS)
 typealias ViewRepresentable = NSViewRepresentable
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
 typealias ViewRepresentable = UIViewRepresentable
 #endif
 
@@ -37,13 +37,13 @@ public typealias SCCommandBuffer = MTLCommandBuffer
 // MARK: - Font
 #if os(macOS)
 public typealias FontAlias = NSFont
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
 public typealias FontAlias = UIFont
 #endif
 
 // MARK: - Color
 #if os(macOS)
 public typealias ColorAlias = NSColor
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
 public typealias ColorAlias = UIColor
 #endif

@@ -39,7 +39,7 @@ final class RectTests: XCTestCase {
         let mtkView = MTKView(frame: CGRect(x: 0, y: 0, width: 100, height: 100), device: ShaderCore.device)
         swiftuiView.renderer.draw(in: mtkView)
         
-        wait(for: [expectation], timeout: 5.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         
         let cgimage = swiftuiView.renderer.cachedTexture!.cgImage!
         let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
@@ -71,7 +71,7 @@ final class RectTests: XCTestCase {
         let mtkView = MTKView(frame: CGRect(x: 0, y: 0, width: 100, height: 100), device: ShaderCore.device)
         swiftuiView.renderer.draw(in: mtkView)
         
-        wait(for: [expectation], timeout: 5.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         
         let cgimage = swiftuiView.renderer.cachedTexture!.cgImage!
         let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))
@@ -103,7 +103,7 @@ final class RectTests: XCTestCase {
         let mtkView = MTKView(frame: CGRect(x: 0, y: 0, width: 100, height: 100), device: ShaderCore.device)
         swiftuiView.renderer.draw(in: mtkView)
         
-        wait(for: [expectation], timeout: 5.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         
         let cgimage = swiftuiView.renderer.cachedTexture!.cgImage!
         let finalimage = NSImage(cgImage: cgimage, size: NSSize(width: 100, height: 100))

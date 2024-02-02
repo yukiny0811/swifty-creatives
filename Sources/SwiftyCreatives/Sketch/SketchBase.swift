@@ -11,12 +11,18 @@ import AppKit
 import UIKit
 #endif
 
+import MetalKit
+
 public protocol SketchBase: AnyObject {
     var deltaTime: Float { get set }
     
     // MARK: functions
+    #if !os(visionOS)
     func setupCamera(camera: some MainCameraBase)
     func update(camera: some MainCameraBase)
+    #else
+    func update()
+    #endif
     func draw(encoder: SCEncoder)
     func updateAndDrawLight(encoder: SCEncoder)
     func beforeDraw(encoder: SCEncoder)

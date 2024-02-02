@@ -7,6 +7,8 @@
 
 import MetalKit
 
+#if !os(visionOS)
+
 extension TouchableMTKView {
     func configure() {
         #if os(macOS)
@@ -40,3 +42,5 @@ extension TouchableMTKView {
     }
     #endif
 }
+
+#endif

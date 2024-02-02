@@ -6,29 +6,31 @@ on:
     branches: [ main ]
   workflow_dispatch:
 env:
-  DEVELOPER_DIR: /Applications/Xcode.app
+  DEVELOPER_DIR: /Applications/Xcode_15.2.app
 jobs:
   build:
-    runs-on: macOS-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS
-        run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS"
+        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS" | xcpretty
       - name: Build iOS
-        run: xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=iOS"
+        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=iOS" | xcpretty
+      - name: Build visionOS
+        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=visionOS" | xcpretty
   test:
-    runs-on: macOS-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
       - name: Test macOS
-        run: xcodebuild -scheme SwiftyCreatives test -destination "platform=macOS,arch=x86_64"
+        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64" | xcpretty
       - name: Test iOS
-        run: xcodebuild -scheme SwiftyCreatives test -destination "name=iPhone 14 Pro"
+        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "name=iPhone 14 Pro" | xcpretty
   build-examples:
-    runs-on: macOS-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS Example
-        run: cd Examples/ExampleMacOSApp && xcodebuild -scheme ExampleMacOSApp build -destination "generic/platform=macOS"
+        run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -scheme ExampleMacOSApp build -destination "generic/platform=macOS" | xcpretty
       - name: Build iOS Example
-        run: cd Examples/ExampleiOSApp && xcodebuild -scheme ExampleiOSApp build -destination "name=iPhone 14 Pro"
+        run: cd Examples/ExampleiOSApp && set -o pipefail && xcodebuild -scheme ExampleiOSApp build -destination "name=iPhone 14 Pro" | xcpretty
