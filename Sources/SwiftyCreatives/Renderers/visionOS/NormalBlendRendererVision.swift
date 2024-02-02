@@ -22,7 +22,7 @@ public class NormalBlendRendererVision: RendererBase {
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
     
-    public init(sketch: SketchBase, layerRenderer: LayerRenderer) {
+    public init(sketch: Sketch, layerRenderer: LayerRenderer) {
         self.layerRenderer = layerRenderer
         worldTracking = WorldTrackingProvider()
         arSession = ARKitSession()

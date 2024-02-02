@@ -17,7 +17,7 @@ import UIKit
 
 public class KitSketchView: TouchableMTKView {
     var thisRenderer: RendererBase
-    public init(_ sketch: SketchBase, blendMode: BlendMode, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
+    public init(_ sketch: Sketch, blendMode: BlendMode, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         thisRenderer = blendMode.getRenderer(
             sketch: sketch,
             cameraConfig: cameraConfig,

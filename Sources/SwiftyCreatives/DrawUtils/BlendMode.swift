@@ -13,7 +13,7 @@ public enum BlendMode {
     case add
     case alphaBlend
     
-    func getRenderer(sketch: SketchBase, cameraConfig: CameraConfig, drawConfig: DrawConfig) -> RendererBase {
+    func getRenderer(sketch: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) -> RendererBase {
         switch self {
         case .normalBlend:
             return NormalBlendRenderer(sketch: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)

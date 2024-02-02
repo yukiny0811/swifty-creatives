@@ -7,16 +7,16 @@
 
 import CoreImage
 
-public class TextFactory {
+public class ImageTextFactory {
     
-    var registeredTextures: [String: TextFactory.TextureData] = [:]
+    var registeredTextures: [String: ImageTextFactory.TextureData] = [:]
     
     init(font: FontAlias, register characters: String, color: ColorAlias) {
         for c in characters {
             let str = String(c)
             let attributedString = createAttributedString(character: str, font: font, color: color)
             let characterImage = createCharacterImage(attributedString: attributedString)
-            registeredTextures[str] = TextFactory.TextureData(
+            registeredTextures[str] = ImageTextFactory.TextureData(
                 texture: createCharacterTexture(image: characterImage),
                 size: f3(Float(characterImage.extent.width / characterImage.extent.height), 1, 1)
             )

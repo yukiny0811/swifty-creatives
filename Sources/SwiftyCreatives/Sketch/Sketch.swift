@@ -1,6 +1,6 @@
 //
 //  Sketch.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2023/01/05.
 //
@@ -12,9 +12,11 @@ import UIKit
 #endif
 
 import simd
+import SimpleSimdSwift
 import MetalKit
 
-open class Sketch: SketchBase, FunctionBase {
+open class Sketch: FunctionBase {
+    public var metalDrawableSize: f2 = .zero
     public let textPostProcessor: TextPostProcessor = TextPostProcessor()
     public var customMatrix: [f4x4] = [f4x4.createIdentity()]
     public var privateEncoder: SCEncoder?
@@ -23,20 +25,16 @@ open class Sketch: SketchBase, FunctionBase {
     public var packet: SCPacket {
         SCPacket(privateEncoder: privateEncoder!, customMatrix: getCustomMatrix())
     }
-    
     public init() {}
-    
-    #if !os(visionOS)
+    #if os(visionOS)
+    open func update() {}
+    #else
     open func setupCamera(camera: MainCamera) {}
     open func update(camera: MainCamera) {}
-    #else
-    open func update() {}
     #endif
     open func draw(encoder: SCEncoder) {}
     
-    #if canImport(XCTest)
-    open func afterCommit() {}
-    #endif
+    open func afterCommit(texture: MTLTexture?) {}
     
     public func beforeDraw(encoder: SCEncoder) {
         self.customMatrix = [f4x4.createIdentity()]

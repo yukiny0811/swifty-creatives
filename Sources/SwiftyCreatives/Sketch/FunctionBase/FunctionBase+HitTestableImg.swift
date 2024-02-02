@@ -6,6 +6,7 @@
 //
 
 import simd
+import SimpleSimdSwift
 
 public extension FunctionBase {
     func img(hitTestableImg: HitTestableImg) {

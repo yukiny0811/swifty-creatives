@@ -6,14 +6,15 @@
 //
 
 import simd
+import SimpleSimdSwift
 
 public extension FunctionBase {
-    func drawNumberText<T: Numeric>(encoder: SCEncoder, factory: NumberTextFactory, number: T, spacing: Float = 1, scale: Float = 1) {
+    func drawNumberText<T: Numeric>(encoder: SCEncoder, factory: NumberImageTextFactory, number: T, spacing: Float = 1, scale: Float = 1) {
         let text = String(describing: number)
         drawGeneralText(encoder: encoder, factory: factory, text: text, spacing: spacing, scale: scale)
     }
     
-    func drawGeneralText(encoder: SCEncoder, factory: TextFactory, text: String, spacing: Float = 1, scale: Float = 1, spacer: Float = 1, color: f4 = .one) {
+    func drawGeneralText(encoder: SCEncoder, factory: ImageTextFactory, text: String, spacing: Float = 1, scale: Float = 1, spacer: Float = 1, color: f4 = .one) {
         encoder.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
         encoder.setVertexBytes([f3.one], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
         encoder.setVertexBytes([f4.one], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)

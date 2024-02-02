@@ -10,19 +10,19 @@ import simd
 
 #if os(visionOS)
 public class RendererBase {
-    var drawProcess: SketchBase
-    public init(drawProcess: SketchBase) {
+    var drawProcess: Sketch
+    public init(drawProcess: Sketch) {
         self.drawProcess = drawProcess
     }
 }
 #else
 public class RendererBase: NSObject, MTKViewDelegate {
     var camera: MainCamera
-    var drawProcess: SketchBase
+    var drawProcess: Sketch
     var savedDate: Date
     var drawConfig: DrawConfig
     public var cachedTexture: MTLTexture?
-    public init(drawProcess: SketchBase, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
+    public init(drawProcess: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         self.camera = MainCamera(config: cameraConfig)
         self.drawConfig = drawConfig
         self.drawProcess = drawProcess

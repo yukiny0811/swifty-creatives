@@ -18,9 +18,9 @@ import UIKit
 
 public struct SketchView: ViewRepresentable {
     let renderer: RendererBase
-    let drawProcess: SketchBase
+    let drawProcess: Sketch
     public init(
-        _ sketch: SketchBase,
+        _ sketch: Sketch,
         blendMode: BlendMode = .alphaBlend,
         cameraConfig: CameraConfig = DefaultPerspectiveConfig(),
         drawConfig: DrawConfig = DefaultDrawConfig()
@@ -41,7 +41,7 @@ public struct SketchView: ViewRepresentable {
     public func updateNSView(_ nsView: MTKView, context: Context) {}
     #elseif os(iOS)
     public func makeUIView(context: Context) -> MTKView {
-        let mtkView = TouchableMTKView<DrawConfig>(renderer: renderer)
+        let mtkView = TouchableMTKView(renderer: renderer)
         return mtkView
     }
     public func updateUIView(_ uiView: MTKView, context: Context) {}

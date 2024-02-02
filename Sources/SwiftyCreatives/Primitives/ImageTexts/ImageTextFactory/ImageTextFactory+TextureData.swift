@@ -7,7 +7,7 @@
 
 import Metal
 
-extension TextFactory {
+extension ImageTextFactory {
     struct TextureData {
         var texture: MTLTexture
         var size: f3

@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2023/03/27.
 //
 
+import SimpleSimdSwift
+
 public extension FunctionBase {
     func text(_ textObj: TextObject) {
         privateEncoder?.setVertexBytes(RectShapeInfo.vertices, length: RectShapeInfo.vertices.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)

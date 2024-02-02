@@ -8,8 +8,8 @@
 import MetalKit
 import CoreGraphics
 
-public class NumberTextFactory: TextFactory {
+public class NumberImageTextFactory: ImageTextFactory {
     public init(font: FontAlias, color: ColorAlias) {
-        super.init(font: font, register: TextFactory.Template.numerics, color: color)
+        super.init(font: font, register: ImageTextFactory.Template.numerics, color: color)
     }
 }
