@@ -6,10 +6,12 @@
 //
 
 import MetalKit
-import Spatial
-import CompositorServices
 
 #if os(visionOS)
+
+import CompositorServices
+import Spatial
+
 public class RendererBase {
     
     var drawProcess: Sketch

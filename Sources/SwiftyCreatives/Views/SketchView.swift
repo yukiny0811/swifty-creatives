@@ -21,7 +21,7 @@ public struct SketchView: ViewRepresentable {
     let drawProcess: Sketch
     public init(
         _ sketch: Sketch,
-        blendMode: BlendMode = .alphaBlend,
+        blendMode: RendererBase.BlendMode = .alphaBlend,
         cameraConfig: CameraConfig = DefaultPerspectiveConfig(),
         drawConfig: DrawConfig = DefaultDrawConfig()
     ) {

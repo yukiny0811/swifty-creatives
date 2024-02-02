@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2024/02/03.
 //
 
+#if os(visionOS)
+
 import Foundation
 import Spatial
 import CompositorServices
@@ -38,3 +40,5 @@ func matrix4x4_translation(_ translationX: Float, _ translationY: Float, _ trans
 func radians_from_degrees(_ degrees: Float) -> Float {
     return (degrees / 180) * .pi
 }
+
+#endif
