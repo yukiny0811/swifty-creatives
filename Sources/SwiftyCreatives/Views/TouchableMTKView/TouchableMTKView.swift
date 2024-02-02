@@ -10,11 +10,10 @@ import MetalKit
 #if !os(visionOS)
 
 public class TouchableMTKView<
-    CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: MTKView {
-    var renderer: RendererBase<CameraConfig, DrawConfig>
-    init(renderer: RendererBase<CameraConfig, DrawConfig>) {
+    var renderer: RendererBase<DrawConfig>
+    init(renderer: RendererBase<DrawConfig>) {
         self.renderer = renderer
         super.init(frame: .zero, device: ShaderCore.device)
         initializeView()
@@ -41,7 +40,7 @@ public class TouchableMTKView<
     public override func mouseDragged(with event: NSEvent) {
         let moveRadX = Float(event.deltaY) * 0.01
         let moveRadY = Float(event.deltaX) * 0.01
-        switch CameraConfig.easyCameraType {
+        switch renderer.camera.config.easyCameraType {
         case .manual:
             break
         case .easy(polarSpacing: let polarSpacing):
@@ -80,7 +79,7 @@ public class TouchableMTKView<
         renderer.drawProcess.viewDidEndLiveResize(camera: renderer.camera, viewFrame: self.superview!.frame)
     }
     public override func scrollWheel(with event: NSEvent) {
-        switch CameraConfig.easyCameraType {
+        switch renderer.camera.config.easyCameraType {
         case .manual:
             break
         case .easy(_), .flexible:
@@ -94,7 +93,7 @@ public class TouchableMTKView<
     #if os(iOS)
     @objc func onScroll(recognizer: UIPanGestureRecognizer) {
         let delta = recognizer.velocity(in: self)
-        switch CameraConfig.easyCameraType {
+        switch renderer.camera.config.easyCameraType {
         case .manual:
             break
         case .easy(_), .flexible:
@@ -111,7 +110,7 @@ public class TouchableMTKView<
         let diff = touch.location(in: self) - touch.previousLocation(in: self)
         let moveRadX = Float(diff.y) * 0.01
         let moveRadY = Float(diff.x) * 0.01
-        switch CameraConfig.easyCameraType {
+        switch renderer.camera.config.easyCameraType {
         case .manual:
             break
         case .easy(polarSpacing: let polarSpacing):

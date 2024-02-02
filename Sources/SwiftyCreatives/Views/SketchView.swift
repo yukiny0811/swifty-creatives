@@ -17,9 +17,8 @@ import UIKit
 #endif
 
 public struct SketchView: ViewRepresentable {
-    typealias CameraConfig = MainCameraConfig
     typealias DrawConfig = MainDrawConfig
-    let renderer: RendererBase<CameraConfig, DrawConfig>
+    let renderer: RendererBase<DrawConfig>
     let drawProcess: SketchBase
     public init(_ sketch: SketchBase) {
         self.drawProcess = sketch
@@ -30,13 +29,13 @@ public struct SketchView: ViewRepresentable {
     
     #if os(macOS)
     public func makeNSView(context: Context) -> MTKView {
-        let mtkView = TouchableMTKView<CameraConfig, DrawConfig>(renderer: renderer)
+        let mtkView = TouchableMTKView<DrawConfig>(renderer: renderer)
         return mtkView
     }
     public func updateNSView(_ nsView: MTKView, context: Context) {}
     #elseif os(iOS)
     public func makeUIView(context: Context) -> MTKView {
-        let mtkView = TouchableMTKView<CameraConfig, DrawConfig>(renderer: renderer)
+        let mtkView = TouchableMTKView<DrawConfig>(renderer: renderer)
         return mtkView
     }
     public func updateUIView(_ uiView: MTKView, context: Context) {}

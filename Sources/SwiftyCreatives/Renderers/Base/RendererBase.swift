@@ -17,10 +17,9 @@ public class RendererBase {
 }
 #else
 public class RendererBase<
-    CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
 >: NSObject, MTKViewDelegate {
-    var camera: MainCamera<CameraConfig>
+    var camera: MainCamera
     var drawProcess: SketchBase
     var savedDate: Date
     public var cachedTexture: MTLTexture?

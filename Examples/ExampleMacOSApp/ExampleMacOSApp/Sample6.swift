@@ -31,7 +31,7 @@ final class Sample6: Sketch {
             objects.append(box)
         }
     }
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         camera.rotateAroundY(0.01)
     }
     override func draw(encoder: SCEncoder) {

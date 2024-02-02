@@ -17,9 +17,8 @@ import MetalKit
 #if !os(visionOS)
     
 class TransparentRenderer<
-    CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: RendererBase<CameraConfig, DrawConfig> {
+>: RendererBase<DrawConfig> {
     
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState

@@ -7,9 +7,7 @@
 
 import simd
 
-public class MainCamera<
-    Config: CameraConfigBase
->: MainCameraBase {
+public class MainCamera {
     
     var frameWidth: Float = 0
     var frameHeight: Float = 0
@@ -24,7 +22,12 @@ public class MainCamera<
     public var mainMatrix: [f4x4] = [f4x4(0)]
     public var perspectiveMatrix: [f4x4] = [f4x4(0)]
     
-    public init() {
+    public var config: CameraConfig
+    
+    public init(
+        config: CameraConfig = DefaultPerspectiveConfig()
+    ) {
+        self.config = config
         matrixR = f4x4.createIdentity()
         matrixT = f4x4.createTransform(0, 0, -20)
         updateMainMatrix()
@@ -91,10 +94,10 @@ public class MainCamera<
     }
     
     public func updatePMatrix() {
-        if Config.isPerspective {
-            perspectiveMatrix[0] = f4x4.createPerspective(fov: Float.degreesToRadians(Config.fov), aspect: frameWidth / frameHeight, near: Config.near, far: Config.far)
+        if config.isPerspective {
+            perspectiveMatrix[0] = f4x4.createPerspective(fov: Float.degreesToRadians(config.fov), aspect: frameWidth / frameHeight, near: config.near, far: config.far)
         } else {
-            perspectiveMatrix[0] = f4x4.createOrthographic(-self.frameWidth/2, self.frameWidth/2, -self.frameHeight/2, self.frameHeight/2, Config.near, Config.far)
+            perspectiveMatrix[0] = f4x4.createOrthographic(-self.frameWidth/2, self.frameWidth/2, -self.frameHeight/2, self.frameHeight/2, config.near, config.far)
         }
     }
     

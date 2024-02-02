@@ -19,7 +19,7 @@ final class Sample5: Sketch {
     override func preProcess(commandBuffer: MTLCommandBuffer) {
         object.setColor(commandBuffer: commandBuffer, f4(1, 0, 1, 1))
     }
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         camera.rotateAroundY(0.01)
     }
     override func draw(encoder: SCEncoder) {

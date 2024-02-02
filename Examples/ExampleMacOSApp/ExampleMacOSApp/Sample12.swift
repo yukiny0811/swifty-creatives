@@ -39,11 +39,11 @@ final class Sample12: Sketch {
         }
     }
     
-    override func setupCamera(camera: some MainCameraBase) {
+    override func setupCamera(camera: MainCamera) {
         camera.setTranslate(0, 0, -30)
     }
     
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         for x in 0...Self.count {
             for y in 0...Self.count {
                 boxes[x][y].$height.update(multiplier: deltaTime * 8)
@@ -74,7 +74,7 @@ final class Sample12: Sketch {
         drawGeneralText(encoder: encoder, factory: textFactory, text: "FrameRate: \(Int(frameRate))")
     }
     
-    override func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func mouseMoved(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {
         var location = mousePos(event: event, viewFrame: viewFrame)
         let ray = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
         var savedIndex: (Int, Int)? = nil
@@ -94,7 +94,7 @@ final class Sample12: Sketch {
         }
     }
     
-    override func keyDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func keyDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {
         if event.keyCode == 49 {
             for x in 0...Self.count {
                 for y in 0...Self.count {

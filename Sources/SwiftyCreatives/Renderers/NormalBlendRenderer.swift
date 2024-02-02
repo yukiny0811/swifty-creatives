@@ -10,9 +10,8 @@
 import MetalKit
 
 public class NormalBlendRenderer<
-    CameraConfig: CameraConfigBase,
     DrawConfig: DrawConfigBase
->: RendererBase<CameraConfig, DrawConfig> {
+>: RendererBase<DrawConfig> {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor

@@ -15,7 +15,7 @@ final class Sample11: Sketch {
     var boxColor: f4 = .one
     var testBoxPos: f3 = .zero
     
-    override func setupCamera(camera: some MainCameraBase) {
+    override func setupCamera(camera: MainCamera) {
         camera.setTranslate(0, 0, -20)
     }
     
@@ -27,7 +27,7 @@ final class Sample11: Sketch {
         drawHitTestableBox(box: box)
     }
     
-    override func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func mouseMoved(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {
         let location = mousePos(event: event, viewFrame: viewFrame)
         let ray = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(viewFrame.width), height: Float(viewFrame.height))
         if let hitPos = box.hitTest(origin: ray.origin, direction: ray.direction) {

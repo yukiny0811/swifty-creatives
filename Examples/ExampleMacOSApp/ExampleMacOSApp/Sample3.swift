@@ -11,7 +11,7 @@ final class Sample3: Sketch {
     override init() {
         super.init()
     }
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         camera.rotateAroundY(0.01)
     }
     override func draw(encoder: SCEncoder) {

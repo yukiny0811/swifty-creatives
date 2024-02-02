@@ -25,7 +25,7 @@ final class Sample7: Sketch {
             .multiplyScale(5)
         
     }
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         camera.rotateAroundY(0.03)
         elapsed += 0.01
     }

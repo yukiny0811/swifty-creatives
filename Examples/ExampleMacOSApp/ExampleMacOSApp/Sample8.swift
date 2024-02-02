@@ -11,10 +11,10 @@ import AppKit
 
 final class Sample8: Sketch {
     var tree = "F"
-    override func setupCamera(camera: some MainCameraBase) {
+    override func setupCamera(camera: MainCamera) {
         camera.setTranslate(0, -20, -40)
     }
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         camera.rotateAroundY(0.01)
     }
     override func draw(encoder: SCEncoder) {
@@ -22,7 +22,7 @@ final class Sample8: Sketch {
             compile(char: t)
         }
     }
-    override func keyDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func keyDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {
         var currentTree = ""
         for t in tree {
             if t == "F" {

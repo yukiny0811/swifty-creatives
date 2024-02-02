@@ -32,8 +32,8 @@ open class Sketch: SketchBase, FunctionBase {
     public init() {}
     
     #if !os(visionOS)
-    open func setupCamera(camera: some MainCameraBase) {}
-    open func update(camera: some MainCameraBase) {}
+    open func setupCamera(camera: MainCamera) {}
+    open func update(camera: MainCamera) {}
     #else
     open func update() {}
     #endif
@@ -58,25 +58,25 @@ open class Sketch: SketchBase, FunctionBase {
     }
     
     #if os(macOS)
-    open func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func mouseDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func mouseUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func mouseEntered(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func mouseExited(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func keyDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func keyUp(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func viewWillStartLiveResize(camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func resize(withOldSuperviewSize oldSize: NSSize, camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func viewDidEndLiveResize(camera: some MainCameraBase, viewFrame: CGRect) {}
-    open func scrollWheel(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {}
+    open func mouseMoved(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func mouseDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func mouseDragged(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func mouseUp(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func mouseEntered(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func mouseExited(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func keyDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func keyUp(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func viewWillStartLiveResize(camera: MainCamera, viewFrame: CGRect) {}
+    open func resize(withOldSuperviewSize oldSize: NSSize, camera: MainCamera, viewFrame: CGRect) {}
+    open func viewDidEndLiveResize(camera: MainCamera, viewFrame: CGRect) {}
+    open func scrollWheel(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
     #endif
     
     #if os(iOS)
-    open func onScroll(delta: CGPoint, camera: some MainCameraBase, view: UIView, gestureRecognizer: UIPanGestureRecognizer) {}
-    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {}
-    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {}
-    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {}
-    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {}
+    open func onScroll(delta: CGPoint, camera: MainCamera, view: UIView, gestureRecognizer: UIPanGestureRecognizer) {}
+    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
+    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
+    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
+    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
     #endif
 }

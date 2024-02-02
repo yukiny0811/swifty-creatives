@@ -14,7 +14,7 @@ class MyHitTestableRect: HitTestableRect {
 }
 
 final class Sample10: Sketch {
-    override func setupCamera(camera: some MainCameraBase) {
+    override func setupCamera(camera: MainCamera) {
         camera.setTranslate(0, 0, -10)
     }
     var rect: [MyHitTestableRect] = [
@@ -31,7 +31,7 @@ final class Sample10: Sketch {
         }
     }
     
-    override func mouseMoved(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
+    override func mouseMoved(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {
         let location = mousePos(event: event, viewFrame: viewFrame)
         
         let ray = camera.screenToWorldDirection(x: location.x, y: location.y, width: Float(viewFrame.width), height: Float(viewFrame.height))
