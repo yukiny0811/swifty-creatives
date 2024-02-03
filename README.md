@@ -6,23 +6,140 @@
 [![License](https://img.shields.io/github/license/yukiny0811/swifty-creatives)](https://github.com/yukiny0811/swifty-creatives/blob/main/LICENSE)
 
 __Creative coding framework for Swift.__   
-Using Metal directly for rendering. Inspired by Processing. Supports visionOS.
+Using Metal directly for rendering. Inspired by Processing. Supports visionOS.    
 
-![ExampleMacOSApp 2022年-12月-16日 18 08 41](https://user-images.githubusercontent.com/28947703/208063423-3ad00c20-1d1c-48b8-8996-2d43e1365fe4.gif)
+![outputFinalfinal](https://github.com/yukiny0811/swifty-creatives/assets/28947703/52d2d3f5-f69b-48f0-b77f-5db910615010)
 
-## Features
-|Geometry|Other Features|
-|-|-|
-|Rectangle (with hit test)|Perspective Camera|
-|Circle|Orthographic Camera|
-|Triangle|BlendMode(normal, add, alphaBlend)|
-|Line|Lighting|
-|Box (with hit test)|push/pop matrix|
-|3D Model|can be used as UIView / NSView|
-|Image (with hit test)|can be used as SwiftUI View|
-|Text|Post Processing|
-|UIViewObject (3d view with interactive button)|User-defined shaders|
+## Requirements
 
+- Swift5.9
+
+## Supported Platforms
+
+- macOS v14
+- iOS v17
+- visionOS v1
+- tvOS v17
+
+## Key Features
+
+### Processing-like Syntax
+
+You can easily create your graphics, using Swift Programming Language with the intuitive essence of Processing.    
+I like how ```push()``` and ```pop()``` became super simple using Swift's trailing closure.
+
+```.swift
+import SwiftyCreatives
+
+final class MySketch: Sketch {
+    override func draw(encoder: SCEncoder) {
+        let count = 20
+        for i in 0..<count {
+            color(0.75, Float(i) / 40, 1, 0.5)
+            push {
+                rotateY(Float.pi * 2 / Float(count) * Float(i))
+                translate(10, 0, 0)
+                box(0, 0, 0, 1, 1, 1)
+            }
+        }
+    }
+}
+
+struct ContentView: View {
+    var body: some View {
+        SketchView(MySketch())
+    }
+}
+```
+![スクリーンショット 2024-02-04 5 38 56](https://github.com/yukiny0811/swifty-creatives/assets/28947703/1d506879-6b23-460f-b7de-eb8a379bf2d1)
+
+### Apple Vision Pro - Immersive Space
+
+Supports visionOS! You can dive in to your sketch with Immersive Space rendering!
+
+```.swift
+ImmersiveSpace(id: "ImmersiveSpace") {
+    CompositorLayer(configuration: ContentStageConfiguration()) { layerRenderer in
+        let renderer = RendererBase.BlendMode.normalBlend.getRenderer(sketch: SampleSketch(), layerRenderer: layerRenderer)
+        renderer.startRenderLoop()
+    }
+}
+```
+
+![ddd](https://github.com/yukiny0811/swifty-creatives/assets/28947703/e700c630-9f49-4f2e-99be-8963484edcc2)
+
+
+### xib to 3D Space!
+
+Create UIView with xib, and place it in 3D scene!    
+UIButton can be connected with IBAction, and can be tapped in 3d space.
+
+![outout](https://github.com/yukiny0811/swifty-creatives/assets/28947703/fbee6220-13f6-42d3-accf-3f43270d7251)
+
+## Installation
+
+Use Swift Package Manager.
+
+```.swift
+dependencies: [
+    .package(url: "https://github.com/yukiny0811/swifty-creatives.git", branch: "main")
+]
+```
+```.swift
+.product(name: "SwiftyCreatives", package: "swifty-creatives")
+```
+
+### Features
+- [x] Geometries
+    - [x] Rectangle
+    - [x] Circle
+    - [x] Box
+    - [x] Triangle
+    - [x] Line
+    - [x] BoldLine
+    - [x] 3D Model (obj)
+    - [x] Image
+    - [x] Text
+    - [x] 3D Text
+    - [x] UIView Object (3d view created from xib, with interactive button)
+    - [x] Mesh
+    - [x] Vertex Buffer
+- [x] Geometries with Hit Test (you can click or hover on it)
+    - [x] HitTestableRect
+    - [x] HitTestableBox
+    - [x] HitTestableImg
+- [x] Effects
+    - [x] Color
+    - [x] Fog
+    - [x] Bloom
+    - [x] Post Process (you can create your own)
+- [x] Transforms
+    - [x] Translate
+    - [x] Rotate
+    - [x] Scale
+    - [x] Push & Pop
+- [x] Rendering
+    - [x] Normal rendering with depth test
+    - [x] Add blend rendering
+    - [x] Transparent rendering with depth test
+- [x] Animation
+    - [x] SCAnimatable property wrapper for animations
+- [x] Audio
+    - [x] Audio Input
+    - [x] FFT
+- [x] Camera
+    - [x] Perspective Camera
+    - [x] Orthographic Camera
+    - [x] Customizable fov
+- [x] View
+    - [x] SwiftUI View
+    - [x] UIKit View
+    - [x] visionOS Immersive Space
+- [x] Others
+    - [x] Creating original geomery class
+    - [x] Font Rendering
+     
+## Other Examples
 
 ![ExampleMacOSApp 2023年-02月-24日 17 11 06](https://user-images.githubusercontent.com/28947703/221126530-c362018e-325c-4747-8e57-c5e18ab7085d.gif)
 
@@ -30,38 +147,12 @@ Using Metal directly for rendering. Inspired by Processing. Supports visionOS.
 
 ![QuickTime Player - 画面収録 2023-02-10 1 53 14 mov 2023年-02月-10日 2 55 14](https://user-images.githubusercontent.com/28947703/217897685-7a83bedf-5624-45e2-b566-9a05aab7c103.gif)
 
+![stable fluids](https://user-images.githubusercontent.com/28947703/210088675-e4605442-db10-4620-b154-0fd4288c1445.gif)
 
-## Sample Code
+## Credits
+- swifty-creatives library is created by Yuki Kuwashima
+- twitter: [@yukiny_sfc](https://twitter.com/yukiny_sfc)
+- [email](yukiny0811@gmail.com)
 
-### Main sketch process
-```SampleSketch.swift
-import SwiftyCreatives
-
-final class SampleSketch: Sketch {
-    override func draw(encoder: SCEncoder) {
-        let count = 20
-        for i in 0...count {
-            color(1, Float(i) / 20, 0, 1)
-            pushMatrix()
-            rotateY(Float.pi * 2 / Float(count) * Float(i))
-            translate(10, 0, 0)
-            box(1, 1, 1)
-            popMatrix()
-        }
-    }
-}
-```
-
-### You can use SketchView as SwiftUI View
-```View.swift
-ZStack {
-    SketchView(SampleSketch())
-}
-.background(.black)
-```
-
-<img width="863" alt="スクリーンショット 2023-02-03 7 51 34" src="https://user-images.githubusercontent.com/28947703/216469226-3f32ccee-c045-48c3-8fc0-0044ef7da891.png">
-
-## Other Examples
-- https://github.com/yukiny0811/sc-treeart
-- https://github.com/yukiny0811/sc-stable-fluids
+## License
+swifty-creatives library is released under the MIT license. See [LICENSE](https://github.com/yukiny0811/swifty-creatives/blob/main/LICENSE) for details.
