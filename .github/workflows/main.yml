@@ -13,48 +13,48 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=macOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=macOS" | xcpretty
       - name: Build Mac Catalyst
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=Mac Catalyst" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=Mac Catalyst" | xcpretty
       - name: Build iOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=iOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=iOS" | xcpretty
       - name: Build iOS Simulator
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=iOS Simulator" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=iOS Simulator" | xcpretty
       - name: Build visionOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=visionOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=visionOS" | xcpretty
       - name: Build visionOS Simulator
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=visionOS Simulator" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=visionOS Simulator" | xcpretty
       - name: Build tvOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=tvOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=tvOS" | xcpretty
       - name: Build tvOS Simulator
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives build -destination "generic/platform=tvOS Simulator" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=tvOS Simulator" | xcpretty
   test:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
       - name: Test macOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64" | xcpretty
       - name: Test Mac Catalyst
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64,variant=Mac Catalyst" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64,variant=Mac Catalyst" | xcpretty
       - name: Test iOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=iOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=iOS" | xcpretty
       - name: Test iOS Simulator
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=iOS Simulator" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=iOS Simulator" | xcpretty
       - name: Test visionOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=visionOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=visionOS" | xcpretty
       - name: Test visionOS Simulator
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=visionOS Simulator" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=visionOS Simulator" | xcpretty
       - name: Test tvOS
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=tvOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=tvOS" | xcpretty
       - name: Test tvOS Simulator
-        run: set -o pipefail && xcodebuild -scheme SwiftyCreatives test -destination "platform=tvOS Simulator" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=tvOS Simulator" | xcpretty
   build-examples:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS Example
-        run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -scheme ExampleMacOSApp build -destination "platform=macOS" | xcpretty
+        run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -skipMacroValidation -scheme ExampleMacOSApp build -destination "platform=macOS" | xcpretty
       - name: Build iOS Example
-        run: cd Examples/ExampleiOSApp && set -o pipefail && xcodebuild -scheme ExampleiOSApp build -destination "platform=iOS Simulator,name=iPhone 15 Pro" | xcpretty
+        run: cd Examples/ExampleiOSApp && set -o pipefail && xcodebuild -skipMacroValidation -scheme ExampleiOSApp build -destination "platform=iOS Simulator,name=iPhone 15 Pro" | xcpretty
       - name: Build visionOS Example
-        run: cd Examples/ExampleVisionOS && set -o pipefail && xcodebuild -scheme ExampleVisionOS build -destination "platform=visionOS Simulator,name=Apple Vision Pro" | xcpretty
+        run: cd Examples/ExampleVisionOS && set -o pipefail && xcodebuild -skipMacroValidation -scheme ExampleVisionOS build -destination "platform=visionOS Simulator,name=Apple Vision Pro" | xcpretty
