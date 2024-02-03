@@ -102,6 +102,17 @@ public class TouchableMTKView: MTKView {
     #endif
     
     #if os(iOS)
+    private func getTouchLocations(touches: Set<UITouch>) -> [f2] {
+        var locations: [f2] = []
+        for touch in touches {
+            var location = touch.location(in: self)
+            location.x /= self.frame.width
+            location.y /= self.frame.height
+            location.y = 1 - location.y
+            locations.append(location.f2Value)
+        }
+        return locations
+    }
     @objc func onScroll(recognizer: UIPanGestureRecognizer) {
         let delta = recognizer.velocity(in: self)
         switch renderer.camera.config.easyCameraType {
@@ -114,7 +125,7 @@ public class TouchableMTKView: MTKView {
         renderer.drawProcess.onScroll(delta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
     }
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        renderer.drawProcess.touchesBegan(touches, with: event, camera: renderer.camera, view: self)
+        renderer.drawProcess.touchesBegan(camera: renderer.camera, touchLocations: getTouchLocations(touches: touches))
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
@@ -133,13 +144,13 @@ public class TouchableMTKView: MTKView {
             renderer.camera.rotateAroundVisibleX(moveRadX)
             renderer.camera.rotateAroundVisibleY(moveRadY)
         }
-        renderer.drawProcess.touchesMoved(touches, with: event, camera: renderer.camera, view: self)
+        renderer.drawProcess.touchesMoved(camera: renderer.camera, touchLocations: getTouchLocations(touches: touches))
     }
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        renderer.drawProcess.touchesEnded(touches, with: event, camera: renderer.camera, view: self)
+        renderer.drawProcess.touchesEnded(camera: renderer.camera, touchLocations: getTouchLocations(touches: touches))
     }
     public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        renderer.drawProcess.touchesCancelled(touches, with: event, camera: renderer.camera, view: self)
+        renderer.drawProcess.touchesCancelled(camera: renderer.camera, touchLocations: getTouchLocations(touches: touches))
     }
     #endif
 }

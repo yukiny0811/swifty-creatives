@@ -62,9 +62,9 @@ open class Sketch: FunctionBase {
     
     #if os(iOS)
     open func onScroll(delta: CGPoint, camera: MainCamera, view: UIView, gestureRecognizer: UIPanGestureRecognizer) {}
-    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
-    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
-    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
-    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {}
+    open func touchesBegan(camera: MainCamera, touchLocations: [f2]) {}
+    open func touchesMoved(camera: MainCamera, touchLocations: [f2]) {}
+    open func touchesEnded(camera: MainCamera, touchLocations: [f2]) {}
+    open func touchesCancelled(camera: MainCamera, touchLocations: [f2]) {}
     #endif
 }

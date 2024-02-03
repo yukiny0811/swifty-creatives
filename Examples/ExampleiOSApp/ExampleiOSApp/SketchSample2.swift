@@ -45,10 +45,9 @@ final class SketchSample2: Sketch {
         viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {
-        let touch = touches.first!
-        let location = touch.location(in: view)
-        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))
+    override func touchesBegan(camera: MainCamera, touchLocations: [f2]) {
+        let location = touchLocations.first!
+        let processed = camera.screenToWorldDirection(x: location.x, y: location.y)
         let origin = processed.origin
         let direction = processed.direction
         viewObj.buttonTest(origin: origin, direction: direction)
