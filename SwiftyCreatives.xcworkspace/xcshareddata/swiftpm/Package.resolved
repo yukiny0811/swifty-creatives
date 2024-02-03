@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yukiny0811/EasyMetalShader.git",
       "state" : {
-        "revision" : "b256285e112ac858394ac3ffc1753406bd7a2409",
-        "version" : "3.1.0"
+        "revision" : "d482c6defd91980b78583a4f567f6be9b0533400",
+        "version" : "3.1.1"
       }
     },
     {

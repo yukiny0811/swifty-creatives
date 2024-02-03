@@ -8,3 +8,4 @@
 @_exported import SimpleSimdSwift
 @_exported import MetalKit
 @_exported import SwiftyCreativesSound
+@_exported import EasyMetalShader

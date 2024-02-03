@@ -14,7 +14,7 @@ class RotatingViewObject: UIViewObject {
 
 final class SketchSample2: Sketch {
     
-    let postProcessor = CornerRadiusPP().radius(100)
+    let postProcessor = CornerRadiusPostProcessor()
     var viewObj = RotatingViewObject()
     
     override init() {
@@ -25,6 +25,15 @@ final class SketchSample2: Sketch {
         }
         viewObj.load(view: view)
         viewObj.multiplyScale(6)
+        
+        let dispatch = EMMetalDispatch()
+        dispatch.compute { [weak self] encoder in
+            guard let self else { return }
+            postProcessor.tex = viewObj.texture
+            postProcessor.radius = 50
+            postProcessor.dispatch(encoder, textureSizeReference: viewObj.texture!)
+        }
+        dispatch.commit()
     }
     
     override func update(camera: MainCamera) {
@@ -34,10 +43,6 @@ final class SketchSample2: Sketch {
     override func draw(encoder: SCEncoder) {
         rotateZ(viewObj.$rotation.animationValue)
         viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
-    }
-    
-    override func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
-        postProcessor.postProcess(commandBuffer: commandBuffer, texture: viewObj.texture!)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: MainCamera, view: UIView) {
