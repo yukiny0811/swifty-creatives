@@ -8,14 +8,19 @@
 import SwiftyCreatives
 import SwiftUI
 
+@SketchObject
 class MyBox {
     var pos: f3
-    var color: f4
+    var col: f4
     var scale: f3
-    init(pos: f3, color: f4, scale: f3) {
+    init(pos: f3, col: f4, scale: f3) {
         self.pos = pos
-        self.color = color
+        self.col = col
         self.scale = scale
+    }
+    func draw() {
+        color(col)
+        box(pos, scale)
     }
 }
 
@@ -26,7 +31,7 @@ final class Sample4: Sketch {
         for _ in 0..<100 {
             let box = MyBox(
                 pos: f3.randomPoint(-7...7),
-                color: f4.randomPoint(0...1),
+                col: f4.randomPoint(0...1),
                 scale: f3.randomPoint(1...2)
             )
             objects.append(box)
@@ -37,8 +42,7 @@ final class Sample4: Sketch {
     }
     override func draw(encoder: SCEncoder) {
         for o in objects {
-            color(o.color)
-            box(o.pos, o.scale)
+            o.draw(encoder: encoder, customMatrix: getCustomMatrix())
         }
     }
 }
