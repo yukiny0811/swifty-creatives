@@ -9,7 +9,7 @@ import SwiftyCreatives
 import Metal
 
 final class Sample1: Sketch {
-    let bloomPP = BloomPP()
+    let bloomPP = BloomPostProcessor()
     override func draw(encoder: SCEncoder) {
         let count = 20
         for i in 0..<count {
@@ -22,6 +22,6 @@ final class Sample1: Sketch {
         }
     }
     override func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
-        bloomPP.postProcess(commandBuffer: commandBuffer, texture: texture, threshold: 0.1, intensity: 25)
+        bloomPP.dispatch(texture: texture, threshold: 0.1, intensity: 25, commandBuffer: commandBuffer)
     }
 }
