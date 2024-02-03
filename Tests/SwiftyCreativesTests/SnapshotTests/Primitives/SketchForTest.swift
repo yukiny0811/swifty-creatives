@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2024/02/03.
 //
 
+#if os(macOS)
+
 @testable import SwiftyCreatives
 import XCTest
 import SnapshotTesting
@@ -42,3 +44,5 @@ class SketchForTest: Sketch {
         assertSnapshot(matching: finalimage, as: .image, record: SnapshotTestUtil.isRecording, testName: testName)
     }
 }
+
+#endif

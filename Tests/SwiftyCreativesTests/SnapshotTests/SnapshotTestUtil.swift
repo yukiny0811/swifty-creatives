@@ -9,6 +9,8 @@ import XCTest
 import MetalKit
 @testable import SwiftyCreatives
 
+#if os(macOS)
+
 enum SnapshotTestUtil {
     
     static let isRecording = false
@@ -23,3 +25,5 @@ enum SnapshotTestUtil {
         swiftuiView.renderer.draw(in: mtkView)
     }
 }
+
+#endif
