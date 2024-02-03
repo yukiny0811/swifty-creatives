@@ -6,15 +6,20 @@
 [![License](https://img.shields.io/github/license/yukiny0811/swifty-creatives)](https://github.com/yukiny0811/swifty-creatives/blob/main/LICENSE)
 
 __Creative coding framework for Swift.__   
-Using Metal directly for rendering. Inspired by Processing. Supports visionOS.
+Using Metal directly for rendering. Inspired by Processing. Supports visionOS.    
 
 ![outputFinalfinal](https://github.com/yukiny0811/swifty-creatives/assets/28947703/52d2d3f5-f69b-48f0-b77f-5db910615010)
 
+## Requirements
+
+- Swift5.9
+
 ## Supported Platforms
 
-|macOS|iOS|visionOS|tvOS|
-|-|-|-|-|
-|v14|v17|v1|v17|
+- macOS v14
+- iOS v17
+- visionOS v1
+- tvOS v17
 
 ## Key Features
 
@@ -71,18 +76,49 @@ UIButton can be connected with IBAction, and can be tapped in 3d space.
 
 ![outout](https://github.com/yukiny0811/swifty-creatives/assets/28947703/fbee6220-13f6-42d3-accf-3f43270d7251)
 
-## Install
+## Installation
 
 Use Swift Package Manager.
 
 ```.swift
-.package(url: "https://github.com/yukiny0811/swifty-creatives.git", from: "2.0.0")
+dependencies: [
+    .package(url: "https://github.com/yukiny0811/swifty-creatives.git", branch: "main")
+]
 ```
 ```.swift
 .product(name: "SwiftyCreatives", package: "swifty-creatives")
 ```
 
-
+### Features
+- [x] Geometries
+    - [x] Rectangle
+    - [x] Circle
+    - [x] Box
+    - [x] Triangle
+    - [x] Line
+    - [x] BoldLine
+    - [x] 3D Model (obj)
+    - [x] Image
+    - [x] Text
+    - [x] 3D Text
+    - [x] UIView Object (3d view created from xib, with interactive button)
+    - [x] Mesh
+    - [x] Vertex Buffer
+- [x] Geometries with Hit Test (you can click or hover on it)
+    - [x] HitTestableRect
+    - [x] HitTestableBox
+    - [x] HitTestableImg
+- [x] Effects
+    - [x] Fog
+    - [x] Bloom
+    - [x] Post Process (you can create your own)
+- [x] Transforms
+    - [x] Translate
+    - [x] Rotate
+    - [x] Scale
+    - [x] Push & Pop
+- [x] Others
+    - [x] Creating original geomery class
 |Geometry|Other Features|
 |-|-|
 |Rectangle (with hit test)|Perspective Camera|
