@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "easymetalshader",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yukiny0811/EasyMetalShader.git",
+      "state" : {
+        "revision" : "b256285e112ac858394ac3ffc1753406bd7a2409",
+        "version" : "3.1.0"
+      }
+    },
+    {
       "identity" : "fontvertexbuilder",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yukiny0811/FontVertexBuilder",

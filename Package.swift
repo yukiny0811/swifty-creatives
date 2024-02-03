@@ -13,12 +13,14 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.15.2"),
     .package(url: "https://github.com/yukiny0811/SimpleSimdSwift", from: "1.0.1"),
     .package(url: "https://github.com/yukiny0811/FontVertexBuilder", from: "1.0.0"),
+    .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", from: "3.1.0"),
 ]
 
 enum CorePackage {
     static let SnapshotTesting = Target.Dependency.product(name: "SnapshotTesting", package: "swift-snapshot-testing")
     static let SimpleSimdSwift = Target.Dependency.product(name: "SimpleSimdSwift", package: "SimpleSimdSwift")
     static let FontVertexBuilder = Target.Dependency.product(name: "FontVertexBuilder", package: "FontVertexBuilder")
+    static let EasyMetalShader = Target.Dependency.product(name: "EasyMetalShader", package: "EasyMetalShader")
 }
 
 let SwiftyCreativesSound = Target.target(
@@ -32,6 +34,7 @@ let SwiftyCreatives = Target.target(
     dependencies: [
         CorePackage.SimpleSimdSwift,
         CorePackage.FontVertexBuilder,
+        CorePackage.EasyMetalShader,
         SwiftyCreativesSound.asDependency,
     ],
     path: "Sources/SwiftyCreatives",
