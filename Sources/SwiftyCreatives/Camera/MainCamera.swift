@@ -118,16 +118,11 @@ public class MainCamera {
     }
     
     /// view points (not normalized)
-    public func screenToWorldDirection(x: Float, y: Float, width: Float, height: Float) -> (origin: f3, direction: f3) {
-
-        var x = x - width/2
-        var y = -(y - height/2)
-
-        x /= width
-        y /= height
-
-        x *= 2
-        y *= 2
+    public func screenToWorldDirection(x: Float, y: Float) -> (origin: f3, direction: f3) {
+        var x = x
+        var y = y
+        x = x * 2 - 1
+        y = y * 2 - 1
 
         let clipCoordinate = f4(x, y, 0, 1)
 
@@ -148,16 +143,11 @@ public class MainCamera {
         return (worldOrigin, worldDirection)
     }
     
-    public func screenToWorldDirection(screenPos: f2, width: Float, height: Float) -> (origin: f3, direction: f3) {
-
-        var x = screenPos.x - width/2
-        var y = -(screenPos.y - height/2)
-
-        x /= width
-        y /= height
-
-        x *= 2
-        y *= 2
+    public func screenToWorldDirection(screenPos: f2) -> (origin: f3, direction: f3) {
+        var x = screenPos.x
+        var y = screenPos.y
+        x = x * 2 - 1
+        y = y * 2 - 1
 
         let clipCoordinate = f4(x, y, 0, 1)
 

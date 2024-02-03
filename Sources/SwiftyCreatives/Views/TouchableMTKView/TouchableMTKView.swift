@@ -28,12 +28,25 @@ public class TouchableMTKView: MTKView {
     }
     
     #if os(macOS)
+    
+    private func getNormalizedMouseLocation(event: NSEvent) -> f2 {
+        let viewOriginInWindow = self.convert(NSPoint.zero, to: event.window!.contentView)
+        let mouseLocationInWindow = event.locationInWindow
+        
+        var localMouseLocation = mouseLocationInWindow
+        localMouseLocation.x -= viewOriginInWindow.x
+        localMouseLocation.y -= window!.contentView!.frame.maxY - viewOriginInWindow.y
+        
+        let normalizedLocation = NSPoint(x: localMouseLocation.x / self.frame.maxX, y: localMouseLocation.y / self.frame.maxY)
+        return normalizedLocation.f2Value
+    }
+    
     override public var acceptsFirstResponder: Bool { return true }
     public override func mouseDown(with event: NSEvent) {
-        renderer.drawProcess.mouseDown(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.mouseDown(camera: renderer.camera, location: getNormalizedMouseLocation(event: event))
     }
     public override func mouseMoved(with event: NSEvent) {
-        renderer.drawProcess.mouseMoved(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.mouseMoved(camera: renderer.camera, location: getNormalizedMouseLocation(event: event))
     }
     public override func mouseDragged(with event: NSEvent) {
         let moveRadX = Float(event.deltaY) * 0.01
@@ -50,16 +63,16 @@ public class TouchableMTKView: MTKView {
             renderer.camera.rotateAroundVisibleX(moveRadX)
             renderer.camera.rotateAroundVisibleY(moveRadY)
         }
-        renderer.drawProcess.mouseDragged(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.mouseDragged(camera: renderer.camera, location: getNormalizedMouseLocation(event: event))
     }
     public override func mouseUp(with event: NSEvent) {
-        renderer.drawProcess.mouseUp(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.mouseUp(camera: renderer.camera, location: getNormalizedMouseLocation(event: event))
     }
     public override func mouseEntered(with event: NSEvent) {
-        renderer.drawProcess.mouseEntered(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.mouseEntered(camera: renderer.camera, location: getNormalizedMouseLocation(event: event))
     }
     public override func mouseExited(with event: NSEvent) {
-        renderer.drawProcess.mouseExited(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+        renderer.drawProcess.mouseExited(camera: renderer.camera, location: getNormalizedMouseLocation(event: event))
     }
     public override func keyDown(with event: NSEvent) {
         renderer.drawProcess.keyDown(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)

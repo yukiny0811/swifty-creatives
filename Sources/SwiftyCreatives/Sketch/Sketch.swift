@@ -46,12 +46,12 @@ open class Sketch: FunctionBase {
     }
     
     #if os(macOS)
-    open func mouseMoved(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
-    open func mouseDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
-    open func mouseDragged(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
-    open func mouseUp(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
-    open func mouseEntered(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
-    open func mouseExited(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func mouseMoved(camera: MainCamera, location: f2) {}
+    open func mouseDown(camera: MainCamera, location: f2) {}
+    open func mouseDragged(camera: MainCamera, location: f2) {}
+    open func mouseUp(camera: MainCamera, location: f2) {}
+    open func mouseEntered(camera: MainCamera, location: f2) {}
+    open func mouseExited(camera: MainCamera, location: f2) {}
     open func keyDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
     open func keyUp(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
     open func viewWillStartLiveResize(camera: MainCamera, viewFrame: CGRect) {}

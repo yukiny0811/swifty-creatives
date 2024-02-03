@@ -6,10 +6,12 @@
 //
 
 import SwiftyCreatives
-import Metal
+import SwiftUI
 
 final class Sample1: Sketch {
-    let bloomPP = BloomPostProcessor()
+    
+    let bloomPostProcessor = BloomPostProcessor()
+    
     override func draw(encoder: SCEncoder) {
         let count = 20
         for i in 0..<count {
@@ -21,7 +23,14 @@ final class Sample1: Sketch {
             }
         }
     }
+    
     override func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
-        bloomPP.dispatch(texture: texture, threshold: 0.1, intensity: 25, commandBuffer: commandBuffer)
+        bloomPostProcessor.dispatch(texture: texture, threshold: 0.1, intensity: 25, commandBuffer: commandBuffer)
+    }
+}
+
+struct Sample1View: View {
+    var body: some View {
+        SketchView(Sample1())
     }
 }

@@ -6,16 +6,24 @@
 //
 
 import SwiftyCreatives
+import SwiftUI
 
 final class Sample2: Sketch {
-    override init() {
-        super.init()
-    }
+    
+    var c: f4 = .init(1, 0.5, 1, 1)
+    
     override func update(camera: MainCamera) {
         camera.rotateAroundY(0.01)
     }
+    
     override func draw(encoder: SCEncoder) {
-        color(f4.randomPoint(0...1))
+        color(c)
         rect(f3.one * 5)
+    }
+}
+
+struct Sample2View: View {
+    var body: some View {
+        SketchView(Sample2())
     }
 }

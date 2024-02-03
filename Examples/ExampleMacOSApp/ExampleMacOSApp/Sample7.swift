@@ -2,44 +2,52 @@
 //  Sample7.swift
 //  ExampleMacOSApp
 //
-//  Created by Yuki Kuwashima on 2023/02/02.
+//  Created by Yuki Kuwashima on 2023/02/19.
 //
 
-import AppKit
 import SwiftyCreatives
+import CoreGraphics
+import AppKit
+import SwiftUI
+
+class MyHitTestableRect: HitTestableRect {
+    var color: f4 = .zero
+}
 
 final class Sample7: Sketch {
+    override func setupCamera(camera: MainCamera) {
+        camera.setTranslate(0, 0, -10)
+    }
+    var rect: [MyHitTestableRect] = [
+        MyHitTestableRect(),
+        MyHitTestableRect(),
+        MyHitTestableRect()
+    ]
+    override func draw(encoder: SCEncoder) {
+        for r in rect {
+            translate(0, 3, 0)
+            rotateY(0.3)
+            color(r.color)
+            r.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
+        }
+    }
     
-//    var colors: [f4] = []
-//    var scales: [f3] = []
-//    var elapsed: Float = 0.0
-//    var text = TextObject()
-//    
-//    override init() {
-//        for _ in 0...8 {
-//            colors.append(f4.randomPoint(0...1))
-//            scales.append(f3.one * Float.random(in: 0.1...0.5))
-//        }
-//        text
-//            .setText("Loading...", font: NSFont.systemFont(ofSize: 120))
-//            .multiplyScale(5)
-//        
-//    }
-//    override func update(camera: MainCamera) {
-//        camera.rotateAroundY(0.03)
-//        elapsed += 0.01
-//    }
-//    
-//    override func draw(encoder: SCEncoder) {
-//        for i in 0..<8 {
-//            let elapsedSin = sin(elapsed * Float(i+1))
-//            let elapsedCos = cos(elapsed * Float(i+1))
-//            color(elapsedSin, colors[i].y, colors[i].z)
-//            pushMatrix()
-//            translate(elapsedCos * 5, elapsedSin * 5, 0)
-//            box(scales[i])
-//            popMatrix()
-//        }
-//        text(text)
-//    }
+    override func mouseMoved(camera: MainCamera, location: f2) {
+        
+        let ray = camera.screenToWorldDirection(x: location.x, y: location.y)
+        
+        for r in rect {
+            if let _ = r.hitTestGetPos(origin: ray.origin, direction: ray.direction) {
+                r.color = f4(1, 0.5, 1, 1)
+            } else {
+                r.color = .one
+            }
+        }
+    }
+}
+
+struct Sample7View: View {
+    var body: some View {
+        SketchView(Sample7())
+    }
 }

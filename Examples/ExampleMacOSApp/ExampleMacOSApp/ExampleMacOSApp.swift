@@ -12,38 +12,35 @@ import SwiftyCreatives
 struct ExampleMacOSApp: App {
     var body: some Scene {
         WindowGroup {
-            VStack {
-                VStack {
-                    HStack {
-                        SketchView(Sample1())
-                        SketchView(Sample2())
+            NavigationSplitView {
+                List {
+                    NavigationLink("Sample1: Blooming Boxes") {
+                        Sample1View()
                     }
-                    HStack {
-                        SketchView(Sample3())
-                        SketchView(Sample4())
+                    NavigationLink("Sample2: Rectangle") {
+                        Sample2View()
                     }
-                }
-//                VStack {
-//                    HStack {
-//                        SketchView(Sample5())
-//                        SketchView(Sample6())
-//                    }
-//                    HStack {
-//                        SketchView(Sample7())
-//                        SketchView(Sample8())
-//                    }
-//                }
-                VStack {
-                    HStack {
-//                        ConfigurableSketchView<MainCameraConfig, Sample9DrawConfig>(Sample9())
-                        SketchView(Sample10())
+                    NavigationLink("Sample3: Box") {
+                        Sample3View()
                     }
-                    HStack {
-                        SketchView(Sample11())
-                        SketchView(Sample12())
+                    NavigationLink("Sample4: Colorful Boxes") {
+                        Sample4View()
+                    }
+                    NavigationLink("Sample5: Tree (L-system)") {
+                        Sample5View()
+                    }
+                    NavigationLink("Sample6: Fog") {
+                        Sample6View()
+                    }
+                    NavigationLink("Sample7: Rect with hit test") {
+                        Sample7View()
                     }
                 }
-            }.background(.black)
+            } detail: {
+                Text("Choose sample sketch from the sidebar")
+                    .foregroundStyle(.white)
+            }
+            .background(.black)
         }
     }
 }
