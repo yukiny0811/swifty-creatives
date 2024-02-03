@@ -149,7 +149,10 @@ dependencies: [
 
 ![stable fluids](https://user-images.githubusercontent.com/28947703/210088675-e4605442-db10-4620-b154-0fd4288c1445.gif)
 
+## Credits
+- swifty-creatives library is created by Yuki Kuwashima
+- twitter: [@yukiny_sfc](https://twitter.com/yukiny_sfc)
+- [email](yukiny0811@gmail.com)
 
-## Other Examples
-- https://github.com/yukiny0811/sc-treeart
-- https://github.com/yukiny0811/sc-stable-fluids
+## License
+swifty-creatives library is released under the MIT license. See [LICENSE](https://github.com/yukiny0811/swifty-creatives/blob/readme-2.0.0/LICENSE) for details.
