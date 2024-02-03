@@ -155,4 +155,4 @@ dependencies: [
 - [email](yukiny0811@gmail.com)
 
 ## License
-swifty-creatives library is released under the MIT license. See [LICENSE](https://github.com/yukiny0811/swifty-creatives/blob/readme-2.0.0/LICENSE) for details.
+swifty-creatives library is released under the MIT license. See [LICENSE](https://github.com/yukiny0811/swifty-creatives/LICENSE) for details.
