@@ -138,7 +138,40 @@ dependencies: [
 - [x] Others
     - [x] Creating original geomery class
     - [x] Font Rendering
-     
+
+## Events
+```.swift
+open func setupCamera(camera: MainCamera) {}
+open func preProcess(commandBuffer: MTLCommandBuffer) {}
+open func update(camera: MainCamera) {}
+open func draw(encoder: SCEncoder) {}
+open func afterCommit(texture: MTLTexture?) {}
+open func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {}
+
+#if os(macOS)
+open func mouseMoved(camera: MainCamera, location: f2) {}
+open func mouseDown(camera: MainCamera, location: f2) {}
+open func mouseDragged(camera: MainCamera, location: f2) {}
+open func mouseUp(camera: MainCamera, location: f2) {}
+open func mouseEntered(camera: MainCamera, location: f2) {}
+open func mouseExited(camera: MainCamera, location: f2) {}
+open func keyDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+open func keyUp(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+open func viewWillStartLiveResize(camera: MainCamera, viewFrame: CGRect) {}
+open func resize(withOldSuperviewSize oldSize: NSSize, camera: MainCamera, viewFrame: CGRect) {}
+open func viewDidEndLiveResize(camera: MainCamera, viewFrame: CGRect) {}
+open func scrollWheel(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+#endif
+
+#if os(iOS)
+open func onScroll(delta: CGPoint, camera: MainCamera, view: UIView, gestureRecognizer: UIPanGestureRecognizer) {}
+open func touchesBegan(camera: MainCamera, touchLocations: [f2]) {}
+open func touchesMoved(camera: MainCamera, touchLocations: [f2]) {}
+open func touchesEnded(camera: MainCamera, touchLocations: [f2]) {}
+open func touchesCancelled(camera: MainCamera, touchLocations: [f2]) {}
+#endif
+```
+
 ## Other Examples
 
 ![ExampleMacOSApp 2023年-02月-24日 17 11 06](https://user-images.githubusercontent.com/28947703/221126530-c362018e-325c-4747-8e57-c5e18ab7085d.gif)
