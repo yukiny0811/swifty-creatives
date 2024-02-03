@@ -14,7 +14,7 @@ class RotatingViewObject: UIViewObject {
 
 final class SketchSample2: Sketch {
     
-    let postProcessor = CornerRadiusPP().radius(100)
+    let postProcessor = CornerRadiusPostProcessor()
     var viewObj = RotatingViewObject()
     
     override init() {
@@ -25,9 +25,18 @@ final class SketchSample2: Sketch {
         }
         viewObj.load(view: view)
         viewObj.multiplyScale(6)
+        
+        let dispatch = EMMetalDispatch()
+        dispatch.compute { [weak self] encoder in
+            guard let self else { return }
+            postProcessor.tex = viewObj.texture
+            postProcessor.radius = 50
+            postProcessor.dispatch(encoder, textureSizeReference: viewObj.texture!)
+        }
+        dispatch.commit()
     }
     
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         viewObj.$rotation.update(multiplier: deltaTime * 5)
     }
     
@@ -36,14 +45,9 @@ final class SketchSample2: Sketch {
         viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
     }
     
-    override func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {
-        postProcessor.postProcess(commandBuffer: commandBuffer, texture: viewObj.texture!)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {
-        let touch = touches.first!
-        let location = touch.location(in: view)
-        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))
+    override func touchesBegan(camera: MainCamera, touchLocations: [f2]) {
+        let location = touchLocations.first!
+        let processed = camera.screenToWorldDirection(x: location.x, y: location.y)
         let origin = processed.origin
         let direction = processed.direction
         viewObj.buttonTest(origin: origin, direction: direction)

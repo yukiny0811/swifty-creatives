@@ -17,26 +17,31 @@ import UIKit
 #endif
 
 public struct SketchView: ViewRepresentable {
-    typealias CameraConfig = MainCameraConfig
-    typealias DrawConfig = MainDrawConfig
-    let renderer: RendererBase<CameraConfig, DrawConfig>
-    let drawProcess: SketchBase
-    public init(_ sketch: SketchBase) {
+    let renderer: RendererBase
+    let drawProcess: Sketch
+    public init(
+        _ sketch: Sketch,
+        blendMode: RendererBase.BlendMode = .alphaBlend,
+        cameraConfig: CameraConfig = DefaultPerspectiveConfig(),
+        drawConfig: DrawConfig = DefaultDrawConfig()
+    ) {
         self.drawProcess = sketch
-        self.renderer = DrawConfig.blendMode.getRenderer(
-            sketch: self.drawProcess
+        self.renderer = blendMode.getRenderer(
+            sketch: self.drawProcess,
+            cameraConfig: cameraConfig,
+            drawConfig: drawConfig
         )
     }
     
     #if os(macOS)
     public func makeNSView(context: Context) -> MTKView {
-        let mtkView = TouchableMTKView<CameraConfig, DrawConfig>(renderer: renderer)
+        let mtkView = TouchableMTKView(renderer: renderer)
         return mtkView
     }
     public func updateNSView(_ nsView: MTKView, context: Context) {}
-    #elseif os(iOS)
+    #elseif os(iOS) || os(tvOS)
     public func makeUIView(context: Context) -> MTKView {
-        let mtkView = TouchableMTKView<CameraConfig, DrawConfig>(renderer: renderer)
+        let mtkView = TouchableMTKView(renderer: renderer)
         return mtkView
     }
     public func updateUIView(_ uiView: MTKView, context: Context) {}

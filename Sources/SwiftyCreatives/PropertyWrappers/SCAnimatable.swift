@@ -1,6 +1,6 @@
 //
 //  SCAnimatable.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2023/02/27.
 //
@@ -22,8 +22,15 @@ public class SCAnimatable {
         get { targetValue }
         set { targetValue = newValue }
     }
-    public var animationValue: Float {
+    private(set) public var animationValue: Float {
         get { value }
+        set {
+            value = newValue
+            targetValue = newValue
+        }
+    }
+    public func directSet(_ value: Float) {
+        animationValue = value
     }
     public func update(multiplier: Float, with type: SCAnimationType = .easeOut) {
         switch type {

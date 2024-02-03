@@ -6,47 +6,41 @@
 //
 
 import simd
+import SimpleSimdSwift
 
 public extension FunctionBase {
     func drawHitTestableBox(box: HitTestableBox) {
-        privateEncoder?.setVertexBytes([f3.zero], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
         
-        pushMatrix()
-        
-        pushMatrix()
-        translate(0, 0, box.scale.z)
-        box.front.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
-        popMatrix()
-        
-        pushMatrix()
-        translate(0, 0, -box.scale.z)
-        box.back.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
-        popMatrix()
-        
-        pushMatrix()
-        rotateY(Float.pi/2)
-        translate(0, 0, box.scale.x)
-        box.l.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
-        popMatrix()
-        
-        pushMatrix()
-        rotateY(Float.pi/2)
-        translate(0, 0, -box.scale.x)
-        box.r.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
-        popMatrix()
-        
-        pushMatrix()
-        rotateX(Float.pi/2)
-        translate(0, 0, box.scale.y)
-        box.top.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
-        popMatrix()
-        
-        pushMatrix()
-        rotateX(Float.pi/2)
-        translate(0, 0, -box.scale.y)
-        box.bottom.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
-        popMatrix()
-        
-        popMatrix()
+        push {
+            push {
+                translate(0, 0, box.scale.z)
+                box.front.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
+            }
+            push {
+                translate(0, 0, -box.scale.z)
+                box.back.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
+            }
+            push {
+                rotateY(Float.pi/2)
+                translate(0, 0, box.scale.x)
+                box.l.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
+            }
+            push {
+                rotateY(Float.pi/2)
+                translate(0, 0, -box.scale.x)
+                box.r.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
+            }
+            push {
+                rotateX(Float.pi/2)
+                translate(0, 0, box.scale.y)
+                box.top.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
+            }
+            push {
+                rotateX(Float.pi/2)
+                translate(0, 0, -box.scale.y)
+                box.bottom.drawWithCache(encoder: privateEncoder!, customMatrix: self.customMatrix.reduce(f4x4.createIdentity(), *))
+            }
+        }
     }
 }

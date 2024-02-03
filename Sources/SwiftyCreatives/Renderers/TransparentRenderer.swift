@@ -16,10 +16,7 @@ import MetalKit
 
 #if !os(visionOS)
     
-class TransparentRenderer<
-    CameraConfig: CameraConfigBase,
-    DrawConfig: DrawConfigBase
->: RendererBase<CameraConfig, DrawConfig> {
+class TransparentRenderer: RendererBase {
     
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState
@@ -29,7 +26,7 @@ class TransparentRenderer<
     
     let optimalTileSize = MTLSize(width: 32, height: 16, depth: 1)
     
-    public init(sketch: SketchBase) {
+    public init(sketch: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         
         // MARK: - functions
         let constantValue = MTLFunctionConstantValues()
@@ -67,7 +64,7 @@ class TransparentRenderer<
         let depthStateDesc = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: false)
         depthState = ShaderCore.device.makeDepthStencilState(descriptor: depthStateDesc)!
         
-        super.init(drawProcess: sketch)
+        super.init(drawProcess: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
         
         self.drawProcess.setupCamera(camera: camera)
     }
@@ -83,11 +80,7 @@ class TransparentRenderer<
         renderPassDescriptor.tileHeight = optimalTileSize.height
         renderPassDescriptor.imageblockSampleLength = resolveState.imageblockSampleLength
         
-        if DrawConfig.clearOnUpdate {
-            renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        } else {
-            renderPassDescriptor.colorAttachments[0].loadAction = .load
-        }
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
         
         drawProcess.preProcess(commandBuffer: commandBuffer)
         
@@ -113,7 +106,6 @@ class TransparentRenderer<
         
         // MARK: - draw primitive
         drawProcess.beforeDraw(encoder: renderEncoder)
-        drawProcess.updateAndDrawLight(encoder: renderEncoder)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderEncoder)
         
@@ -121,8 +113,8 @@ class TransparentRenderer<
             MTLViewport(
                 originX: 0,
                 originY: 0,
-                width: Double(view.bounds.width) * Double(DrawConfig.contentScaleFactor),
-                height: Double(view.bounds.height) * Double(DrawConfig.contentScaleFactor),
+                width: Double(view.bounds.width) * Double(drawConfig.contentScaleFactor),
+                height: Double(view.bounds.height) * Double(drawConfig.contentScaleFactor),
                 znear: -1,
                 zfar: 1
             )
@@ -136,26 +128,12 @@ class TransparentRenderer<
         
         self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer)
         
-        if cachedTexture == nil || cachedTexture!.width != view.currentDrawable!.texture.width || cachedTexture!.height != view.currentDrawable!.texture.height {
-            let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
-                pixelFormat: view.colorPixelFormat,
-                width: view.currentDrawable!.texture.width,
-                height: view.currentDrawable!.texture.height,
-                mipmapped: false)
-            textureDescriptor.usage = [.shaderRead]
-            cachedTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)
-        }
-        
-        let afterEncoder = commandBuffer.makeBlitCommandEncoder()!
-        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: cachedTexture!)
-        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
-        afterEncoder.endEncoding()
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
         
         #if canImport(XCTest)
         commandBuffer.waitUntilCompleted()
-        self.drawProcess.afterCommit()
+        self.drawProcess.afterCommit(texture: renderPassDescriptor.colorAttachments[0].texture)
         #endif
     }
 }

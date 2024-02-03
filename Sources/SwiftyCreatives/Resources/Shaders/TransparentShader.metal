@@ -111,11 +111,7 @@ inline void InsertFragment(OITDataT oitData, half4 color, half depth, half trans
 template <typename OITDataT>
 void OITFragmentFunction(RasterizerData in,
                          OITDataT oitData,
-                         const device Material &material,
-                         const device int &lightCount,
-                         const device Light *lights,
                          FrameUniforms_HasTexture uniformHasTexture,
-                         FrameUniforms_IsActiveToLight isActiveToLight,
                          FrameUniforms_FogDensity uniformFogDensity,
                          FrameUniforms_FogColor uniformFogColor,
                          texture2d<half> tex) {
@@ -127,11 +123,6 @@ void OITFragmentFunction(RasterizerData in,
     if (uniformHasTexture.value) {
         constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
         fragmentColor = tex.sample(textureSampler, float2(in.uv.x*tex.get_width(), in.uv.y*tex.get_height()));
-    }
-    
-    if (isActiveToLight.value) {
-        float3 phongIntensity = calculatePhongIntensity(in, material, lightCount, lights);
-        fragmentColor = half4(float4(fragmentColor) * float4(phongIntensity, 1));
     }
     
     fragmentColor = half4(createFog(in.position.z / in.position.w,
@@ -169,15 +160,11 @@ half4 OITResolve(OITData<NUM_LAYERS> pixelData) {
 fragment FragOut<4>
 OITFragmentFunction_4Layer(RasterizerData in [[ stage_in ]],
                            OITImageblock<4> oitImageblock [[ imageblock_data ]],
-                           const device Material &material [[ buffer(FragmentBuffer_Material) ]],
-                           const device int &lightCount [[ buffer(FragmentBuffer_LightCount) ]],
-                           const device Light *lights [[ buffer(FragmentBuffer_Lights) ]],
                            const device FrameUniforms_HasTexture &uniformHasTexture [[ buffer(FragmentBuffer_HasTexture) ]],
-                           const device FrameUniforms_IsActiveToLight &isActiveToLight [[ buffer(FragmentBuffer_IsActiveToLight) ]],
                            const device FrameUniforms_FogDensity &fogDensity [[ buffer(FragmentBuffer_FogDensity) ]],
                            const device FrameUniforms_FogColor &fogColor [[ buffer(FragmentBuffer_FogColor) ]],
                            texture2d<half, access::sample> tex [[ texture(FragmentTexture_MainTexture) ]]) {
-    OITFragmentFunction(in, &oitImageblock.oitData, material, lightCount, lights, uniformHasTexture, isActiveToLight, fogDensity, fogColor, tex);
+    OITFragmentFunction(in, &oitImageblock.oitData, uniformHasTexture, fogDensity, fogColor, tex);
     FragOut<4> Out;
     Out.aoitImageBlock = oitImageblock;
     return Out;

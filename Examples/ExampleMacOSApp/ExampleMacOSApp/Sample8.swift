@@ -2,65 +2,45 @@
 //  Sample8.swift
 //  ExampleMacOSApp
 //
-//  Created by Yuki Kuwashima on 2023/02/10.
+//  Created by Yuki Kuwashima on 2023/02/19.
 //
 
 import SwiftyCreatives
 import CoreGraphics
 import AppKit
+import SwiftUI
 
 final class Sample8: Sketch {
-    var tree = "F"
-    override func setupCamera(camera: some MainCameraBase) {
-        camera.setTranslate(0, -20, -40)
+    
+    let box = HitTestableBox().setScale(f3(2, 3, 4))
+    var boxColor: f4 = .one
+    var testBoxPos: f3 = .zero
+    
+    override func setupCamera(camera: MainCamera) {
+        camera.setTranslate(0, 0, -20)
     }
-    override func update(camera: some MainCameraBase) {
-        camera.rotateAroundY(0.01)
-    }
+    
     override func draw(encoder: SCEncoder) {
-        for t in tree {
-            compile(char: t)
+        color(1, 0, 0, 1)
+        box(testBoxPos, f3.one * 0.1)
+        translate(0, 3, 0)
+        color(boxColor)
+        drawHitTestableBox(box: box)
+    }
+    
+    override func mouseMoved(camera: MainCamera, location: f2) {
+        let ray = camera.screenToWorldDirection(x: location.x, y: location.y)
+        if let hitPos = box.hitTest(origin: ray.origin, direction: ray.direction) {
+            boxColor = f4(0, 1, 0, 1)
+            testBoxPos = hitPos
+        } else {
+            boxColor = .one
         }
     }
-    override func keyDown(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
-        var currentTree = ""
-        for t in tree {
-            if t == "F" {
-                currentTree += "FyF+[+FyF-yB]-y[-yF+YP]"
-            } else {
-                currentTree += String(t)
-            }
-        }
-        tree = currentTree
-    }
-    func compile(char: Character) {
-        switch char {
-        case "B":
-            color(0.5, 0.5, 1.0, 1.0)
-            boldline(0, 0, 0, 0, 1, 0, width: 0.1)
-            translate(0, 1, 0)
-        case "P":
-            color(1.0, 0.3, 1.0, 1.0)
-            boldline(0, 0, 0, 0, 1, 0, width: 0.1)
-            translate(0, 1, 0)
-        case "F":
-            color(0.9, 1.0, 1.0, 0.8)
-            boldline(0, 0, 0, 0, 1, 0, width: 0.1)
-            translate(0, 1, 0)
-        case "+":
-            rotateZ(0.3)
-        case "-":
-            rotateZ(-0.3)
-        case "[":
-            pushMatrix()
-        case "]":
-            popMatrix()
-        case "y":
-            rotateY(0.15)
-        case "Y":
-            rotateY(-0.15)
-        default:
-            break
-        }
+}
+
+struct Sample8View: View {
+    var body: some View {
+        SketchView(Sample8())
     }
 }

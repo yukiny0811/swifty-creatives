@@ -26,7 +26,7 @@ final class SketchSample1: Sketch {
         }
     }
     
-    override func update(camera: some MainCameraBase) {
+    override func update(camera: MainCamera) {
         camera.rotateAroundY(deltaTime)
         elapsed += deltaTime
     }
@@ -41,10 +41,9 @@ final class SketchSample1: Sketch {
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, camera: some MainCameraBase, view: UIView) {
-        let touch = touches.first!
-        let location = touch.location(in: view)
-        let processed = camera.screenToWorldDirection(x: Float(location.x), y: Float(location.y), width: Float(view.frame.width), height: Float(view.frame.height))
+    override func touchesBegan(camera: MainCamera, touchLocations: [f2]) {
+        let location = touchLocations.first!
+        let processed = camera.screenToWorldDirection(x: location.x, y: location.y)
         let origin = processed.origin
         let direction = processed.direction
         let finalPos = origin + direction * 20

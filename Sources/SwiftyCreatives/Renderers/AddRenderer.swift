@@ -9,14 +9,11 @@
 
 import MetalKit
 
-public class AddRenderer<
-    CameraConfig: CameraConfigBase,
-    DrawConfig: DrawConfigBase
->: RendererBase<CameraConfig, DrawConfig> {
+public class AddRenderer: RendererBase {
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
     let renderPipelineState: MTLRenderPipelineState
-    public init(sketch: SketchBase) {
+    public init(sketch: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
@@ -32,7 +29,7 @@ public class AddRenderer<
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
-        super.init(drawProcess: sketch)
+        super.init(drawProcess: sketch, cameraConfig: cameraConfig, drawConfig: drawConfig)
         self.drawProcess.setupCamera(camera: camera)
     }
     public override func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -46,11 +43,7 @@ public class AddRenderer<
             return
         }
         
-        if DrawConfig.clearOnUpdate {
-            renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        } else {
-            renderPassDescriptor.colorAttachments[0].loadAction = .load
-        }
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
         
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()
         
@@ -70,7 +63,6 @@ public class AddRenderer<
         renderCommandEncoder?.setRenderPipelineState(renderPipelineState)
         
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
-        drawProcess.updateAndDrawLight(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
 
@@ -78,8 +70,8 @@ public class AddRenderer<
             MTLViewport(
                 originX: 0,
                 originY: 0,
-                width: Double(view.bounds.width) * Double(DrawConfig.contentScaleFactor),
-                height: Double(view.bounds.height) * Double(DrawConfig.contentScaleFactor),
+                width: Double(view.bounds.width) * Double(drawConfig.contentScaleFactor),
+                height: Double(view.bounds.height) * Double(drawConfig.contentScaleFactor),
                 znear: -1,
                 zfar: 1
             )
@@ -89,26 +81,12 @@ public class AddRenderer<
         
         self.drawProcess.postProcess(texture: renderPassDescriptor.colorAttachments[0].texture!, commandBuffer: commandBuffer!)
         
-        if cachedTexture == nil || cachedTexture!.width != view.currentDrawable!.texture.width || cachedTexture!.height != view.currentDrawable!.texture.height {
-            let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
-                pixelFormat: view.colorPixelFormat,
-                width: view.currentDrawable!.texture.width,
-                height: view.currentDrawable!.texture.height,
-                mipmapped: false)
-            textureDescriptor.usage = [.shaderRead]
-            cachedTexture = ShaderCore.device.makeTexture(descriptor: textureDescriptor)
-        }
-        
-        let afterEncoder = commandBuffer!.makeBlitCommandEncoder()!
-        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: cachedTexture!)
-        afterEncoder.copy(from: renderPassDescriptor.colorAttachments[0].texture!, to: view.currentDrawable!.texture)
-        afterEncoder.endEncoding()
         commandBuffer!.present(view.currentDrawable!)
         commandBuffer!.commit()
         
         #if canImport(XCTest)
         commandBuffer!.waitUntilCompleted()
-        self.drawProcess.afterCommit()
+        self.drawProcess.afterCommit(texture: renderPassDescriptor.colorAttachments[0].texture)
         #endif
     }
 }
