@@ -8,9 +8,81 @@
 __Creative coding framework for Swift.__   
 Using Metal directly for rendering. Inspired by Processing. Supports visionOS.
 
-![ExampleMacOSApp 2022年-12月-16日 18 08 41](https://user-images.githubusercontent.com/28947703/208063423-3ad00c20-1d1c-48b8-8996-2d43e1365fe4.gif)
+![outputFinalfinal](https://github.com/yukiny0811/swifty-creatives/assets/28947703/52d2d3f5-f69b-48f0-b77f-5db910615010)
 
-## Features
+## Supported Platforms
+
+|macOS|iOS|visionOS|tvOS|
+|-|-|-|-|
+|v14|v17|v1|v17|
+
+## Key Features
+
+### Processing-like Syntax
+
+You can easily create your graphics, using Swift Programming Language with the intuitive essence of Processing.    
+I like how ```push()``` and ```pop()``` became super simple using Swift's trailing closure.
+
+```.swift
+import SwiftyCreatives
+
+final class MySketch: Sketch {
+    override func draw(encoder: SCEncoder) {
+        let count = 20
+        for i in 0..<count {
+            color(0.75, Float(i) / 40, 1, 0.5)
+            push {
+                rotateY(Float.pi * 2 / Float(count) * Float(i))
+                translate(10, 0, 0)
+                box(0, 0, 0, 1, 1, 1)
+            }
+        }
+    }
+}
+
+struct ContentView: View {
+    var body: some View {
+        SketchView(MySketch())
+    }
+}
+```
+![スクリーンショット 2024-02-04 5 38 56](https://github.com/yukiny0811/swifty-creatives/assets/28947703/1d506879-6b23-460f-b7de-eb8a379bf2d1)
+
+### Apple Vision Pro - Immersive Space
+
+Supports visionOS! You can dive in to your sketch with Immersive Space rendering!
+
+```.swift
+ImmersiveSpace(id: "ImmersiveSpace") {
+    CompositorLayer(configuration: ContentStageConfiguration()) { layerRenderer in
+        let renderer = RendererBase.BlendMode.normalBlend.getRenderer(sketch: SampleSketch(), layerRenderer: layerRenderer)
+        renderer.startRenderLoop()
+    }
+}
+```
+
+![ddd](https://github.com/yukiny0811/swifty-creatives/assets/28947703/e700c630-9f49-4f2e-99be-8963484edcc2)
+
+
+### xib to 3D Space!
+
+Create UIView with xib, and place it in 3D scene!    
+UIButton can be connected with IBAction, and can be tapped in 3d space.
+
+![outout](https://github.com/yukiny0811/swifty-creatives/assets/28947703/fbee6220-13f6-42d3-accf-3f43270d7251)
+
+## Install
+
+Use Swift Package Manager.
+
+```.swift
+.package(url: "https://github.com/yukiny0811/swifty-creatives.git", from: "2.0.0")
+```
+```.swift
+.product(name: "SwiftyCreatives", package: "swifty-creatives")
+```
+
+
 |Geometry|Other Features|
 |-|-|
 |Rectangle (with hit test)|Perspective Camera|
