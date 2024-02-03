@@ -45,4 +45,23 @@ extension FunctionBase {
         privateEncoder?.setFragmentBytes([value], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
     }
     
+    internal func setColor(_ value: f4) {
+        privateEncoder?.setVertexBytes([value], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
+    }
+    
+    internal func setFogDensity(_ value: Float) {
+        privateEncoder?.setFragmentBytes([value], length: Float.memorySize, index: FragmentBufferIndex.FogDensity.rawValue)
+    }
+    
+    internal func setFogColor(_ value: f4) {
+        privateEncoder?.setFragmentBytes([value], length: f4.memorySize, index: FragmentBufferIndex.FogColor.rawValue)
+    }
+    
+    internal func setTexture(_ value: MTLTexture?) {
+        privateEncoder?.setFragmentTexture(value, index: FragmentTextureIndex.MainTexture.rawValue)
+    }
+    
+    internal func setCustomMatrix() {
+        privateEncoder?.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: VertexBufferIndex.CustomMatrix.rawValue)
+    }
 }

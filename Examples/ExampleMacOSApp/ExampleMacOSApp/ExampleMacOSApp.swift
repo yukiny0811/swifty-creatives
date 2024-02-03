@@ -12,7 +12,7 @@ import SwiftyCreatives
 struct ExampleMacOSApp: App {
     var body: some Scene {
         WindowGroup {
-            ZStack {
+            VStack {
                 VStack {
                     HStack {
                         SketchView(Sample1())
@@ -33,16 +33,16 @@ struct ExampleMacOSApp: App {
 //                        SketchView(Sample8())
 //                    }
 //                }
-//                VStack {
-//                    HStack {
+                VStack {
+                    HStack {
 //                        ConfigurableSketchView<MainCameraConfig, Sample9DrawConfig>(Sample9())
-//                        SketchView(Sample10())
-//                    }
-//                    HStack {
-//                        SketchView(Sample11())
-//                        SketchView(Sample12())
-//                    }
-//                }
+                        SketchView(Sample10())
+                    }
+                    HStack {
+                        SketchView(Sample11())
+                        SketchView(Sample12())
+                    }
+                }
             }.background(.black)
         }
     }
