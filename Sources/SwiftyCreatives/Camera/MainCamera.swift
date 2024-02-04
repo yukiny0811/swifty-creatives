@@ -101,6 +101,11 @@ public class MainCamera {
         }
     }
     
+    public func setFov(to degrees: Float) {
+        config.fov = degrees
+        updatePMatrix()
+    }
+
     public func setFrame(width: Float, height: Float) {
         if self.frameWidth != width || self.frameHeight != height {
             self.frameWidth = width

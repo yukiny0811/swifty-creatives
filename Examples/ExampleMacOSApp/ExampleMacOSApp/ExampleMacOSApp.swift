@@ -38,6 +38,9 @@ struct ExampleMacOSApp: App {
                     NavigationLink("Sample8: Box with hit test") {
                         Sample8View()
                     }
+                    NavigationLink("Sample9: fov") {
+                        Sample9View()
+                    }
                 }
             } detail: {
                 Text("Choose sample sketch from the sidebar")
