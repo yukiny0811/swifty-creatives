@@ -22,9 +22,29 @@ open class Text2D: PathText {
         }
         posBuffer = ShaderCore.device.makeBuffer(bytes: finalVertices, length: finalVertices.count * f3.memorySize)
     }
-    public override init(text: String, fontName: String = "AppleSDGothicNeo-Bold", fontSize: Float = 10.0, bounds: CGSize = .zero, pivot: f2 = .zero, textAlignment: CTTextAlignment = .natural, verticalAlignment: PathText.VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0.0, isClockwiseFont: Bool = true) {
-        super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing, isClockwiseFont: isClockwiseFont)
-        let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths, isClockwiseFont: isClockwiseFont)
+    public override init(
+        text: String,
+        fontName: String = "AppleSDGothicNeo-Bold",
+        fontSize: Float = 10.0,
+        bounds: CGSize = .zero,
+        pivot: f2 = .zero,
+        textAlignment: CTTextAlignment = .natural,
+        verticalAlignment: PathText.VerticalAlignment = .center,
+        kern: Float = 0.0,
+        lineSpacing: Float = 0.0
+    ) {
+        super.init(
+            text: text,
+            fontName: fontName,
+            fontSize: fontSize,
+            bounds: bounds,
+            pivot: pivot,
+            textAlignment: textAlignment,
+            verticalAlignment: verticalAlignment,
+            kern: kern,
+            lineSpacing: lineSpacing
+        )
+        let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
         createAndSetBuffer(from: triangulatedPaths)
     }
 }
