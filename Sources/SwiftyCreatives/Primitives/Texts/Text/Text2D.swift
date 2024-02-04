@@ -13,12 +13,15 @@ import FontVertexBuilder
 open class Text2D: PathText {
     public var posBuffer: MTLBuffer?
     public var finalVertices: [f3] = []
-    func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) {
+    func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) throws {
         finalVertices = []
         for letter in triangulatedPaths {
             for portion in letter.glyphLines {
                 finalVertices += portion
             }
+        }
+        if finalVertices.count == 0 {
+            throw TextBufferCreationError.noVertices
         }
         posBuffer = ShaderCore.device.makeBuffer(bytes: finalVertices, length: finalVertices.count * f3.memorySize)
     }
@@ -45,6 +48,6 @@ open class Text2D: PathText {
             lineSpacing: lineSpacing
         )
         let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
-        createAndSetBuffer(from: triangulatedPaths)
+        try? createAndSetBuffer(from: triangulatedPaths)
     }
 }

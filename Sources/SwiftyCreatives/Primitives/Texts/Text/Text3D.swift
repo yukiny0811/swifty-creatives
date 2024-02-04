@@ -21,7 +21,7 @@ open class Text3D: PathText {
         }
         posBuffer?.contents().copyMemory(from: finalVertices, byteCount: f3.memorySize * finalVertices.count)
     }
-    func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) {
+    func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) throws {
         finalVertices = []
         extrudingIndices = []
         for letter in triangulatedPaths {
@@ -74,6 +74,9 @@ open class Text3D: PathText {
                 }
             }
         }
+        if finalVertices.count == 0 {
+            throw TextBufferCreationError.noVertices
+        }
         posBuffer = ShaderCore.device.makeBuffer(bytes: finalVertices, length: f3.memorySize * finalVertices.count)
     }
     public init(
@@ -91,7 +94,7 @@ open class Text3D: PathText {
         self.extrudingValue = extrudingValue
         super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
         let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
-        createAndSetBuffer(from: triangulatedPaths)
+        try? createAndSetBuffer(from: triangulatedPaths)
     }
 }
 

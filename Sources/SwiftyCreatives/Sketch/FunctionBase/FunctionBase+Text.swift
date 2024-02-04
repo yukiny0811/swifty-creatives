@@ -12,13 +12,15 @@ public extension FunctionBase {
     
     func text(_ text: Text2D, primitiveType: MTLPrimitiveType = .triangle) {
         setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        privateEncoder?.setVertexBuffer(text.posBuffer!, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        guard let textPosBuffer = text.posBuffer else { return }
+        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
         privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
     
     func text(_ text: Text3D, primitiveType: MTLPrimitiveType = .triangle) {
         setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        privateEncoder?.setVertexBuffer(text.posBuffer!, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        guard let textPosBuffer = text.posBuffer else { return }
+        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
         privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
     
