@@ -14,31 +14,31 @@ struct ExampleMacOSApp: App {
         WindowGroup {
             NavigationSplitView {
                 List {
-                    NavigationLink("Sample1: Blooming Boxes") {
+                    NavigationLink("1 Blooming Boxes") {
                         Sample1View()
                     }
-                    NavigationLink("Sample2: Rectangle") {
+                    NavigationLink("2 Rectangle") {
                         Sample2View()
                     }
-                    NavigationLink("Sample3: Box") {
+                    NavigationLink("3 Box") {
                         Sample3View()
                     }
-                    NavigationLink("Sample4: Colorful Boxes") {
+                    NavigationLink("4 Colorful Boxes") {
                         Sample4View()
                     }
-                    NavigationLink("Sample5: Tree (L-system)") {
+                    NavigationLink("5 Tree (L-system)") {
                         Sample5View()
                     }
-                    NavigationLink("Sample6: Fog") {
+                    NavigationLink("6 Fog") {
                         Sample6View()
                     }
-                    NavigationLink("Sample7: Rect with hit test") {
+                    NavigationLink("7 Rect with hit test") {
                         Sample7View()
                     }
-                    NavigationLink("Sample8: Box with hit test") {
+                    NavigationLink("8 Box with hit test") {
                         Sample8View()
                     }
-                    NavigationLink("Sample9: fov") {
+                    NavigationLink("9 fov") {
                         Sample9View()
                     }
                 }
