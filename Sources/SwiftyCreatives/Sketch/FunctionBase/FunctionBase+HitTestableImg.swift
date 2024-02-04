@@ -9,7 +9,7 @@ import simd
 import SimpleSimdSwift
 
 public extension FunctionBase {
-    func img(hitTestableImg: HitTestableImg) {
+    func img(_ hitTestableImg: HitTestableImg) {
         setUniforms(modelPos: .zero, modelScale: hitTestableImg.scale, hasTexture: true)
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)
