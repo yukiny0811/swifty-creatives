@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yukiny0811/FontVertexBuilder",
       "state" : {
-        "revision" : "cfb1a1ba8b469c004b22b8a093927e3fec788e1c",
-        "version" : "1.1.2"
+        "revision" : "a6e28db6b43457e3fe03215c9bf878721e484129",
+        "version" : "1.2.1"
       }
     },
     {
@@ -25,6 +25,15 @@
       "state" : {
         "revision" : "4a0b195450e42f8a46b0a77f183b1ff116696697",
         "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "svgpath",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nicklockwood/SVGPath",
+      "state" : {
+        "revision" : "47c65cae8009646157890ded09621a7027dac68c",
+        "version" : "1.1.4"
       }
     },
     {
