@@ -63,7 +63,10 @@ let SwiftyCreativesTests = Target.testTarget(
         SwiftyCreatives.asDependency,
         CorePackage.SnapshotTesting,
     ],
-    path: "Tests/SwiftyCreativesTests"
+    path: "Tests/SwiftyCreativesTests",
+    resources: [
+        .process("Resources")
+    ]
 )
 
 let package = Package(
