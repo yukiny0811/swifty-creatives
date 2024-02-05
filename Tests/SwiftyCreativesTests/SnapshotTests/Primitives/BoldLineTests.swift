@@ -43,5 +43,23 @@ final class BoldLineTests: XCTestCase {
         SnapshotTestUtil.render(sketch: sketch)
         await fulfillment(of: [expectation], timeout: 5.0)
     }
+    
+    @MainActor
+    func testBoldLineVariations() async throws {
+        try SnapshotTestUtil.testGPU()
+        class TestSketch: SketchForTest {
+            override func draw(encoder: SCEncoder) {
+                color(1, 0.5, 0.2, 0.8)
+                boldline(0, 0, 0, 10, 10, 0, width: 2)
+                boldline(0, 0, 0, 10, 0, 0, width: 2)
+                boldline(-3, -4, 0, -3, 1, 0, width: 2)
+                boldline(-5, -3, 0, 2, -5, 0, width: 2)
+            }
+        }
+        let expectation = XCTestExpectation()
+        let sketch = TestSketch(expectation, testName: "testBoldLineVariations")
+        SnapshotTestUtil.render(sketch: sketch)
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
 }
 #endif
