@@ -17,6 +17,7 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
                                             const device FrameUniforms_ViewMatrix& uniformViewMatrix [[ buffer(VertexBuffer_ViewMatrix) ]],
                                             const device FrameUniforms_CameraPos& uniformCameraPos [[ buffer(VertexBuffer_CameraPos) ]],
                                             const device float4& color [[ buffer(VertexBuffer_Color) ]],
+                                            const device FrameUniforms_UseVertexColor& useVertexColor [[ buffer(VertexBuffer_UseVertexColor) ]],
                                             const device FrameUniforms_CustomMatrix& uniformCustomMatrix [[ buffer(VertexBuffer_CustomMatrix) ]]
                                      ) {
     
@@ -35,7 +36,11 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
     rd.surfaceNormal = (modelMatrix * float4(vIn.normal, 1.0)).xyz;
     rd.toCameraVector = uniformCameraPos.value - rd.worldPosition;
     rd.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * float4(vIn.position, 1.0);
-    rd.color = color;
+    if (useVertexColor.value) {
+        rd.color = vIn.color;
+    } else {
+        rd.color = color;
+    }
     rd.uv = vIn.uv;
     return rd;
 }

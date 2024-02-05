@@ -53,6 +53,10 @@ struct FrameUniforms_FogColor {
     float4 value;
 };
 
+struct FrameUniforms_UseVertexColor {
+    bool value;
+};
+
 struct RasterizerData {
     float4 position [[ position ]];
     float4 color;
@@ -66,20 +70,5 @@ struct Vertex {
     float3 position [[ attribute(VertexAttribute_Position) ]];
     float2 uv [[ attribute(VertexAttribute_UV) ]];
     float3 normal [[ attribute(VertexAttribute_Normal) ]];
-};
-
-struct Light {
-    float3 position;
-    float3 color;
-    float brightness;
-    float ambientIntensity;
-    float diffuseIntensity;
-    float specularIntensity;
-};
-
-struct Material {
-    float3 ambient;
-    float3 diffuse;
-    float3 specular;
-    float shininess;
+    float4 color [[ attribute(VertexAttribute_Color) ]];
 };

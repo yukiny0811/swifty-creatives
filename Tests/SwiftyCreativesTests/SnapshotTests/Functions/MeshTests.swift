@@ -33,5 +33,68 @@ final class MeshTests: XCTestCase {
         SnapshotTestUtil.render(sketch: sketch)
         await fulfillment(of: [expectation], timeout: 5.0)
     }
+    
+    @MainActor
+    func testTexturedMeshIsDrawed() async throws {
+        try SnapshotTestUtil.testGPU()
+        class TestSketch: SketchForTest {
+            override func draw(encoder: SCEncoder) {
+                color(1, 0, 1, 1)
+                mesh(
+                    vertices: [
+                        f3(-5, -5, -5),
+                        f3(5, 3, 5),
+                        f3(-5, 5, 3),
+                    ],
+                    uvs: [
+                        .zero,
+                        .init(1, 1),
+                        .init(0, 1)
+                    ],
+                    normals: [
+                        .zero,
+                        .zero,
+                        .zero,
+                    ],
+                    image: Bundle.module.image(forResource: "sampleImage")!.cgImage(
+                        forProposedRect: nil,
+                        context: nil,
+                        hints: nil
+                    )!
+                )
+            }
+        }
+        let expectation = XCTestExpectation()
+        let sketch = TestSketch(expectation, testName: "testTexturedMeshIsDrawed")
+        SnapshotTestUtil.render(sketch: sketch)
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
+    
+    @MainActor
+    func testMeshWithVertexColor() async throws {
+        try SnapshotTestUtil.testGPU()
+        class TestSketch: SketchForTest {
+            override func draw(encoder: SCEncoder) {
+                color(1, 0, 1, 1)
+                mesh(
+                    vertices: [
+                        f3(-5, -5, -5),
+                        f3(5, 3, 5),
+                        f3(-5, 5, 3),
+                    ],
+                    colors: [
+                        f4(1, 0, 0, 1),
+                        f4(0, 1, 0, 1),
+                        f4(0, 0, 1, 1),
+                    ],
+                    primitiveType: .triangle
+                )
+            }
+        }
+        let expectation = XCTestExpectation()
+        let sketch = TestSketch(expectation, testName: "testMeshWithVertexColor")
+        SnapshotTestUtil.render(sketch: sketch)
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
 }
 #endif

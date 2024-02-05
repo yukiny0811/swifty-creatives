@@ -15,10 +15,11 @@ public protocol FunctionBase: AnyObject {
 
 extension FunctionBase {
     
-    internal func setUniforms(modelPos: f3, modelScale: f3, hasTexture: Bool) {
+    internal func setUniforms(modelPos: f3, modelScale: f3, hasTexture: Bool, useVertexColor: Bool = false) {
         setModelPos(modelPos)
         setModelScale(modelScale)
         setHasTexture(hasTexture)
+        setUseVertexColor(useVertexColor)
     }
     
     private func setModelPos(_ value: f3) {
@@ -63,5 +64,13 @@ extension FunctionBase {
     
     internal func setCustomMatrix() {
         privateEncoder?.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: VertexBufferIndex.CustomMatrix.rawValue)
+    }
+    
+    internal func setUseVertexColor(_ value: Bool) {
+        privateEncoder?.setVertexBytes([value], length: Bool.memorySize, index: VertexBufferIndex.UseVertexColor.rawValue)
+    }
+    
+    internal func setVertexColors(_ value: [f4]) {
+        privateEncoder?.setVertexBytes(value, length: value.count * f4.memorySize, index: VertexBufferIndex.VertexColor.rawValue)
     }
 }

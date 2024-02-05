@@ -19,6 +19,10 @@ extension RendererBase {
         vertexDescriptor.attributes[VertexAttributeIndex.Normal.rawValue].format = .float3
         vertexDescriptor.attributes[VertexAttributeIndex.Normal.rawValue].offset = 0
         vertexDescriptor.attributes[VertexAttributeIndex.Normal.rawValue].bufferIndex = 12
+        vertexDescriptor.attributes[VertexAttributeIndex.Color.rawValue].format = .float4
+        vertexDescriptor.attributes[VertexAttributeIndex.Color.rawValue].offset = 0
+        vertexDescriptor.attributes[VertexAttributeIndex.Color.rawValue].bufferIndex = 19
+        
         vertexDescriptor.layouts[VertexBufferIndex.Position.rawValue].stride = 16
         vertexDescriptor.layouts[VertexBufferIndex.Position.rawValue].stepRate = 1
         vertexDescriptor.layouts[VertexBufferIndex.Position.rawValue].stepFunction = .perVertex
@@ -28,6 +32,9 @@ extension RendererBase {
         vertexDescriptor.layouts[VertexBufferIndex.Normal.rawValue].stride = 16
         vertexDescriptor.layouts[VertexBufferIndex.Normal.rawValue].stepRate = 1
         vertexDescriptor.layouts[VertexBufferIndex.Normal.rawValue].stepFunction = .perVertex
+        vertexDescriptor.layouts[VertexBufferIndex.VertexColor.rawValue].stride = 16
+        vertexDescriptor.layouts[VertexBufferIndex.VertexColor.rawValue].stepRate = 1
+        vertexDescriptor.layouts[VertexBufferIndex.VertexColor.rawValue].stepFunction = .perVertex
         return vertexDescriptor
     }
     
@@ -50,6 +57,7 @@ extension RendererBase {
         encoder.setVertexBuffer(DefaultBuffers.default_f2, offset: 0, index: VertexBufferIndex.UV.rawValue)
         encoder.setVertexBuffer(DefaultBuffers.default_f3, offset: 0, index: VertexBufferIndex.Normal.rawValue)
         encoder.setVertexBuffer(DefaultBuffers.default_f4x4, offset: 0, index: VertexBufferIndex.CustomMatrix.rawValue)
+        encoder.setVertexBuffer(DefaultBuffers.default_false, offset: 0, index: VertexBufferIndex.UseVertexColor.rawValue)
         encoder.setFragmentBytes([1], length: Float.memorySize, index: FragmentBufferIndex.LightCount.rawValue)
         encoder.setFragmentBuffer(DefaultBuffers.default_false, offset: 0, index: FragmentBufferIndex.HasTexture.rawValue)
         encoder.setFragmentBuffer(DefaultBuffers.default_false, offset: 0, index: FragmentBufferIndex.IsActiveToLight.rawValue)
