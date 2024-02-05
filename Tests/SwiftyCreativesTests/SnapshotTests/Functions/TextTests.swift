@@ -92,5 +92,26 @@ final class TextTests: XCTestCase {
         SnapshotTestUtil.render(sketch: sketch)
         await fulfillment(of: [expectation], timeout: 5.0)
     }
+    
+    @MainActor
+    func testText2DGradient() async throws {
+        try SnapshotTestUtil.testGPU()
+        class TestSketch: SketchForTest {
+            let textObject = Text2D(text: "Test", fontName: "Avenir-BlackOblique", fontSize: 10)
+            override func draw(encoder: SCEncoder) {
+                text(
+                    textObject,
+                    topLeft: f4(1, 0, 0, 1),
+                    topRight: f4(0, 1, 0, 1),
+                    bottomLeft: f4(0, 0, 1, 1),
+                    bottomRight: f4(1, 1, 1, 1)
+                )
+            }
+        }
+        let expectation = XCTestExpectation()
+        let sketch = TestSketch(expectation, testName: "testText2DGradient")
+        SnapshotTestUtil.render(sketch: sketch)
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
 }
 #endif

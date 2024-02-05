@@ -13,6 +13,7 @@ import FontVertexBuilder
 open class Text2D: PathText {
     public var posBuffer: MTLBuffer?
     public var finalVertices: [f3] = []
+    public var finalVerticesNormalized: [f3] = []
     func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) throws {
         finalVertices = []
         for letter in triangulatedPaths {
@@ -23,6 +24,17 @@ open class Text2D: PathText {
         if finalVertices.count == 0 {
             throw TextBufferCreationError.noVertices
         }
+        var largestX: Float = 0
+        var largestY: Float = 0
+        for vert in finalVertices {
+            if vert.x > largestX {
+                largestX = vert.x
+            }
+            if vert.y < largestY {
+                largestY = vert.y
+            }
+        }
+        finalVerticesNormalized = finalVertices.map { f3($0.x / largestX, $0.y / largestY, 0)}
         posBuffer = ShaderCore.device.makeBuffer(bytes: finalVertices, length: finalVertices.count * f3.memorySize)
     }
     public override init(
