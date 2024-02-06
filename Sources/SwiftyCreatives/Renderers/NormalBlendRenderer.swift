@@ -16,6 +16,8 @@ public class NormalBlendRenderer: RendererBase {
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
     
+    var skyBox = try! SkyBox(textureReference: nil)
+    
     public init(sketch: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
@@ -74,6 +76,11 @@ public class NormalBlendRenderer: RendererBase {
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
+        
+        var copyCameraMatrix = camera.mainMatrix[0]
+        copyCameraMatrix[3] = f4(0, 0, 0, 1)
+        renderCommandEncoder?.setVertexBytes([copyCameraMatrix], length: f4x4.memorySize, index: VertexBufferIndex.ViewMatrix.rawValue)
+        skyBox.draw(encoder: renderCommandEncoder!)
         
         renderCommandEncoder?.setViewport(
             MTLViewport(

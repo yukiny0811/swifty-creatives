@@ -13,6 +13,7 @@ public class AddRenderer: RendererBase {
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     let vertexDescriptor: MTLVertexDescriptor
     let renderPipelineState: MTLRenderPipelineState
+    var skyBox = try! SkyBox(textureReference: nil)
     public init(sketch: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
@@ -65,6 +66,11 @@ public class AddRenderer: RendererBase {
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderCommandEncoder!)
+        
+        var copyCameraMatrix = camera.mainMatrix[0]
+        copyCameraMatrix[3] = f4(0, 0, 0, 1)
+        renderCommandEncoder?.setVertexBytes([copyCameraMatrix], length: f4x4.memorySize, index: VertexBufferIndex.ViewMatrix.rawValue)
+        skyBox.draw(encoder: renderCommandEncoder!)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(

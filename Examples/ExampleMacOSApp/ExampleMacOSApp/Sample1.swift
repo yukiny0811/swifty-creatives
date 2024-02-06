@@ -31,6 +31,6 @@ final class Sample1: Sketch {
 
 struct Sample1View: View {
     var body: some View {
-        SketchView(Sample1())
+        SketchView(Sample1(), blendMode: .alphaBlend)
     }
 }

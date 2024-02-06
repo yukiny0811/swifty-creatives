@@ -26,6 +26,8 @@ class TransparentRenderer: RendererBase {
     
     let optimalTileSize = MTLSize(width: 32, height: 16, depth: 1)
     
+    var skyBox = try! SkyBox(textureReference: nil)
+    
     public init(sketch: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         
         // MARK: - functions
@@ -108,6 +110,11 @@ class TransparentRenderer: RendererBase {
         drawProcess.beforeDraw(encoder: renderEncoder)
         drawProcess.update(camera: camera)
         drawProcess.draw(encoder: renderEncoder)
+        
+//        var copyCameraMatrix = camera.mainMatrix[0]
+//        copyCameraMatrix[3] = f4(0, 0, 0, 1)
+//        renderEncoder.setVertexBytes([copyCameraMatrix], length: f4x4.memorySize, index: VertexBufferIndex.ViewMatrix.rawValue)
+//        skyBox.draw(encoder: renderEncoder)
         
         renderEncoder.setViewport(
             MTLViewport(

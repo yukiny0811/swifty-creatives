@@ -42,4 +42,5 @@ enum FragmentBufferIndex: Int {
 
 enum FragmentTextureIndex: Int {
     case MainTexture = 0
+    case SkyBox = 30
 }

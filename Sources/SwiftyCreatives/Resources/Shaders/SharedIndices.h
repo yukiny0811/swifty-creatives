@@ -42,7 +42,8 @@ typedef enum {
 } FragmentBufferIndex;
 
 typedef enum {
-    FragmentTexture_MainTexture = 0
+    FragmentTexture_MainTexture = 0,
+    FragmentTexture_SkyBox = 30
 } FragmentTextureIndex;
 
 #endif /* SharedIndices_h */
