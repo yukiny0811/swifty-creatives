@@ -21,7 +21,7 @@ open class Text3D: PathText {
         }
         posBuffer?.contents().copyMemory(from: finalVertices, byteCount: f3.memorySize * finalVertices.count)
     }
-    func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) {
+    func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) throws {
         finalVertices = []
         extrudingIndices = []
         for letter in triangulatedPaths {
@@ -74,13 +74,27 @@ open class Text3D: PathText {
                 }
             }
         }
+        if finalVertices.count == 0 {
+            throw TextBufferCreationError.noVertices
+        }
         posBuffer = ShaderCore.device.makeBuffer(bytes: finalVertices, length: f3.memorySize * finalVertices.count)
     }
-    public init(text: String, fontName: String = "AppleSDGothicNeo-Bold", fontSize: Float = 10.0, bounds: CGSize = .zero, pivot: f2 = .zero, textAlignment: CTTextAlignment = .natural, verticalAlignment: PathText.VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0.0, isClockwiseFont: Bool = true, extrudingValue: Float = 0) {
+    public init(
+        text: String,
+        fontName: String = "Avenir-BlackOblique",
+        fontSize: Float = 10.0,
+        bounds: CGSize = .zero,
+        pivot: f2 = .zero,
+        textAlignment: CTTextAlignment = .natural,
+        verticalAlignment: PathText.VerticalAlignment = .center,
+        kern: Float = 0.0,
+        lineSpacing: Float = 0.0,
+        extrudingValue: Float = 0
+    ) {
         self.extrudingValue = extrudingValue
-        super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing, isClockwiseFont: isClockwiseFont)
-        let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths, isClockwiseFont: isClockwiseFont)
-        createAndSetBuffer(from: triangulatedPaths)
+        super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
+        let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
+        try? createAndSetBuffer(from: triangulatedPaths)
     }
 }
 

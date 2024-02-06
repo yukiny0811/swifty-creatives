@@ -25,7 +25,7 @@ final class Sample8: Sketch {
         box(testBoxPos, f3.one * 0.1)
         translate(0, 3, 0)
         color(boxColor)
-        drawHitTestableBox(box: box)
+        box(box)
     }
     
     override func mouseMoved(camera: MainCamera, location: f2) {

@@ -12,13 +12,15 @@ public extension FunctionBase {
     
     func text(_ text: Text2D, primitiveType: MTLPrimitiveType = .triangle) {
         setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        privateEncoder?.setVertexBuffer(text.posBuffer!, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        guard let textPosBuffer = text.posBuffer else { return }
+        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
         privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
     
     func text(_ text: Text3D, primitiveType: MTLPrimitiveType = .triangle) {
         setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        privateEncoder?.setVertexBuffer(text.posBuffer!, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        guard let textPosBuffer = text.posBuffer else { return }
+        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
         privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
     
@@ -57,5 +59,22 @@ public extension FunctionBase {
                 spacerFactor = -size.x
             }
         }
+    }
+    
+    func text(_ text: Text2D, topLeft: f4, topRight: f4, bottomLeft: f4, bottomRight: f4, primitiveType: MTLPrimitiveType = .triangle) {
+        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false, useVertexColor: true)
+        guard let textPosBuffer = text.posBuffer else { return }
+        let colors: [f4] = text.finalVerticesNormalized.map { pos in
+            let xTopColor = mix(topLeft, topRight, t: pos.x)
+            let xBottomColor = mix(bottomLeft, bottomRight, t: pos.x)
+            let yColor = mix(xTopColor, xBottomColor, t: pos.y)
+            return yColor
+        }
+        guard let vertexColorBuffer = ShaderCore.device.makeBuffer(bytes: colors, length: colors.count * f4.memorySize) else {
+            return
+        }
+        privateEncoder?.setVertexBuffer(vertexColorBuffer, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
+        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
 }

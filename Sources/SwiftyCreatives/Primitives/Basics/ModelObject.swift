@@ -17,7 +17,7 @@ open class ModelObject: Primitive<ModelObjectInfo> {
     var texture: MTLTexture?
     
     @discardableResult
-    public func loadModel(name: String, extensionName: String) -> Self {
+    public func loadModel(name: String, extensionName: String, bundle: Bundle = .main) -> Self {
         
         let allocator = MTKMeshBufferAllocator(device: ShaderCore.device)
 
@@ -35,7 +35,7 @@ open class ModelObject: Primitive<ModelObjectInfo> {
         ]
 
         let asset = MDLAsset(
-            url: Bundle.main.url(forResource: name, withExtension: extensionName)!,
+            url: bundle.url(forResource: name, withExtension: extensionName)!,
             vertexDescriptor: vertexDescriptor,
             bufferAllocator: allocator
         )
@@ -69,7 +69,8 @@ open class ModelObject: Primitive<ModelObjectInfo> {
                     #if os(iOS) || os(visionOS) || os(tvOS)
                     let tex = try? textureLoader.newTexture(cgImage: UIImage(named: baseColorProperty.stringValue!)!.cgImage!)
                     #elseif os(macOS)
-                    let tex = try? textureLoader.newTexture(cgImage: NSImage(named: baseColorProperty.stringValue!)!.cgImage(forProposedRect: nil, context: nil, hints: nil)!)
+                    let image = bundle.image(forResource: baseColorProperty.stringValue!)!
+                    let tex = try? textureLoader.newTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!)
                     #endif
                     texture = tex
                 }
@@ -140,6 +141,65 @@ open class ModelObject: Primitive<ModelObjectInfo> {
                     encoder.setFragmentBytes([false], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
                 }
                 encoder.drawIndexedPrimitives(type: primitiveType, indexCount: s.indexCount, indexType: s.indexType, indexBuffer: s.indexBuffer.buffer, indexBufferOffset: s.indexBuffer.offset)
+            }
+        }
+    }
+    
+    public func draw(_ encoder: SCEncoder, with image: CGImage) {
+            
+        let loader = MTKTextureLoader(device: ShaderCore.device)
+        let mtlTexture = try! loader.newTexture(cgImage: image)
+        
+        guard let meshes = self.mesh as? [MTKMesh] else { return }
+        
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+        
+        for mesh in meshes {
+            
+            for b in 0..<mesh.vertexBuffers.count {
+                switch b {
+                case 0:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+                case 1:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.UV.rawValue)
+                case 2:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.Normal.rawValue)
+                default:
+                    break
+                }
+            }
+            for s in mesh.submeshes {
+                encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+                encoder.setFragmentTexture(mtlTexture, index: FragmentTextureIndex.MainTexture.rawValue)
+                encoder.drawIndexedPrimitives(type: s.primitiveType, indexCount: s.indexCount, indexType: s.indexType, indexBuffer: s.indexBuffer.buffer, indexBufferOffset: s.indexBuffer.offset)
+            }
+        }
+    }
+    
+    public func draw(_ encoder: SCEncoder, with mtlTexture: MTLTexture) {
+        
+        guard let meshes = self.mesh as? [MTKMesh] else { return }
+        
+        encoder.setVertexBytes(_mScale, length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+        
+        for mesh in meshes {
+            
+            for b in 0..<mesh.vertexBuffers.count {
+                switch b {
+                case 0:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+                case 1:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.UV.rawValue)
+                case 2:
+                    encoder.setVertexBuffer(mesh.vertexBuffers[b].buffer, offset: 0, index: VertexBufferIndex.Normal.rawValue)
+                default:
+                    break
+                }
+            }
+            for s in mesh.submeshes {
+                encoder.setFragmentBytes([true], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+                encoder.setFragmentTexture(mtlTexture, index: FragmentTextureIndex.MainTexture.rawValue)
+                encoder.drawIndexedPrimitives(type: s.primitiveType, indexCount: s.indexCount, indexType: s.indexType, indexBuffer: s.indexBuffer.buffer, indexBufferOffset: s.indexBuffer.offset)
             }
         }
     }

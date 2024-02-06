@@ -60,5 +60,22 @@ final class BoxTests: XCTestCase {
         SnapshotTestUtil.render(sketch: sketch)
         await fulfillment(of: [expectation], timeout: 5.0)
     }
+    
+    @MainActor
+    func testBoxVariations() async throws {
+        try SnapshotTestUtil.testGPU()
+        class TestSketch: SketchForTest {
+            override func draw(encoder: SCEncoder) {
+                color(1, 0.5, 0.2, 0.8)
+                rotateX(0.5)
+                rotateY(0.5)
+                box(3, 5, 3, 1, 2, 3)
+            }
+        }
+        let expectation = XCTestExpectation()
+        let sketch = TestSketch(expectation, testName: "testBoxVariations")
+        SnapshotTestUtil.render(sketch: sketch)
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
 }
 #endif

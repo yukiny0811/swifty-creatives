@@ -11,7 +11,8 @@
 typedef enum {
     VertexAttribute_Position = 0,
     VertexAttribute_UV = 1,
-    VertexAttribute_Normal = 2
+    VertexAttribute_Normal = 2,
+    VertexAttribute_Color = 3,
 } VertexAttributeIndex;
 
 typedef enum {
@@ -26,6 +27,8 @@ typedef enum {
     VertexBuffer_UV = 11,
     VertexBuffer_Normal = 12,
     VertexBuffer_CustomMatrix = 15,
+    VertexBuffer_UseVertexColor = 18,
+    VertexBuffer_VertexColor = 19,
 } VertexBufferIndex;
 
 typedef enum {

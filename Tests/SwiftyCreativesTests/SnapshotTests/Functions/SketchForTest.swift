@@ -30,6 +30,7 @@ class SketchForTest: Sketch {
         desc.width = texture!.width
         desc.height = texture!.height
         desc.textureType = .type2D
+        desc.pixelFormat = .bgra8Unorm
         let tex = ShaderCore.device.makeTexture(descriptor: desc)!
         
         let cb = ShaderCore.commandQueue.makeCommandBuffer()!

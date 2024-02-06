@@ -13,6 +13,8 @@
 		56694B07298AB8730022C24D /* Sample2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B06298AB8730022C24D /* Sample2.swift */; };
 		56694B09298AB8840022C24D /* Sample3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B08298AB8840022C24D /* Sample3.swift */; };
 		56694B11298AB8EE0022C24D /* Sample4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B10298AB8EE0022C24D /* Sample4.swift */; };
+		566E503B2B6FB551002B98D6 /* Sample9.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566E503A2B6FB551002B98D6 /* Sample9.swift */; };
+		566E503D2B6FC549002B98D6 /* Sample10.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566E503C2B6FC549002B98D6 /* Sample10.swift */; };
 		5675A0F8294B18A2005C25BD /* SwiftyCreatives in Frameworks */ = {isa = PBXBuildFile; productRef = 5675A0F7294B18A2005C25BD /* SwiftyCreatives */; };
 		569A83992999236000F62062 /* Sample6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569A83982999236000F62062 /* Sample6.swift */; };
 		569EBEAE2995583D0090F5AB /* Sample5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569EBEAD2995583D0090F5AB /* Sample5.swift */; };
@@ -28,6 +30,8 @@
 		56694B06298AB8730022C24D /* Sample2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample2.swift; sourceTree = "<group>"; };
 		56694B08298AB8840022C24D /* Sample3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample3.swift; sourceTree = "<group>"; };
 		56694B10298AB8EE0022C24D /* Sample4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample4.swift; sourceTree = "<group>"; };
+		566E503A2B6FB551002B98D6 /* Sample9.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample9.swift; sourceTree = "<group>"; };
+		566E503C2B6FC549002B98D6 /* Sample10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample10.swift; sourceTree = "<group>"; };
 		5675A0F6294B187D005C25BD /* swifty-creatives */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swifty-creatives"; path = ../..; sourceTree = "<group>"; };
 		569A83982999236000F62062 /* Sample6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample6.swift; sourceTree = "<group>"; };
 		569EBEAD2995583D0090F5AB /* Sample5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample5.swift; sourceTree = "<group>"; };
@@ -88,6 +92,8 @@
 				569A83982999236000F62062 /* Sample6.swift */,
 				5643923029A14E2F0053C6E6 /* Sample7.swift */,
 				5643923229A187740053C6E6 /* Sample8.swift */,
+				566E503A2B6FB551002B98D6 /* Sample9.swift */,
+				566E503C2B6FC549002B98D6 /* Sample10.swift */,
 				56C53FCA294A645200962DD6 /* Assets.xcassets */,
 				56C53FCF294A645200962DD6 /* ExampleMacOSApp.entitlements */,
 				56C53FCC294A645200962DD6 /* Preview Content */,
@@ -186,6 +192,8 @@
 				56C53FC7294A645100962DD6 /* ExampleMacOSApp.swift in Sources */,
 				5643923329A187740053C6E6 /* Sample8.swift in Sources */,
 				569EBEAE2995583D0090F5AB /* Sample5.swift in Sources */,
+				566E503B2B6FB551002B98D6 /* Sample9.swift in Sources */,
+				566E503D2B6FC549002B98D6 /* Sample10.swift in Sources */,
 				569A83992999236000F62062 /* Sample6.swift in Sources */,
 				5643923129A14E2F0053C6E6 /* Sample7.swift in Sources */,
 				56694B09298AB8840022C24D /* Sample3.swift in Sources */,
@@ -317,6 +325,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ExampleMacOSApp/ExampleMacOSApp.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -344,6 +353,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ExampleMacOSApp/ExampleMacOSApp.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

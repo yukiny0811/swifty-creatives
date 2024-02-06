@@ -28,8 +28,8 @@ public class RawTextFactory {
     public var cachedBuffer: [Character: LetterCache] = [:]
     
     public func cacheCharacter(char: Character) {
-        let vectorText = PathText(text: String(char), fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing, isClockwiseFont: isClockwiseFont)
-        let resultTuple = GlyphUtil.MainFunctions.triangulateWithoutLetterOffset(vectorText.calculatedPaths, isClockwiseFont: isClockwiseFont)
+        let vectorText = PathText(text: String(char), fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
+        let resultTuple = GlyphUtil.MainFunctions.triangulateWithoutLetterOffset(vectorText.calculatedPaths)
         let path = resultTuple.paths.first!
         guard let offset = resultTuple.letterOffsets.first else {
             print("failed to cache \(char)")
@@ -66,7 +66,7 @@ public class RawTextFactory {
         cachedBuffer[char]!.buffer.contents().copyMemory(from: cached[char]!.vertices, byteCount: f3.memorySize * cached[char]!.vertices.count)
     }
     
-    public init(fontName: String = "AppleSDGothicNeo-Bold",
+    public init(fontName: String = "Avenir-BlackOblique",
                 fontSize: Float = 10.0,
                 bounds: CGSize = .zero,
                 pivot: f2 = .zero,

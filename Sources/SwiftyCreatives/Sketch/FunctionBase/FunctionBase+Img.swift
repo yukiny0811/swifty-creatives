@@ -20,7 +20,7 @@ public extension FunctionBase {
         privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
-    func img(imgObj: Img) {
+    func img(_ imgObj: Img) {
         setUniforms(modelPos: .zero, modelScale: imgObj.scale, hasTexture: true)
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)

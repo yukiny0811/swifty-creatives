@@ -11,6 +11,7 @@ enum VertexAttributeIndex: Int {
     case Position = 0
     case UV = 1
     case Normal = 2
+    case Color = 3
 }
 
 enum VertexBufferIndex: Int {
@@ -25,6 +26,8 @@ enum VertexBufferIndex: Int {
     case UV = 11
     case Normal = 12
     case CustomMatrix = 15
+    case UseVertexColor = 18
+    case VertexColor = 19
 }
 
 enum FragmentBufferIndex: Int {

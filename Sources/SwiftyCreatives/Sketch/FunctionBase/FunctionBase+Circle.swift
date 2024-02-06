@@ -19,34 +19,18 @@ public extension FunctionBase {
     }
     
     func circle(_ pos: f3, _ radX: Float, _ radY: Float) {
-        setUniforms(modelPos: pos, modelScale: f3(radX, radY, 1), hasTexture: false)
-        setVertices(CircleInfo.vertices)
-        setUVs(CircleInfo.uvs)
-        setNormals(CircleInfo.normals)
-        privateEncoder?.drawIndexedPrimitives(type: CircleInfo.primitiveType, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
+        circle(pos.x, pos.y, pos.z, radX, radY)
     }
     
     func circle(_ pos: f3, _ rad: Float) {
-        setUniforms(modelPos: pos, modelScale: .init(rad, rad, 1), hasTexture: false)
-        setVertices(CircleInfo.vertices)
-        setUVs(CircleInfo.uvs)
-        setNormals(CircleInfo.normals)
-        privateEncoder?.drawIndexedPrimitives(type: CircleInfo.primitiveType, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
+        circle(pos.x, pos.y, pos.z, rad, rad)
     }
     
     func circle(_ rad: Float) {
-        setUniforms(modelPos: .zero, modelScale: .init(rad, rad, 1), hasTexture: false)
-        setVertices(CircleInfo.vertices)
-        setUVs(CircleInfo.uvs)
-        setNormals(CircleInfo.normals)
-        privateEncoder?.drawIndexedPrimitives(type: CircleInfo.primitiveType, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
+        circle(0, 0, 0, rad, rad)
     }
     
     func circle(_ radX: Float, _ radY: Float) {
-        setUniforms(modelPos: .zero, modelScale: f3(radX, radY, 1), hasTexture: false)
-        setVertices(CircleInfo.vertices)
-        setUVs(CircleInfo.uvs)
-        setNormals(CircleInfo.normals)
-        privateEncoder?.drawIndexedPrimitives(type: CircleInfo.primitiveType, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
+        circle(0, 0, 0, radX, radY)
     }
 }
