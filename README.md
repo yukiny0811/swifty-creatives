@@ -104,6 +104,7 @@ dependencies: [
     - [x] UIView Object (3d view created from xib, with interactive button)
     - [x] Mesh
     - [x] Vertex Buffer
+    - [x] SVG
 - [x] Geometries with Hit Test (you can click or hover on it)
     - [x] HitTestableRect
     - [x] HitTestableBox
