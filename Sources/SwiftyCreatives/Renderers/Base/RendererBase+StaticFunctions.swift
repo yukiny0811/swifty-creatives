@@ -58,6 +58,7 @@ extension RendererBase {
         encoder.setVertexBuffer(DefaultBuffers.default_f3, offset: 0, index: VertexBufferIndex.Normal.rawValue)
         encoder.setVertexBuffer(DefaultBuffers.default_f4x4, offset: 0, index: VertexBufferIndex.CustomMatrix.rawValue)
         encoder.setVertexBuffer(DefaultBuffers.default_false, offset: 0, index: VertexBufferIndex.UseVertexColor.rawValue)
+        encoder.setVertexBuffer(DefaultBuffers.default_f4, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
         encoder.setFragmentBytes([1], length: Float.memorySize, index: FragmentBufferIndex.LightCount.rawValue)
         encoder.setFragmentBuffer(DefaultBuffers.default_false, offset: 0, index: FragmentBufferIndex.HasTexture.rawValue)
         encoder.setFragmentBuffer(DefaultBuffers.default_false, offset: 0, index: FragmentBufferIndex.IsActiveToLight.rawValue)

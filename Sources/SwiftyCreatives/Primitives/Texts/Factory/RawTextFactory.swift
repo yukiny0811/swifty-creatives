@@ -66,7 +66,7 @@ public class RawTextFactory {
         cachedBuffer[char]!.buffer.contents().copyMemory(from: cached[char]!.vertices, byteCount: f3.memorySize * cached[char]!.vertices.count)
     }
     
-    public init(fontName: String = "AppleSDGothicNeo-Bold",
+    public init(fontName: String = "Avenir-BlackOblique",
                 fontSize: Float = 10.0,
                 bounds: CGSize = .zero,
                 pivot: f2 = .zero,

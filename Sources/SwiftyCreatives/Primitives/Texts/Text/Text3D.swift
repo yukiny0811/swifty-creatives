@@ -81,7 +81,7 @@ open class Text3D: PathText {
     }
     public init(
         text: String,
-        fontName: String = "AppleSDGothicNeo-Bold",
+        fontName: String = "Avenir-BlackOblique",
         fontSize: Float = 10.0,
         bounds: CGSize = .zero,
         pivot: f2 = .zero,
