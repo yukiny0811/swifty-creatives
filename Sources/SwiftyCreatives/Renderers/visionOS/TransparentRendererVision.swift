@@ -34,7 +34,7 @@ class TransparentRendererVision: RendererBase {
         // MARK: - functions
         let constantValue = MTLFunctionConstantValues()
         let transparencyMethodFragmentFunction = try! ShaderCore.library.makeFunction(name: "OITFragmentFunction_4Layer", constantValues: constantValue)
-        let vertexFunction = ShaderCore.library.makeFunction(name: "vertexTransform")
+        let vertexFunction = ShaderCore.library.makeFunction(name: "vertexTransform_vision")
         let resolveFunction = try! ShaderCore.library.makeFunction(name: "OITResolve_4Layer", constantValues: constantValue)
         let clearFunction = try! ShaderCore.library.makeFunction(name: "OITClear_4Layer", constantValues: constantValue)
         
@@ -46,17 +46,17 @@ class TransparentRendererVision: RendererBase {
         pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.rasterSampleCount = 1
-        pipelineStateDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
-        pipelineStateDescriptor.stencilAttachmentPixelFormat = .depth32Float_stencil8
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+        pipelineStateDescriptor.depthAttachmentPixelFormat = layerRenderer.configuration.depthFormat
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = layerRenderer.configuration.colorFormat
         pipelineStateDescriptor.colorAttachments[0].isBlendingEnabled = false
         pipelineStateDescriptor.fragmentFunction = transparencyMethodFragmentFunction
+        pipelineStateDescriptor.maxVertexAmplificationCount = layerRenderer.properties.viewCount
         pipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
         
         // MARK: - Tile descriptor
         let tileDesc = MTLTileRenderPipelineDescriptor()
         tileDesc.tileFunction = resolveFunction
-        tileDesc.colorAttachments[0].pixelFormat = .bgra8Unorm
+        tileDesc.colorAttachments[0].pixelFormat = layerRenderer.configuration.colorFormat
         tileDesc.threadgroupSizeMatchesTileSize = true
         resolveState = try! ShaderCore.device.makeRenderPipelineState(tileDescriptor: tileDesc, options: .argumentInfo, reflection: nil) // FIXME: argumentinfo?
         
@@ -102,6 +102,9 @@ class TransparentRendererVision: RendererBase {
         renderPassDescriptor.tileWidth = optimalTileSize.width
         renderPassDescriptor.tileHeight = optimalTileSize.height
         renderPassDescriptor.imageblockSampleLength = resolveState.imageblockSampleLength
+        if layerRenderer.configuration.layout == .layered {
+            renderPassDescriptor.renderTargetArrayLength = drawable.views.count
+        }
         
         drawProcess.preProcess(commandBuffer: commandBuffer)
         
@@ -117,26 +120,37 @@ class TransparentRendererVision: RendererBase {
         
         let simdDeviceAnchor = deviceAnchor?.originFromAnchorTransform ?? matrix_identity_float4x4
         
-        let view = drawable.views[0]
-        let viewMatrix = (simdDeviceAnchor * view.transform).inverse
-        let projectionTemp = ProjectiveTransform3D(leftTangent: Double(view.tangents[0]),
-                                               rightTangent: Double(view.tangents[1]),
-                                               topTangent: Double(view.tangents[2]),
-                                               bottomTangent: Double(view.tangents[3]),
-                                               nearZ: Double(drawable.depthRange.y),
-                                               farZ: Double(drawable.depthRange.x),
-                                               reverseZ: true)
-        let projection = matrix_float4x4.init(projectionTemp)
+        let viewMatrixs = drawable.views.map { (simdDeviceAnchor * $0.transform).inverse }
+        let projectionTemps = drawable.views.map {
+            ProjectiveTransform3D(
+                leftTangent: Double($0.tangents[0]),
+                rightTangent: Double($0.tangents[1]),
+                topTangent: Double($0.tangents[2]),
+                bottomTangent: Double($0.tangents[3]),
+                nearZ: Double(drawable.depthRange.y),
+                farZ: Double(drawable.depthRange.x),
+                reverseZ: true
+            )
+        }
+        let projections = projectionTemps.map { matrix_float4x4.init($0) }
         
-        renderEncoder.setVertexBytes([projection], length: f4x4.memorySize, index: VertexBufferIndex.ProjectionMatrix.rawValue)
-        renderEncoder.setVertexBytes([viewMatrix], length: f4x4.memorySize, index: VertexBufferIndex.ViewMatrix.rawValue)
+        renderEncoder.setVertexBytes(projections, length: f4x4.memorySize * projections.count, index: VertexBufferIndex.ProjectionMatrix.rawValue)
+        renderEncoder.setVertexBytes(viewMatrixs, length: f4x4.memorySize * viewMatrixs.count, index: VertexBufferIndex.ViewMatrix.rawValue)
+        
+        let viewports = drawable.views.map { $0.textureMap.viewport }
+        renderEncoder.setViewports(viewports)
+        
+        if drawable.views.count > 1 {
+            var viewMappings = (0..<drawable.views.count).map {
+                MTLVertexAmplificationViewMapping(viewportArrayIndexOffset: UInt32($0),
+                                                  renderTargetArrayIndexOffset: UInt32($0))
+            }
+            renderEncoder.setVertexAmplificationCount(viewports.count, viewMappings: &viewMappings)
+        }
         
         let cameraPosBuffer = ShaderCore.device.makeBuffer(bytes: [f3(0, 0, 0)], length: f3.memorySize)
         renderEncoder.setVertexBuffer(cameraPosBuffer, offset: 0, index: VertexBufferIndex.CameraPos.rawValue)
         renderEncoder.setFragmentTexture(AssetUtil.defaultMTLTexture, index: FragmentTextureIndex.MainTexture.rawValue)
-        
-        let viewports = drawable.views.map { $0.textureMap.viewport }
-        renderEncoder.setViewport(viewports[0])
         
         drawProcess.beforeDraw(encoder: renderEncoder)
         drawProcess.update()

@@ -22,8 +22,8 @@ final class SampleSketch: Sketch {
                     let r = Float(x + count) / Float(count * 2)
                     let g = Float(y + count) / Float(count * 2)
                     let b = Float(z + count) / Float(count * 2)
-                    color(r, g, b, 0.8)
-                    box(Float(x) * 15, Float(y) * 15, Float(z) * 15, 1, 1, 1)
+                    color(r, g, b, 0.1)
+                    box(Float(x) * 1, Float(y) * 1, Float(z) * 1, 0.1, 0.1, 0.1)
                 }
             }
         }

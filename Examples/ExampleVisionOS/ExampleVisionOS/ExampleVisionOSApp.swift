@@ -8,7 +8,7 @@ import SwiftyCreatives
 
 struct ContentStageConfiguration: CompositorLayerConfiguration {
     func makeConfiguration(capabilities: LayerRenderer.Capabilities, configuration: inout LayerRenderer.Configuration) {
-        configuration.depthFormat = .depth32Float
+        configuration.depthFormat = .depth32Float_stencil8
         configuration.colorFormat = .bgra8Unorm_srgb
     
         let foveationEnabled = capabilities.supportsFoveation
@@ -23,6 +23,9 @@ struct ContentStageConfiguration: CompositorLayerConfiguration {
 
 @main
 struct TestingApp: App {
+    init() {
+        print("wow", ShaderCore.device.supportsFamily(.apple4))
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -30,7 +33,7 @@ struct TestingApp: App {
 
         ImmersiveSpace(id: "ImmersiveSpace") {
             CompositorLayer(configuration: ContentStageConfiguration()) { layerRenderer in
-                let renderer = RendererBase.BlendMode.normalBlend.getRenderer(sketch: SampleSketch(), layerRenderer: layerRenderer)
+                let renderer = RendererBase.BlendMode.alphaBlend.getRenderer(sketch: SampleSketch(), layerRenderer: layerRenderer)
                 renderer.startRenderLoop()
             }
         }.immersionStyle(selection: .constant(.full), in: .full)
