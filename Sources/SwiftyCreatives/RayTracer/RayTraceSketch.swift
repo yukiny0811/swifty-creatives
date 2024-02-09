@@ -7,17 +7,23 @@
 
 import Foundation
 import SwiftyCreativesCore
+import MetalKit
 
 open class RayTraceSketch {
     
+    public var staticObjects: [RayTargetObject] = []
     public var objects: [RayTargetObject] = []
     private var currentColor: f4 = .one
+    
+    var isCreatingStaticScene = true
     
     public init() {}
     
     func clearObjects() {
         objects.removeAll()
     }
+    
+    open func createStaticScene() {}
     
     open func updateUniform(uniform: inout RayTracingUniform) {}
     
@@ -41,12 +47,62 @@ open class RayTraceSketch {
                 color: currentColor
             )
         }
-        objects.append(boxObj)
+        if isCreatingStaticScene {
+            staticObjects.append(boxObj)
+        } else {
+            objects.append(boxObj)
+        }
+    }
+    
+    public func rect(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float) {
+        let obj = BoxRayTarget()
+        obj.vertices = obj.vertices.map {
+            RayTracingVertex(
+                v1: f3(x + $0.v1.x * scaleX, y + $0.v1.y * scaleY, z + $0.v1.z * 0),
+                v2: f3(x + $0.v2.x * scaleX, y + $0.v2.y * scaleY, z + $0.v2.z * 0),
+                v3: f3(x + $0.v3.x * scaleX, y + $0.v3.y * scaleY, z + $0.v3.z * 0),
+                uv1: $0.uv1,
+                uv2: $0.uv2,
+                uv3: $0.uv3,
+                normal: $0.normal,
+                color: currentColor
+            )
+        }
+        if isCreatingStaticScene {
+            staticObjects.append(obj)
+        } else {
+            objects.append(obj)
+        }
     }
 }
 
 public protocol RayTargetObject {
     var vertices: [RayTracingVertex] { get set }
+}
+
+public class RectRayTarget: RayTargetObject {
+    public var vertices: [RayTracingVertex] = [
+        RayTracingVertex(
+            v1: RectShapeInfo.VertexPoint.A,
+            v2: RectShapeInfo.VertexPoint.B,
+            v3: RectShapeInfo.VertexPoint.D,
+            uv1: f2(0, 0),
+            uv2: f2(0, 1),
+            uv3: f2(1, 0),
+            normal: f3(0, 0, 1),
+            color: .one
+        ),
+        RayTracingVertex(
+            v1: RectShapeInfo.VertexPoint.B,
+            v2: RectShapeInfo.VertexPoint.D,
+            v3: RectShapeInfo.VertexPoint.C,
+            uv1: f2(0, 1),
+            uv2: f2(1, 0),
+            uv3: f2(1, 1),
+            normal: f3(0, 0, 1),
+            color: .one
+        ),
+    ]
 }
 
 public class BoxRayTarget: RayTargetObject {

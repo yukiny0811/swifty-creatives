@@ -12,12 +12,23 @@ class Sample11: RayTraceSketch {
     override func updateUniform(uniform: inout RayTracingUniform) {
         uniform.cameraTransform = .createRotation(angle: 0.3, axis: f3(0, 1, 0)) * .createTransform(0, 1, -10)
     }
-    override func draw() {
-        color(1, 0, 0, 1)
-        box(0, 0, 0, 1, 1, 1)
+    override func createStaticScene() {
         
-        color(0, 0, 1, 1)
-        box(-3, 0, 0, 0.4, 0.4, 0.4)
+        for _ in 0..<100 {
+            color(
+                Float.random(in: 0...1),
+                Float.random(in: 0...1),
+                Float.random(in: 0...1),
+                1
+            )
+            rect(
+                Float.random(in: -7...7),
+                Float.random(in: -7...7),
+                Float.random(in: -7...7),
+                Float.random(in: 0.1...1),
+                Float.random(in: 0.1...1)
+            )
+        }
     }
 }
 

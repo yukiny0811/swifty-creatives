@@ -60,6 +60,20 @@ inline float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 random
     return normalize(float3(newX, newY, newZ) * fuzz + normalize(normal));
 }
 
+inline float3 barycentricCoordinates(float3 A, float3 B, float3 C, float3 P) {
+    float3 v0 = B - A, v1 = C - A, v2 = P - A;
+    float d00 = dot(v0, v0);
+    float d01 = dot(v0, v1);
+    float d11 = dot(v1, v1);
+    float d20 = dot(v2, v0);
+    float d21 = dot(v2, v1);
+    float denom = d00 * d11 - d01 * d01;
+    float v = (d11 * d20 - d01 * d21) / denom;
+    float w = (d00 * d21 - d01 * d20) / denom;
+    float u = 1.0 - v - w;
+    return float3(u, v, w);
+}
+
 kernel void rayTrace_initRay(
     texture2d<float, access::write> rayOriginTex [[ texture(1) ]],
     texture2d<float, access::write> rayDirectionTex [[ texture(2) ]],
@@ -82,7 +96,7 @@ kernel void rayTrace_initRay(
     
     rayOriginTex.write(float4(ray.origin, 0), gid);
     rayDirectionTex.write(float4(ray.direction, 0), gid);
-    rayColorTex.write(float4(0, 0, 0, 0), gid);
+    rayColorTex.write(float4(1, 1, 1, 1), gid);
     rayParameterTex.write(float4(0, 0, 0, 0), gid);
 }
 
@@ -104,7 +118,7 @@ kernel void rayTrace_calculateRay(
     ray.bounceCount = int(rayParameterTex.read(gid).r);
     ray.finished = int(rayParameterTex.read(gid).g);
     
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 2; i++) {
         
         if (ray.finished == 1) { break; }
         
@@ -125,11 +139,11 @@ kernel void rayTrace_calculateRay(
         
         if (foundIntersection == false) {
             ray.finished = 1;
-            ray.color = (ray.color * float(ray.bounceCount) + float4(0.1, 0.1, 0.1, 1)) / float(ray.bounceCount + 1);
+            ray.color = ray.color * float4(0.1, 0.1, 0.1, 1);
             break;
         }
         
-        ray.color = (ray.color * float(ray.bounceCount) + shortestTriangle.color) / float(ray.bounceCount + 1);
+        ray.color = shortestTriangle.color * ray.color;
         ray.origin = ray.origin + ray.direction * shortestT;
         float3 thisNormal = dot(ray.direction, shortestTriangle.normal) < 0 ? shortestTriangle.normal : -shortestTriangle.normal;
         ray.direction = lambertDiffusion(thisNormal, float2(gid.x, gid.y), randomFactor);
@@ -160,3 +174,61 @@ kernel void rayTrace_drawRay(
     float4 color = sampleSumTex.read(gid);
     drawableTex.write(color / sampleCount, gid);
 }
+
+//kernel void photonMap_calculateRay(
+//    texture2d<float, access::read_write> photonPosTex [[ texture(1) ]],
+//    texture2d<float, access::read_write> photonColorTex [[ texture(1) ]],
+//    const device RayTracingVertex* vertices [[ buffer(0) ]],
+//    const device RayTracingUniform& uniform [[ buffer(1) ]],
+//    const device int& vertexCount [[ buffer(2) ]],
+//    const device float3& randomFactor [[ buffer(3) ]],
+//    ushort2 gid [[ thread_position_in_grid ]]
+//) {
+//    
+//    Ray ray;
+//    float4 globalLightPos = uniform.cameraTransform * float4(0, 0, 0, 1);
+//    ray.origin = globalLightPos.xyz;
+//    ray.direction = lambertDiffusion(float3(0, 0, 0), float2(gid.x, gid.y), randomFactor);
+//    ray.color = float4(1, 1, 1, 1);
+//    ray.bounceCount = 0;
+//    ray.finished = 0;
+//    
+//    for (int i = 0; i < 10; i++) {
+//        
+//        if (ray.finished == 1) { break; }
+//        
+//        bool foundIntersection = false;
+//        float shortestT = 10000.0;
+//        RayTracingVertex shortestTriangle;
+//        
+//        for (int c = 0; c < vertexCount; c++) {
+//            float t = checkIntersection(ray, vertices[c]);
+//            if (t > 0.00001) {
+//                foundIntersection = true;
+//                if (t < shortestT) {
+//                    shortestT = t;
+//                    shortestTriangle = vertices[c];
+//                }
+//            }
+//        }
+//        
+//        if (foundIntersection == false) {
+//            ray.finished = 1;
+//            ray.color = ray.color * float4(1, 1, 1, 1);
+//            break;
+//        }
+//        
+//        float3 hitPos = ray.origin + ray.direction * shortestT;
+//        float4 newColor = shortestTriangle.color * ray.color;
+//        
+//        float3 iPos = barycentricCoordinates(shortestTriangle.v1, shortestTriangle.v2, shortestTriangle.v3, hitPos);
+//        float2 uv = shortestTriangle.uv1 * iPos.x + shortestTriangle.uv2 * iPos.y + shortestTriangle.uv3 * iPos.z;
+//        float2 textureGid = uv * 64;
+//        photonTextures[shortestTriangle.textureIndex].write(newColor, textureGid);
+//        
+//        ray.color = newColor;
+//        ray.origin = hitPos;
+//        float3 thisNormal = dot(ray.direction, shortestTriangle.normal) < 0 ? shortestTriangle.normal : -shortestTriangle.normal;
+//        ray.direction = lambertDiffusion(thisNormal, float2(gid.x, gid.y), randomFactor);
+//    }
+//}
