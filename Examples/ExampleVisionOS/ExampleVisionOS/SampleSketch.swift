@@ -7,25 +7,39 @@
 
 import SwiftyCreatives
 
+@SketchObject
+class MyBox {
+    var pos: f3
+    var col: f4
+    var scale: f3
+    init(pos: f3, col: f4, scale: f3) {
+        self.pos = pos
+        self.col = col
+        self.scale = scale
+    }
+    func draw() {
+        color(col)
+        box(pos, scale)
+    }
+}
+
 final class SampleSketch: Sketch {
-    
-    let count = 5
-    
+    var objects: [MyBox] = []
+    override init() {
+        super.init()
+        for _ in 0..<100 {
+            let box = MyBox(
+                pos: f3.randomPoint(-1...1),
+                col: f4.randomPoint(0...1),
+                scale: f3.randomPoint(0.05...0.1)
+            )
+            objects.append(box)
+        }
+    }
     override func draw(encoder: SCEncoder) {
-        setFog(color: f4.one, density: 0.02)
-        for z in -count...count {
-            for y in -count...count {
-                for x in -count...count {
-                    if x == 0 && y == 0 && z == 0 {
-                        continue
-                    }
-                    let r = Float(x + count) / Float(count * 2)
-                    let g = Float(y + count) / Float(count * 2)
-                    let b = Float(z + count) / Float(count * 2)
-                    color(r, g, b, 0.1)
-                    box(Float(x) * 1, Float(y) * 1, Float(z) * 1, 0.1, 0.1, 0.1)
-                }
-            }
+        translate(0, 0, -3)
+        for o in objects {
+            o.draw(encoder: encoder, customMatrix: getCustomMatrix())
         }
     }
 }
