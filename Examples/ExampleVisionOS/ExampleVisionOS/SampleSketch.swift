@@ -37,7 +37,7 @@ final class SampleSketch: Sketch {
         }
     }
     override func draw(encoder: SCEncoder) {
-        translate(0, 0, -3)
+        translate(0, 0, -2.2)
         for o in objects {
             o.draw(encoder: encoder, customMatrix: getCustomMatrix())
         }
