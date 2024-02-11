@@ -28,7 +28,7 @@ public extension RendererBase {
                 }
             case .alphaBlend:
                 if ShaderCore.device.supportsFamily(.apple4) {
-                    return NormalBlendRendererVision(sketch: sketch, layerRenderer: layerRenderer)
+                    return TransparentRendererVision(sketch: sketch, layerRenderer: layerRenderer)
                 } else {
                     return NormalBlendRendererVision(sketch: sketch, layerRenderer: layerRenderer)
                 }
