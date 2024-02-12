@@ -40,4 +40,10 @@ struct RayTraceTriangle {
     vector_float2 uvs[3];
 };
 
+struct PointLight {
+    simd_float3 pos;
+    simd_float3 color;
+    float intensity;
+}
+
 #endif

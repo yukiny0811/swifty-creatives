@@ -26,37 +26,27 @@ inline float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) 
     return normalize(float3(newX, newY, newZ) + normalize(normal));
 }
 
-//inline float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
-//    float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
-//    float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
-//    float phi = asin((2.0 * p) - 1.0);
-//
-//    float newX = cos(phi) * cos(theta);
-//    float newY = cos(phi) * sin(theta);
-//    float newZ = sin(phi);
-//    
-//    return normalize(float3(newX, newY, newZ) * fuzz + normalize(normal));
-//}
-//
-//inline float3 barycentricCoordinates(float3 A, float3 B, float3 C, float3 P) {
-//    float3 v0 = B - A, v1 = C - A, v2 = P - A;
-//    float d00 = dot(v0, v0);
-//    float d01 = dot(v0, v1);
-//    float d11 = dot(v1, v1);
-//    float d20 = dot(v2, v0);
-//    float d21 = dot(v2, v1);
-//    float denom = d00 * d11 - d01 * d01;
-//    float v = (d11 * d20 - d01 * d21) / denom;
-//    float w = (d00 * d21 - d01 * d20) / denom;
-//    float u = 1.0 - v - w;
-//    return float3(u, v, w);
-//}
+inline float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
+    float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
+    float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
+    float phi = asin((2.0 * p) - 1.0);
+
+    float newX = cos(phi) * cos(theta);
+    float newY = cos(phi) * sin(theta);
+    float newZ = sin(phi);
+    
+    return normalize(float3(newX, newY, newZ) * fuzz + normalize(normal));
+}
 
 kernel void rayTrace(
     texture2d<half, access::write> drawableTex [[ texture(0) ]],
     const device RayTracingUniform& uniform [[ buffer(1) ]],
     primitive_acceleration_structure accelerationStructure [[ buffer(2) ]],
     const device float3& randomFactor [[ buffer(3) ]],
+    const device int& bounceCount [[ buffer(4) ]],
+    const device int& sampleCount [[ buffer(5) ]],
+    const device PointLight* pointLights [[ buffer(6) ]],
+    const device int* pointLightCount [[ buffer(7) ]],
     ushort2 gid [[ thread_position_in_grid ]]
 ) {
     float width = drawableTex.get_width();
@@ -66,21 +56,45 @@ kernel void rayTrace(
     float4 globalCameraPos = uniform.cameraTransform * float4(0, 0, 0, 1);
     float4 globalCameraDirection = uniform.cameraTransform * float4(normalizedX, -normalizedY, 1, 1);
     
+    intersector<triangle_data> intersector;
+    
     ray r;
     r.origin = globalCameraPos.xyz;
     r.direction = normalize(globalCameraDirection.xyz - r.origin);
     r.max_distance = INFINITY;
     
-    intersector<triangle_data> intersector;
-    intersection_result<triangle_data> intersection;
-    intersection = intersector.intersect(r, accelerationStructure);
+    float4 finalColor = float4(0, 0, 0, 0);
     
-    float dist = intersection.distance;
-    float2 coords = intersection.triangle_barycentric_coord;
-    RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
-    
-    float4 finalColor = triangle.colors[0];
-    drawableTex.write(half4(finalColor), gid);
+    for (int s = 0; s < sampleCount; s++) {
+        
+        float4 thisSampleColor = float4(0, 0, 0, 0);
+        int bouncedCount = 0;
+        
+        for (int b = 0; b < bounceCount; b++) {
+
+            intersection_result<triangle_data> intersection;
+            intersection = intersector.intersect(r, accelerationStructure);
+            
+            if (intersection.type == intersection_type::none) {
+                break;
+            }
+            
+            float dist = intersection.distance;
+            float2 coords = intersection.triangle_barycentric_coord;
+            RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
+            
+            float3 thisNormal = dot(r.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
+            r.origin = r.origin + r.direction * dist;
+            r.direction = lambertDiffusion(thisNormal, float2(gid.x, gid.y), randomFactor);
+            
+            thisSampleColor += triangle.colors[0];
+            bouncedCount += 1;
+        }
+        if (bouncedCount > 0) {
+            finalColor += thisSampleColor / float(bouncedCount);
+        }
+    }
+    drawableTex.write(half4(finalColor / float(sampleCount)), gid);
 }
 
 //kernel void rayTrace(

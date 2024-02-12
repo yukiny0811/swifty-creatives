@@ -12,17 +12,32 @@ import MetalKit
 open class RayTraceSketch {
     
     public var objects: [RayTargetObject] = []
+    public var pointLights: [PointLight] = []
     private var currentColor: f4 = .one
+    
+    public let rayTraceConfig: RayTraceConfig = .init()
     
     public init() {}
     
     func clearObjects() {
         objects.removeAll()
+        pointLights.removeAll()
+        currentColor = .one
     }
     
     open func updateUniform(uniform: inout RayTracingUniform) {}
     
     open func draw() {}
+    
+    public func addPointLight(pos: f3, color: f3, intensity: Float) {
+        self.pointLights.append(
+            PointLight(
+                pos: pos,
+                color: color,
+                intensity: intensity
+            )
+        )
+    }
     
     public func color(_ r: Float, _ g: Float, _ b: Float, _ a: Float) {
         self.currentColor = f4(r, g, b, a)
