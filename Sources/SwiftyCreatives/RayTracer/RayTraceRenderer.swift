@@ -13,33 +13,9 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
     
     var drawProcess: RayTraceSketch
     var uniform: RayTracingUniform
-    var sampleCount: Int32 = 1
     
-    var rayOriginTex = EMMetalTexture.create(width: 1, height: 1, pixelFormat: .rgba32Float, label: "rayOriginTex")
-    var rayDirectionTex = EMMetalTexture.create(width: 1, height:1, pixelFormat: .rgba32Float, label: "rayDirectionTex")
-    var rayColorTex = EMMetalTexture.create(width: 1, height: 1, pixelFormat: .rgba32Float, label: "rayColorTex")
-    var rayParameterTex = EMMetalTexture.create(width: 1, height: 1, pixelFormat: .rgba32Float, label: "rayParameterTex")
-    var sampleSumTex = EMMetalTexture.create(width: 1, height: 1, pixelFormat: .rgba32Float, label: "sampleSumTex")
-    
-    var staticObjectBuffer: MTLBuffer
-    
-    let initRay: MTLComputePipelineState = {
-        let function = ShaderCore.library.makeFunction(name: "rayTrace_initRay")!
-        let state = try! ShaderCore.device.makeComputePipelineState(function: function)
-        return state
-    }()
-    let calculateRay: MTLComputePipelineState = {
-        let function = ShaderCore.library.makeFunction(name: "rayTrace_calculateRay")!
-        let state = try! ShaderCore.device.makeComputePipelineState(function: function)
-        return state
-    }()
-    let addSample: MTLComputePipelineState = {
-        let function = ShaderCore.library.makeFunction(name: "rayTrace_addSample")!
-        let state = try! ShaderCore.device.makeComputePipelineState(function: function)
-        return state
-    }()
-    let drawRay: MTLComputePipelineState = {
-        let function = ShaderCore.library.makeFunction(name: "rayTrace_drawRay")!
+    let rayTrace: MTLComputePipelineState = {
+        let function = ShaderCore.library.makeFunction(name: "rayTrace")!
         let state = try! ShaderCore.device.makeComputePipelineState(function: function)
         return state
     }()
@@ -47,11 +23,6 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
     public init(drawProcess: RayTraceSketch) {
         self.drawProcess = drawProcess
         self.uniform = .init(cameraTransform: .createIdentity())
-        drawProcess.isCreatingStaticScene = true
-        drawProcess.createStaticScene()
-        let staticVertices = drawProcess.staticObjects.flatMap { $0.vertices }
-        staticObjectBuffer = ShaderCore.device.makeBuffer(bytes: staticVertices, length: MemoryLayout<RayTracingVertex>.stride * staticVertices.count)!
-        drawProcess.isCreatingStaticScene = false
     }
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     public func draw(in view: MTKView) {
@@ -62,64 +33,83 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
         guard let drawable = view.currentDrawable else {
             return
         }
-        if rayOriginTex.width != drawable.texture.width || rayOriginTex.height != drawable.texture.height {
-            recreateTexture(drawable: drawable)
-        }
         drawProcess.clearObjects()
         drawProcess.updateUniform(uniform: &uniform)
         drawProcess.draw()
         
         let dispatch = EMMetalDispatch()
+        
+        var accelerationStructure: MTLAccelerationStructure! = nil
+        
+        dispatch.custom { [self] commandBuffer in
+            
+            // create descriptor
+            let accelerationStructureDescriptor = MTLPrimitiveAccelerationStructureDescriptor()
+            accelerationStructureDescriptor.geometryDescriptors = []
+            for geometry in drawProcess.objects {
+                let vertices = geometry.vertices.flatMap {
+                    [ $0.v1, $0.v2, $0.v3 ]
+                }
+                let triangles = geometry.vertices.map {
+                    RayTraceTriangle(
+                        positions: ($0.v1, $0.v2, $0.v3),
+                        normal: $0.normal,
+                        colors: ($0.color, $0.color, $0.color),
+                        uvs: ($0.uv1, $0.uv2, $0.uv3)
+                    )
+                }
+                let geometryDescriptor = MTLAccelerationStructureTriangleGeometryDescriptor()
+                geometryDescriptor.vertexBuffer = ShaderCore.device.makeBuffer(
+                    bytes: vertices,
+                    length: f3.memorySize * vertices.count
+                )
+                geometryDescriptor.vertexFormat = .float3
+                geometryDescriptor.vertexBufferOffset = 0
+                geometryDescriptor.vertexStride = f3.memorySize
+                geometryDescriptor.triangleCount = vertices.count / 3
+                geometryDescriptor.primitiveDataBuffer = ShaderCore.device.makeBuffer(
+                    bytes: triangles,
+                    length: MemoryLayout<RayTraceTriangle>.stride * triangles.count
+                )
+                geometryDescriptor.primitiveDataStride = MemoryLayout<RayTraceTriangle>.stride
+                geometryDescriptor.primitiveDataElementSize = MemoryLayout<RayTraceTriangle>.stride
+                accelerationStructureDescriptor.geometryDescriptors?.append(geometryDescriptor)
+            }
+            
+            // allocate storage
+            let sizes = ShaderCore.device.accelerationStructureSizes(descriptor: accelerationStructureDescriptor)
+            accelerationStructure = ShaderCore.device.makeAccelerationStructure(size: sizes.accelerationStructureSize)!
+            let scratchBuffer = ShaderCore.device.makeBuffer(length: sizes.buildScratchBufferSize, options: .storageModePrivate)!
+            
+            let accelerationEncoder = commandBuffer.makeAccelerationStructureCommandEncoder()!
+            accelerationEncoder.build(
+                accelerationStructure: accelerationStructure,
+                descriptor: accelerationStructureDescriptor,
+                scratchBuffer: scratchBuffer,
+                scratchBufferOffset: 0
+            )
+            accelerationEncoder.endEncoding()
+        }
+        
         dispatch.render(renderTargetTexture: drawable.texture, needsClear: true) { _ in }
-        dispatch.render(renderTargetTexture: sampleSumTex, needsClear: true) { _ in }
         
         dispatch.compute { [weak self] encoder in
             guard let self else { return }
             
             encoder.setTexture(drawable.texture, index: 0)
-            encoder.setTexture(rayOriginTex, index: 1)
-            encoder.setTexture(rayDirectionTex, index: 2)
-            encoder.setTexture(rayColorTex, index: 3)
-            encoder.setTexture(rayParameterTex, index: 4)
-            encoder.setTexture(sampleSumTex, index: 5)
             
-            encoder.setBuffer(staticObjectBuffer, offset: 0, index: 0)
             encoder.setBytes([uniform], length: MemoryLayout<RayTracingUniform>.stride, index: 1)
-            encoder.setBytes([uniform], length: MemoryLayout<RayTracingUniform>.stride, index: 1)
-            encoder.setBytes([staticObjectBuffer.length / MemoryLayout<RayTracingVertex>.stride], length: Int32.memorySize, index: 2)
+            encoder.setAccelerationStructure(accelerationStructure, bufferIndex: 2)
             encoder.setBytes([f3(Float.random(in: 0...10000),Float.random(in: 0...10000),Float.random(in: 0...10000))],length: f3.memorySize, index: 3)
-            encoder.setBytes([sampleCount], length: Int32.memorySize, index: 4)
             
-            for _ in 0..<sampleCount {
-                encoder.setComputePipelineState(initRay)
-                var dispatchSize = Self.createDispatchSize(for: initRay, width: rayOriginTex.width, height: rayOriginTex.height)
-                encoder.dispatchThreadgroups(dispatchSize.threadGroupCount, threadsPerThreadgroup: dispatchSize.threadsPerThreadGroup)
-            
-                encoder.setComputePipelineState(calculateRay)
-                dispatchSize = Self.createDispatchSize(for: calculateRay, width: rayOriginTex.width, height: rayOriginTex.height)
-                encoder.dispatchThreadgroups(dispatchSize.threadGroupCount, threadsPerThreadgroup: dispatchSize.threadsPerThreadGroup)
-            
-                encoder.setComputePipelineState(addSample)
-                dispatchSize = Self.createDispatchSize(for: addSample, width: rayOriginTex.width, height: rayOriginTex.height)
-                encoder.dispatchThreadgroups(dispatchSize.threadGroupCount, threadsPerThreadgroup: dispatchSize.threadsPerThreadGroup)
-            
-                encoder.setComputePipelineState(drawRay)
-                dispatchSize = Self.createDispatchSize(for: drawRay, width: rayOriginTex.width, height: rayOriginTex.height)
-                encoder.dispatchThreadgroups(dispatchSize.threadGroupCount, threadsPerThreadgroup: dispatchSize.threadsPerThreadGroup)
-            }
+            encoder.setComputePipelineState(rayTrace)
+            let dispatchSize = Self.createDispatchSize(for: rayTrace, width: drawable.texture.width, height: drawable.texture.height)
+            encoder.dispatchThreadgroups(dispatchSize.threadGroupCount, threadsPerThreadgroup: dispatchSize.threadsPerThreadGroup)
         }
         
         //commit
         dispatch.present(drawable: drawable)
         dispatch.commit()
-    }
-    
-    func recreateTexture(drawable: CAMetalDrawable) {
-        rayOriginTex = EMMetalTexture.create(width: drawable.texture.width, height: drawable.texture.height, pixelFormat: .rgba32Float, label: "rayOriginTex")
-        rayDirectionTex = EMMetalTexture.create(width: drawable.texture.width, height: drawable.texture.height, pixelFormat: .rgba32Float, label: "rayDirectionTex")
-        rayColorTex = EMMetalTexture.create(width: drawable.texture.width, height: drawable.texture.height, pixelFormat: .rgba32Float, label: "rayColorTex")
-        rayParameterTex = EMMetalTexture.create(width: drawable.texture.width, height: drawable.texture.height, pixelFormat: .rgba32Float, label: "rayParameterTex")
-        sampleSumTex = EMMetalTexture.create(width: drawable.texture.width, height: drawable.texture.height, pixelFormat: .rgba32Float, label: "sampleSumTex")
     }
     
     public static func createDispatchSize(

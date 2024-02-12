@@ -11,19 +11,14 @@ import MetalKit
 
 open class RayTraceSketch {
     
-    public var staticObjects: [RayTargetObject] = []
     public var objects: [RayTargetObject] = []
     private var currentColor: f4 = .one
-    
-    var isCreatingStaticScene = true
     
     public init() {}
     
     func clearObjects() {
         objects.removeAll()
     }
-    
-    open func createStaticScene() {}
     
     open func updateUniform(uniform: inout RayTracingUniform) {}
     
@@ -47,15 +42,11 @@ open class RayTraceSketch {
                 color: currentColor
             )
         }
-        if isCreatingStaticScene {
-            staticObjects.append(boxObj)
-        } else {
-            objects.append(boxObj)
-        }
+        objects.append(boxObj)
     }
     
     public func rect(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float) {
-        let obj = BoxRayTarget()
+        let obj = RectRayTarget()
         obj.vertices = obj.vertices.map {
             RayTracingVertex(
                 v1: f3(x + $0.v1.x * scaleX, y + $0.v1.y * scaleY, z + $0.v1.z * 0),
@@ -68,11 +59,7 @@ open class RayTraceSketch {
                 color: currentColor
             )
         }
-        if isCreatingStaticScene {
-            staticObjects.append(obj)
-        } else {
-            objects.append(obj)
-        }
+        objects.append(obj)
     }
 }
 

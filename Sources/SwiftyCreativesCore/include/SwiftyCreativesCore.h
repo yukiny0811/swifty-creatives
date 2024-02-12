@@ -33,4 +33,11 @@ typedef struct {
     int finished; // 1 if true
 } Ray;
 
+struct RayTraceTriangle {
+    vector_float3 positions[3];
+    simd_float3 normal;
+    vector_float4 colors[3];
+    vector_float2 uvs[3];
+};
+
 #endif

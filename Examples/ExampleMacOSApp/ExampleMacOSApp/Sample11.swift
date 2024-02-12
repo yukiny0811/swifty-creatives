@@ -9,26 +9,30 @@ import SwiftyCreatives
 import SwiftUI
 
 class Sample11: RayTraceSketch {
+    var rotation: Float = 0
     override func updateUniform(uniform: inout RayTracingUniform) {
-        uniform.cameraTransform = .createRotation(angle: 0.3, axis: f3(0, 1, 0)) * .createTransform(0, 1, -10)
+        rotation += 0.003
+        uniform.cameraTransform = .createRotation(angle: rotation, axis: f3(0, 1, 0)) * .createTransform(0, 1, -20)
     }
-    override func createStaticScene() {
+    override func draw() {
         
-        for _ in 0..<100 {
+        for _ in 0..<1000 {
             color(
                 Float.random(in: 0...1),
                 Float.random(in: 0...1),
                 Float.random(in: 0...1),
                 1
             )
-            rect(
+            box(
                 Float.random(in: -7...7),
                 Float.random(in: -7...7),
                 Float.random(in: -7...7),
-                Float.random(in: 0.1...1),
-                Float.random(in: 0.1...1)
+                Float.random(in: 0.1...0.2),
+                Float.random(in: 0.1...0.2),
+                Float.random(in: 0.1...0.2)
             )
         }
+        print("finish static")
     }
 }
 
