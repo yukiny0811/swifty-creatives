@@ -38,10 +38,9 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
         drawProcess.updateUniform(uniform: &uniform)
         drawProcess.draw()
         
-        let dispatch = EMMetalDispatch()
-        
         var accelerationStructure: MTLAccelerationStructure! = nil
         
+        let dispatch = EMMetalDispatch()
         dispatch.custom { [self] commandBuffer in
             
             // create descriptor

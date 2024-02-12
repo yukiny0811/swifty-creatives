@@ -9,13 +9,13 @@ using namespace raytracing;
 constant float PI = 3.14159265;
 constant float INV_PI = 1.0 / PI;
 
-inline float rand(int x, int y, int z) {
+float rand(int x, int y, int z) {
     int seed = x + y * 57 + z * 241;
     seed = (seed<< 13) ^ seed;
     return (( 1.0 - ( (seed * (seed * seed * 15731 + 789221) + 1376312589) & 2147483647) / 1073741824.0f) + 1.0f) / 2.0f;
 }
 
-inline float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) {
+float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) {
     float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
     float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
     float phi = asin((2.0 * p) - 1.0);
@@ -27,7 +27,7 @@ inline float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) 
     return normalize(float3(newX, newY, newZ) + normalize(normal));
 }
 
-inline float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
+float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
     float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
     float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
     float phi = asin((2.0 * p) - 1.0);
@@ -87,45 +87,46 @@ float3 backTraceRay(
     }
     if (traceDepth >= bounceCount) {
         return toColor;
-    } else {
-        float3 thisRandomFactor = float3(randomFactor.x * float(traceDepth + 1) * 10, randomFactor.y * float(s + 1) * 10, randomFactor.z * float(s + 1) * float(traceDepth + 1) * 10);
-        float3 fromDirection = lambertDiffusion(normal, float2(gid.x, gid.y), thisRandomFactor);
-        
-        intersection_result<triangle_data> intersection;
-        ray fromray;
-        fromray.origin = currentPosition;
-        fromray.direction = fromDirection;
-        fromray.origin = fromray.origin + fromray.direction * 0.001;
-        fromray.max_distance = INFINITY;
-        intersection = intersector.intersect(fromray, accelerationStructure);
-        
-        if (intersection.type == intersection_type::none) {
-            return toColor;
-        }
-        RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
-        float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
-        return toColor + thisColor * backTraceRay(
-                            fromray.origin + fromray.direction * intersection.distance,
-                            -fromDirection,
-                            triangle.colors[0].xyz,
-                            lights,
-                            lightCount,
-                            thisNormal,
-                            accelerationStructure,
-                            traceDepth + 1,
-                            bounceCount,
-                            randomFactor,
-                            gid,
-                            s
-                            );
     }
+    
+    float3 thisRandomFactor = float3(randomFactor.x * float(traceDepth + 1) * 10, randomFactor.y * float(s + 1) * 10, randomFactor.z * float(s + 1) * float(traceDepth + 1) * 10);
+    float3 fromDirection = lambertDiffusion(normal, float2(gid.x, gid.y), thisRandomFactor);
+    
+    intersection_result<triangle_data> intersection;
+    ray fromray;
+    fromray.origin = currentPosition;
+    fromray.direction = fromDirection;
+    fromray.origin = fromray.origin + fromray.direction * 0.001;
+    fromray.max_distance = INFINITY;
+    intersection = intersector.intersect(fromray, accelerationStructure);
+    
+    if (intersection.type == intersection_type::none) {
+        return toColor;
+    }
+    RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
+    float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
+    float3 calculated = backTraceRay(
+                                    fromray.origin + fromray.direction * intersection.distance,
+                                    -fromDirection,
+                                    triangle.colors[0].xyz,
+                                    lights,
+                                    lightCount,
+                                    thisNormal,
+                                    accelerationStructure,
+                                    traceDepth + 1,
+                                    bounceCount,
+                                    randomFactor,
+                                    gid,
+                                    s
+                                    );
+    return toColor + thisColor * calculated;
 }
 
 
 kernel void rayTrace(
     texture2d<half, access::write> drawableTex [[ texture(0) ]],
     const device RayTracingUniform& uniform [[ buffer(1) ]],
-    primitive_acceleration_structure accelerationStructure [[ buffer(2) ]],
+    const primitive_acceleration_structure accelerationStructure [[ buffer(2) ]],
     const device float3& randomFactor [[ buffer(3) ]],
     const device int& bounceCount [[ buffer(4) ]],
     const device int& sampleCount [[ buffer(5) ]],
@@ -171,7 +172,7 @@ kernel void rayTrace(
                                          bounceCount,
                                          randomFactor,
                                          float2(gid.x, gid.y),
-                                         float(s)
+                                         float(s+1)
                                          );
                                          
         finalColor += float4(backTraced, 1);

@@ -38,8 +38,8 @@ class Sample11: RayTraceSketch {
     }()
     
     override func updateUniform(uniform: inout RayTracingUniform) {
-        rayTraceConfig.sampleCount = 8
-        rayTraceConfig.bounceCount = 2
+        rayTraceConfig.sampleCount = 3
+        rayTraceConfig.bounceCount = 3
         rotation += 0.02
         uniform.cameraTransform = .createRotation(angle: rotation, axis: f3(0, 1, 0)) * .createRotation(angle: 0.7, axis: f3(1, 0, 0)) * .createTransform(0, 0, -18)
     }
