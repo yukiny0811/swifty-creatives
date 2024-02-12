@@ -61,7 +61,6 @@ float3 backTraceRay(
                            const device PointLight* lights,
                            const int lightCount,
                            const float3 normal,
-                           const intersector<triangle_data> intersector,
                            const primitive_acceleration_structure accelerationStructure,
                            const int traceDepth, // first should be 0
                            const int bounceCount,
@@ -69,7 +68,7 @@ float3 backTraceRay(
                            const float2 gid,
                            const float s // sample count for random
 ) {
-    
+    intersector<triangle_data> intersector;
     float3 toColor = float3(0, 0, 0);
     for (int pl = 0; pl < lightCount; pl++) {
         ray lightRay;
@@ -96,6 +95,7 @@ float3 backTraceRay(
         ray fromray;
         fromray.origin = currentPosition;
         fromray.direction = fromDirection;
+        fromray.origin = fromray.origin + fromray.direction * 0.001;
         fromray.max_distance = INFINITY;
         intersection = intersector.intersect(fromray, accelerationStructure);
         
@@ -111,7 +111,6 @@ float3 backTraceRay(
                             lights,
                             lightCount,
                             thisNormal,
-                            intersector,
                             accelerationStructure,
                             traceDepth + 1,
                             bounceCount,
@@ -167,7 +166,6 @@ kernel void rayTrace(
                                          pointLights,
                                          pointLightCount,
                                          thisNormal,
-                                         intersector,
                                          accelerationStructure,
                                          1,
                                          bounceCount,
