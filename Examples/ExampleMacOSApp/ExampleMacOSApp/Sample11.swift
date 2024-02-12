@@ -30,7 +30,7 @@ class Sample11: RayTraceSketch {
                         Float.random(in: 0...1),
                         1
                     ),
-                    scale: f3.randomPoint(0.7...1)
+                    scale: f3.randomPoint(0.7...1.0)
                 )
             )
         }
@@ -38,8 +38,10 @@ class Sample11: RayTraceSketch {
     }()
     
     override func updateUniform(uniform: inout RayTracingUniform) {
+        rayTraceConfig.sampleCount = 8
+        rayTraceConfig.bounceCount = 5
         rotation += 0.02
-        uniform.cameraTransform = .createRotation(angle: rotation, axis: f3(0, 1, 0)) * .createRotation(angle: 0.7, axis: f3(1, 0, 0)) * .createTransform(0, 1, -20)
+        uniform.cameraTransform = .createRotation(angle: rotation, axis: f3(0, 1, 0)) * .createRotation(angle: 0.7, axis: f3(1, 0, 0)) * .createTransform(0, 0, -22)
     }
     
     override func draw() {

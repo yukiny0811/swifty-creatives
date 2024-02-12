@@ -27,12 +27,13 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     public func draw(in view: MTKView) {
         view.drawableSize = CGSize(
-            width: view.frame.size.width * 3,
-            height: view.frame.size.height * 3
+            width: view.frame.size.width * 2,
+            height: view.frame.size.height * 2
         )
         guard let drawable = view.currentDrawable else {
             return
         }
+        print(drawable.texture.width, drawable.texture.height)
         drawProcess.clearObjects()
         drawProcess.updateUniform(uniform: &uniform)
         drawProcess.draw()
