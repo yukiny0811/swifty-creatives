@@ -10,7 +10,7 @@
 
 #include <simd/simd.h>
 
-typedef struct {
+struct RayTracingVertex {
     simd_float3 v1;
     simd_float3 v2;
     simd_float3 v3;
@@ -19,7 +19,9 @@ typedef struct {
     simd_float2 uv3;
     simd_float3 normal;
     simd_float4 color;
-} RayTracingVertex;
+    float roughness;
+    float metallic;
+};
 
 typedef struct {
     simd_float4x4 cameraTransform;
@@ -38,6 +40,8 @@ struct RayTraceTriangle {
     simd_float3 normal;
     vector_float4 colors[3];
     vector_float2 uvs[3];
+    float roughness;
+    float metallic;
 };
 
 struct PointLight {

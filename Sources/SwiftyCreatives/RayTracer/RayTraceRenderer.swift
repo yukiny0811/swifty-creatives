@@ -16,7 +16,10 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
     
     let rayTrace: MTLComputePipelineState = {
         let function = ShaderCore.library.makeFunction(name: "rayTrace")!
-        let state = try! ShaderCore.device.makeComputePipelineState(function: function)
+        let computeDesc = MTLComputePipelineDescriptor()
+        computeDesc.computeFunction = function
+        computeDesc.maxCallStackDepth = 100
+        let state = try! ShaderCore.device.makeComputePipelineState(descriptor: computeDesc, options: [], reflection: nil)
         return state
     }()
     
@@ -33,7 +36,6 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
         guard let drawable = view.currentDrawable else {
             return
         }
-        print(drawable.texture.width, drawable.texture.height)
         drawProcess.clearObjects()
         drawProcess.updateUniform(uniform: &uniform)
         drawProcess.draw()
@@ -55,7 +57,9 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
                         positions: ($0.v1, $0.v2, $0.v3),
                         normal: $0.normal,
                         colors: ($0.color, $0.color, $0.color),
-                        uvs: ($0.uv1, $0.uv2, $0.uv3)
+                        uvs: ($0.uv1, $0.uv2, $0.uv3),
+                        roughness: $0.roughness,
+                        metallic: $0.metallic
                     )
                 }
                 let geometryDescriptor = MTLAccelerationStructureTriangleGeometryDescriptor()

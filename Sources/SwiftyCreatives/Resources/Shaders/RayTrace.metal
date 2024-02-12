@@ -9,13 +9,13 @@ using namespace raytracing;
 constant float PI = 3.14159265;
 constant float INV_PI = 1.0 / PI;
 
-float rand(int x, int y, int z) {
+inline float rand(int x, int y, int z) {
     int seed = x + y * 57 + z * 241;
     seed = (seed<< 13) ^ seed;
     return (( 1.0 - ( (seed * (seed * seed * 15731 + 789221) + 1376312589) & 2147483647) / 1073741824.0f) + 1.0f) / 2.0f;
 }
 
-float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) {
+inline float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) {
     float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
     float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
     float phi = asin((2.0 * p) - 1.0);
@@ -27,7 +27,7 @@ float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) {
     return normalize(float3(newX, newY, newZ) + normalize(normal));
 }
 
-float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
+inline float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
     float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
     float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
     float phi = asin((2.0 * p) - 1.0);
@@ -39,7 +39,7 @@ float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor,
     return normalize(float3(newX, newY, newZ) * fuzz + normalize(normal));
 }
 
-float3 diffuseOrenNayarBrdf(float3 reflectance, float3 normal, float3 viewDir, float3 lightDir, float roughness) { //viewDisが次の光線のdir reflectanceがalbedo
+inline float3 diffuseOrenNayarBrdf(float3 reflectance, float3 normal, float3 viewDir, float3 lightDir, float roughness) { //viewDisが次の光線のdir reflectanceがalbedo
     float dotNV = saturate(dot(normal, viewDir));
     float dotNL = saturate(dot(normal, lightDir));
     float roughness2 = roughness * roughness;
@@ -74,15 +74,21 @@ float3 backTraceRay(
         ray lightRay;
         lightRay.origin = currentPosition;
         lightRay.direction = normalize(lights[pl].pos - currentPosition);
+        
+        if (dot(lightRay.direction, normal) < 0) {
+            continue;
+        }
+        
         lightRay.origin = lightRay.origin + lightRay.direction * 0.001;
         lightRay.max_distance = INFINITY;
         
         intersection_result<triangle_data> lightIntersection;
         lightIntersection = intersector.intersect(lightRay, accelerationStructure);
+        RayTraceTriangle thisTriangle = *(const device RayTraceTriangle*)lightIntersection.primitive_data;
         
         if (lightIntersection.type == intersection_type::none) {
             float3 thisLightColor = lights[pl].color * lights[pl].intensity;
-            toColor += thisLightColor * diffuseOrenNayarBrdf(thisColor, normal, toDirection, lightRay.direction, 0.5);
+            toColor += thisLightColor * diffuseOrenNayarBrdf(thisColor, normal, toDirection, lightRay.direction, thisTriangle.roughness);
         }
     }
     if (traceDepth >= bounceCount) {
