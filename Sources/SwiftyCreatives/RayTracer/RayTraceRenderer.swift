@@ -117,7 +117,12 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
         
         //commit
         dispatch.present(drawable: drawable)
-        dispatch.commit()
+        dispatch.custom { cb in
+            cb.commit()
+            view.isPaused = true
+            cb.waitUntilCompleted()
+            view.isPaused = false
+        }
     }
     
     public static func createDispatchSize(

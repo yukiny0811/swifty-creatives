@@ -27,6 +27,21 @@ inline float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) 
     return normalize(float3(newX, newY, newZ) + normalize(normal));
 }
 
+inline float3 lambertDiffusionWithRandomReflection(float3 normal, float2 fgid, float3 randomFactor, float3 reflected, float metallic) {
+    if (rand(fgid.y * randomFactor.x, randomFactor.z, fgid.x * randomFactor.y) < metallic) {
+        return normalize(reflected);
+    }
+    float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
+    float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
+    float phi = asin((2.0 * p) - 1.0);
+
+    float newX = cos(phi) * cos(theta);
+    float newY = cos(phi) * sin(theta);
+    float newZ = sin(phi);
+    
+    return normalize(float3(newX, newY, newZ) + normalize(normal));
+}
+
 inline float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
     float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
     float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
@@ -53,9 +68,42 @@ inline float3 diffuseOrenNayarBrdf(float3 reflectance, float3 normal, float3 vie
     return reflectance * INV_PI * (a + b * cosPhi * s * t);
 }
 
+float3 fresnelSchlick(float3 f0, float cosine) {
+    return f0 + (1.0 - f0) * pow(1.0 - cosine, 5.0);
+}
+
+float normalDistributionGgx(float3 normal, float3 halfDir, float roughness) {
+    float roughness2 = roughness * roughness;
+    float dotNH = saturate(dot(normal, halfDir));
+    float a = (1.0 - (1.0 - roughness2) * dotNH * dotNH);
+    return roughness2 * INV_PI / (a * a);
+}
+
+float maskingShadowingSmithJoint(float3 normal, float3 viewDir, float3 lightDir, float roughness) {
+    float roughness2 = roughness * roughness;
+    float dotNV = saturate(dot(normal, viewDir));
+    float dotNL = saturate(dot(normal, lightDir));
+    float lv = 0.5 * (-1.0 + sqrt(1.0 + roughness2 * (1.0 / (dotNV * dotNV) - 1.0)));
+    float ll = 0.5 * (-1.0 + sqrt(1.0 + roughness2 * (1.0 / (dotNL * dotNL) - 1.0)));
+    return 1.0 / (1.0 + lv + ll);
+}
+
+float3 specularCookTorranceBrdf(float3 reflectance, float3 normal, float3 viewDir, float3 lightDir, float roughness) {
+    float3 halfDir = normalize(viewDir + lightDir);
+    float dotNV = saturate(dot(normal, viewDir));
+    float dotNL = saturate(dot(normal, lightDir));
+    float dotVH = saturate(dot(viewDir, halfDir));
+    float d = normalDistributionGgx(normal, halfDir, roughness);
+    float g = maskingShadowingSmithJoint(normal, viewDir, lightDir, roughness);
+    float3 f = fresnelSchlick(reflectance, dotVH);
+    return d  * g * f / (4.0 * dotNV * dotNL);
+}
+
 // returns color
 float3 backTraceRay(
                            const float3 currentPosition,
+                           const float currentRoughness,
+                           const float currentMetallic,
                            const float3 toDirection,
                            const float3 thisColor,
                            const device PointLight* lights,
@@ -84,11 +132,15 @@ float3 backTraceRay(
         
         intersection_result<triangle_data> lightIntersection;
         lightIntersection = intersector.intersect(lightRay, accelerationStructure);
-        RayTraceTriangle thisTriangle = *(const device RayTraceTriangle*)lightIntersection.primitive_data;
         
         if (lightIntersection.type == intersection_type::none) {
             float3 thisLightColor = lights[pl].color * lights[pl].intensity;
-            toColor += thisLightColor * diffuseOrenNayarBrdf(thisColor, normal, toDirection, lightRay.direction, thisTriangle.roughness);
+            
+            float3 diffuseBRDF = diffuseOrenNayarBrdf(thisColor, normal, toDirection, lightRay.direction, currentRoughness);
+            float3 specularBRDF = specularCookTorranceBrdf(thisColor, normal, toDirection, lightRay.direction, currentRoughness);
+            float3 f = (1.0 - currentMetallic) * diffuseBRDF + currentMetallic * specularBRDF;
+            
+            toColor += thisLightColor * f;
         }
     }
     if (traceDepth >= bounceCount) {
@@ -96,7 +148,7 @@ float3 backTraceRay(
     }
     
     float3 thisRandomFactor = float3(randomFactor.x * float(traceDepth + 1) * 10, randomFactor.y * float(s + 1) * 10, randomFactor.z * float(s + 1) * float(traceDepth + 1) * 10);
-    float3 fromDirection = lambertDiffusion(normal, float2(gid.x, gid.y), thisRandomFactor);
+    float3 fromDirection = lambertDiffusionWithRandomReflection(normal, float2(gid.x, gid.y), thisRandomFactor, reflect(-toDirection, normal), currentMetallic);
     
     intersection_result<triangle_data> intersection;
     ray fromray;
@@ -113,6 +165,8 @@ float3 backTraceRay(
     float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
     float3 calculated = backTraceRay(
                                     fromray.origin + fromray.direction * intersection.distance,
+                                    triangle.roughness,
+                                    triangle.metallic,
                                     -fromDirection,
                                     triangle.colors[0].xyz,
                                     lights,
@@ -168,6 +222,8 @@ kernel void rayTrace(
         
         float3 backTraced = backTraceRay(
                                          fromray.origin + fromray.direction * intersection.distance,
+                                         triangle.roughness,
+                                         triangle.metallic,
                                          -fromray.direction,
                                          triangle.colors[0].xyz,
                                          pointLights,
