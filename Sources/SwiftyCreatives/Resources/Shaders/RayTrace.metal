@@ -46,7 +46,7 @@ kernel void rayTrace(
     const device int& bounceCount [[ buffer(4) ]],
     const device int& sampleCount [[ buffer(5) ]],
     const device PointLight* pointLights [[ buffer(6) ]],
-    const device int* pointLightCount [[ buffer(7) ]],
+    const device int& pointLightCount [[ buffer(7) ]],
     ushort2 gid [[ thread_position_in_grid ]]
 ) {
     float width = drawableTex.get_width();
@@ -72,23 +72,45 @@ kernel void rayTrace(
         
         for (int b = 0; b < bounceCount; b++) {
 
+            // main ray
             intersection_result<triangle_data> intersection;
             intersection = intersector.intersect(r, accelerationStructure);
             
             if (intersection.type == intersection_type::none) {
                 break;
             }
+            bouncedCount += 1;
             
             float dist = intersection.distance;
             float2 coords = intersection.triangle_barycentric_coord;
             RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
             
+            // shadow ray
+            float4 shadowColor = float4(0, 0, 0, 0);
+            for (int pl = 0; pl < pointLightCount; pl++) {
+                ray shadowRay;
+                shadowRay.origin = r.origin + r.direction * dist;
+                shadowRay.direction = normalize(pointLights[pl].pos - shadowRay.origin);
+                shadowRay.max_distance = INFINITY;
+                intersection_result<triangle_data> shadowIntersection;
+                shadowIntersection = intersector.intersect(shadowRay, accelerationStructure);
+                
+                if (shadowIntersection.type == intersection_type::none) {
+                    float3 thisShadowColor = pointLights[pl].color * pointLights[pl].intensity;
+                    shadowColor += float4(thisShadowColor, 1);
+                }
+            }
+            if (pointLightCount > 0) {
+                shadowColor /= pointLightCount;
+            }
+            
+            // new ray
             float3 thisNormal = dot(r.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
             r.origin = r.origin + r.direction * dist;
             r.direction = lambertDiffusion(thisNormal, float2(gid.x, gid.y), randomFactor);
             
-            thisSampleColor += triangle.colors[0];
-            bouncedCount += 1;
+            //composition
+            thisSampleColor += triangle.colors[0] * (1.0 / float(bouncedCount)) * shadowColor;
         }
         if (bouncedCount > 0) {
             finalColor += thisSampleColor / float(bouncedCount);

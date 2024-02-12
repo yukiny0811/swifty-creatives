@@ -44,6 +44,6 @@ struct PointLight {
     simd_float3 pos;
     simd_float3 color;
     float intensity;
-}
+};
 
 #endif
