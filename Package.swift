@@ -42,6 +42,16 @@ let SwiftyCreativesMacro = Target.macro(
     path: "Sources/SwiftyCreativesMacro"
 )
 
+let SwiftyCreativesCore = Target.target(
+    name: "SwiftyCreativesCore",
+    dependencies: [],
+    path: "Sources/SwiftyCreativesCore",
+    publicHeadersPath: "include",
+    cxxSettings: [
+        .headerSearchPath("include"),
+    ]
+)
+
 let SwiftyCreatives = Target.target(
     name: "SwiftyCreatives",
     dependencies: [
@@ -50,6 +60,7 @@ let SwiftyCreatives = Target.target(
         CorePackage.EasyMetalShader,
         SwiftyCreativesSound.asDependency,
         SwiftyCreativesMacro.asDependency,
+        SwiftyCreativesCore.asDependency,
     ],
     path: "Sources/SwiftyCreatives",
     resources: [
@@ -89,5 +100,6 @@ let package = Package(
         SwiftyCreativesMacro,
         SwiftyCreatives,
         SwiftyCreativesTests,
+        SwiftyCreativesCore,
     ]
 )

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		564064902B798EBB00391D0D /* Sample11.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640648F2B798EBB00391D0D /* Sample11.swift */; };
 		5643923129A14E2F0053C6E6 /* Sample7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5643923029A14E2F0053C6E6 /* Sample7.swift */; };
 		5643923329A187740053C6E6 /* Sample8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5643923229A187740053C6E6 /* Sample8.swift */; };
 		56694B05298AB8100022C24D /* Sample1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56694B04298AB8100022C24D /* Sample1.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5640648F2B798EBB00391D0D /* Sample11.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample11.swift; sourceTree = "<group>"; };
 		5643923029A14E2F0053C6E6 /* Sample7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample7.swift; sourceTree = "<group>"; };
 		5643923229A187740053C6E6 /* Sample8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample8.swift; sourceTree = "<group>"; };
 		56694B04298AB8100022C24D /* Sample1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample1.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				5643923229A187740053C6E6 /* Sample8.swift */,
 				566E503A2B6FB551002B98D6 /* Sample9.swift */,
 				566E503C2B6FC549002B98D6 /* Sample10.swift */,
+				5640648F2B798EBB00391D0D /* Sample11.swift */,
 				56C53FCA294A645200962DD6 /* Assets.xcassets */,
 				56C53FCF294A645200962DD6 /* ExampleMacOSApp.entitlements */,
 				56C53FCC294A645200962DD6 /* Preview Content */,
@@ -190,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				56C53FC7294A645100962DD6 /* ExampleMacOSApp.swift in Sources */,
+				564064902B798EBB00391D0D /* Sample11.swift in Sources */,
 				5643923329A187740053C6E6 /* Sample8.swift in Sources */,
 				569EBEAE2995583D0090F5AB /* Sample5.swift in Sources */,
 				566E503B2B6FB551002B98D6 /* Sample9.swift in Sources */,
@@ -325,12 +329,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ExampleMacOSApp/ExampleMacOSApp.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ExampleMacOSApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = XH2JMYC7KB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -353,12 +357,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ExampleMacOSApp/ExampleMacOSApp.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ExampleMacOSApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = XH2JMYC7KB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
