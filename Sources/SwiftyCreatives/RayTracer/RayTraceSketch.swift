@@ -43,7 +43,7 @@ open class RayTraceSketch {
         self.currentColor = f4(r, g, b, a)
     }
     
-    public func box(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float, _ scaleZ: Float, roughness: Float, metallic: Float) {
+    public func box(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float, _ scaleZ: Float, roughness: Float, metallic: Float, isMetal: Bool) {
         let boxObj = BoxRayTarget()
         boxObj.vertices = boxObj.vertices.map {
             RayTracingVertex(
@@ -56,13 +56,14 @@ open class RayTraceSketch {
                 normal: $0.normal,
                 color: currentColor,
                 roughness: roughness,
-                metallic: metallic
+                metallic: metallic,
+                isMetal: isMetal ? 1 : 0
             )
         }
         objects.append(boxObj)
     }
     
-    public func rect(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float, roughness: Float, metallic: Float) {
+    public func rect(_ x: Float, _ y: Float, _ z: Float, _ scaleX: Float, _ scaleY: Float, roughness: Float, metallic: Float, isMetal: Bool) {
         let obj = RectRayTarget()
         obj.vertices = obj.vertices.map {
             RayTracingVertex(
@@ -75,7 +76,8 @@ open class RayTraceSketch {
                 normal: $0.normal,
                 color: currentColor,
                 roughness: roughness,
-                metallic: metallic
+                metallic: metallic,
+                isMetal: isMetal ? 1 : 0
             )
         }
         objects.append(obj)
@@ -98,7 +100,8 @@ public class RectRayTarget: RayTargetObject {
             normal: f3(0, 0, 1),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: RectShapeInfo.VertexPoint.B,
@@ -110,7 +113,8 @@ public class RectRayTarget: RayTargetObject {
             normal: f3(0, 0, 1),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
     ]
 }
@@ -127,7 +131,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, 0, 1),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.A,
@@ -139,7 +144,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, 0, 1),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.R,
@@ -151,7 +157,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, 0, -1),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.Q,
@@ -163,7 +170,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, 0, -1),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.Q,
@@ -175,7 +183,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(-1, 0, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.Q,
@@ -187,7 +196,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(-1, 0, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.D,
@@ -199,7 +209,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(1, 0, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.D,
@@ -211,7 +222,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(1, 0, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.Q,
@@ -223,7 +235,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, 1, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.Q,
@@ -235,7 +248,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, 1, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.B,
@@ -247,7 +261,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, -1, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
         RayTracingVertex(
             v1: BoxInfo.VertexPoint.B,
@@ -259,7 +274,8 @@ public class BoxRayTarget: RayTargetObject {
             normal: f3(0, -1, 0),
             color: .one,
             roughness: 0.0,
-            metallic: 0.0
+            metallic: 0.0,
+            isMetal: 0
         ),
     ]
 }

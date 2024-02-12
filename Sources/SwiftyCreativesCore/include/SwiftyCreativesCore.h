@@ -21,6 +21,7 @@ struct RayTracingVertex {
     simd_float4 color;
     float roughness;
     float metallic;
+    int isMetal;
 };
 
 typedef struct {
@@ -42,6 +43,7 @@ struct RayTraceTriangle {
     vector_float2 uvs[3];
     float roughness;
     float metallic;
+    int isMetal;
 };
 
 struct PointLight {

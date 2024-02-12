@@ -27,10 +27,7 @@ inline float3 lambertDiffusion(float3 normal, float2 fgid, float3 randomFactor) 
     return normalize(float3(newX, newY, newZ) + normalize(normal));
 }
 
-inline float3 lambertDiffusionWithRandomReflection(float3 normal, float2 fgid, float3 randomFactor, float3 reflected, float metallic) {
-    if (rand(fgid.y * randomFactor.x, randomFactor.z, fgid.x * randomFactor.y) < metallic) {
-        return normalize(reflected);
-    }
+inline float3 lambertDiffusionWithFuzz(float3 reflected, float2 fgid, float3 randomFactor, float fuzz) {
     float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
     float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
     float phi = asin((2.0 * p) - 1.0);
@@ -39,19 +36,7 @@ inline float3 lambertDiffusionWithRandomReflection(float3 normal, float2 fgid, f
     float newY = cos(phi) * sin(theta);
     float newZ = sin(phi);
     
-    return normalize(float3(newX, newY, newZ) + normalize(normal));
-}
-
-inline float3 lambertDiffusionWithFuzz(float3 normal, float2 fgid, float3 randomFactor, float fuzz) {
-    float theta = rand(fgid.x * randomFactor.x, fgid.y * randomFactor.y, randomFactor.z) * PI * 2 - PI;
-    float p = rand(fgid.x * randomFactor.y * 4, fgid.y * randomFactor.x * 3, randomFactor.z * 2);
-    float phi = asin((2.0 * p) - 1.0);
-
-    float newX = cos(phi) * cos(theta);
-    float newY = cos(phi) * sin(theta);
-    float newZ = sin(phi);
-    
-    return normalize(float3(newX, newY, newZ) * fuzz + normalize(normal));
+    return normalize(float3(newX, newY, newZ) * fuzz + normalize(reflected));
 }
 
 inline float3 diffuseOrenNayarBrdf(float3 reflectance, float3 normal, float3 viewDir, float3 lightDir, float roughness) { //viewDisが次の光線のdir reflectanceがalbedo
@@ -104,6 +89,7 @@ float3 backTraceRay(
                            const float3 currentPosition,
                            const float currentRoughness,
                            const float currentMetallic,
+                           const int isMetal,
                            const float3 toDirection,
                            const float3 thisColor,
                            const device PointLight* lights,
@@ -148,7 +134,12 @@ float3 backTraceRay(
     }
     
     float3 thisRandomFactor = float3(randomFactor.x * float(traceDepth + 1) * 10, randomFactor.y * float(s + 1) * 10, randomFactor.z * float(s + 1) * float(traceDepth + 1) * 10);
-    float3 fromDirection = lambertDiffusionWithRandomReflection(normal, float2(gid.x, gid.y), thisRandomFactor, reflect(-toDirection, normal), currentMetallic);
+    float3 fromDirection;
+    if (isMetal == 1) {
+        fromDirection = lambertDiffusionWithFuzz(reflect(-toDirection, normal), float2(gid.x, gid.y), thisRandomFactor, 1.0 - currentMetallic);
+    } else {
+        fromDirection = lambertDiffusion(normal, float2(gid.x, gid.y), thisRandomFactor);
+    }
     
     intersection_result<triangle_data> intersection;
     ray fromray;
@@ -167,6 +158,7 @@ float3 backTraceRay(
                                     fromray.origin + fromray.direction * intersection.distance,
                                     triangle.roughness,
                                     triangle.metallic,
+                                    triangle.isMetal,
                                     -fromDirection,
                                     triangle.colors[0].xyz,
                                     lights,
@@ -179,7 +171,7 @@ float3 backTraceRay(
                                     gid,
                                     s
                                     );
-    return toColor + thisColor * calculated;
+    return toColor * calculated;
 }
 
 
@@ -224,6 +216,7 @@ kernel void rayTrace(
                                          fromray.origin + fromray.direction * intersection.distance,
                                          triangle.roughness,
                                          triangle.metallic,
+                                         triangle.isMetal,
                                          -fromray.direction,
                                          triangle.colors[0].xyz,
                                          pointLights,

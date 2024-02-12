@@ -59,7 +59,8 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
                         colors: ($0.color, $0.color, $0.color),
                         uvs: ($0.uv1, $0.uv2, $0.uv3),
                         roughness: $0.roughness,
-                        metallic: $0.metallic
+                        metallic: $0.metallic,
+                        isMetal: $0.isMetal
                     )
                 }
                 let geometryDescriptor = MTLAccelerationStructureTriangleGeometryDescriptor()
