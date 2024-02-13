@@ -24,7 +24,11 @@ public class RayTraceMTKView: MTKView {
         self.depthStencilPixelFormat = .depth32Float_stencil8
         self.sampleCount = 1
         self.clearDepth = 1.0
+        #if os(macOS)
         self.layer?.isOpaque = false
+        #else
+        self.layer.isOpaque = false
+        #endif
     }
     
     @available(*, unavailable)

@@ -86,6 +86,7 @@ float3 specularCookTorranceBrdf(float3 reflectance, float3 normal, float3 viewDi
 
 // returns color
 float3 backTraceRay(
+                    const thread intersector<triangle_data>& intersector,
                            const float3 currentPosition,
                            const float currentRoughness,
                            const float currentMetallic,
@@ -95,14 +96,13 @@ float3 backTraceRay(
                            const device PointLight* lights,
                            const int lightCount,
                            const float3 normal,
-                           const primitive_acceleration_structure accelerationStructure,
+                           const thread primitive_acceleration_structure& accelerationStructure,
                            const int traceDepth, // first should be 0
                            const int bounceCount,
                            const float3 randomFactor,
                            const float2 gid,
                            const float s // sample count for random
 ) {
-    intersector<triangle_data> intersector;
     float3 toColor = float3(0, 0, 0);
     for (int pl = 0; pl < lightCount; pl++) {
         ray lightRay;
@@ -154,7 +154,8 @@ float3 backTraceRay(
     }
     RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
     float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
-    float3 calculated = backTraceRay(
+    thread float3 calculated = backTraceRay(
+                                     intersector,
                                     fromray.origin + fromray.direction * intersection.distance,
                                     triangle.roughness,
                                     triangle.metallic,
@@ -171,7 +172,8 @@ float3 backTraceRay(
                                     gid,
                                     s
                                     );
-    return toColor * calculated;
+//    return toColor * calculated;
+    return calculated = (1.0 - currentMetallic) * toColor + currentMetallic * toColor * calculated;
 }
 
 
@@ -212,7 +214,8 @@ kernel void rayTrace(
         RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
         float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
         
-        float3 backTraced = backTraceRay(
+        float3 calculated = backTraceRay(
+                                         intersector,
                                          fromray.origin + fromray.direction * intersection.distance,
                                          triangle.roughness,
                                          triangle.metallic,
@@ -230,7 +233,7 @@ kernel void rayTrace(
                                          float(s+1)
                                          );
                                          
-        finalColor += float4(backTraced, 1);
+        finalColor += float4(calculated, 1);
         
     }
     drawableTex.write(half4(finalColor / float(sampleCount)), gid);

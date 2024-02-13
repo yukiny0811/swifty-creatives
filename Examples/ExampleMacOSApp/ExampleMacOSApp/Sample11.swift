@@ -34,9 +34,9 @@ class Sample11: RayTraceSketch {
                         1
                     ),
                     scale: f3.randomPoint(1...2),
-                    roughness: 0.5,
-                    metallic: 1,
-                    isMetal: Bool.random()
+                    roughness: 0.3,
+                    metallic: 0.6,
+                    isMetal: true
                 )
             )
         }
@@ -44,14 +44,14 @@ class Sample11: RayTraceSketch {
     }()
     
     override func updateUniform(uniform: inout RayTracingUniform) {
-        rayTraceConfig.sampleCount = 30
-        rayTraceConfig.bounceCount = 2
+        rayTraceConfig.sampleCount = 40
+        rayTraceConfig.bounceCount = 3
         rotation += 0.02
-        uniform.cameraTransform = .createRotation(angle: rotation, axis: f3(0, 1, 0)) * .createRotation(angle: 0.9, axis: f3(1, 0, 0)) * .createTransform(0, 0, -22)
+        uniform.cameraTransform = .createRotation(angle: rotation, axis: f3(0, 1, 0)) * .createRotation(angle: 0.7, axis: f3(1, 0, 0)) * .createTransform(0, 0, -25)
     }
     
     override func draw() {
-        addPointLight(pos: f3(0, 30, 0), color: f3(1, 1, 1), intensity: 5)
+        addPointLight(pos: f3(30, 30, -10), color: f3(1, 1, 1), intensity: 5)
         for b in boxes {
             color(b.color.x, b.color.y, b.color.z, b.color.w)
             box(b.pos.x, b.pos.y, b.pos.z, b.scale.x, b.scale.y, b.scale.z, roughness: b.roughness, metallic: b.metallic, isMetal: b.isMetal)
