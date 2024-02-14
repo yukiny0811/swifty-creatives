@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2024/02/07.
 //
 
+#if !os(visionOS)
+
 import MetalKit
 import SwiftyCreatives
 import EasyMetalShader
@@ -151,3 +153,5 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
         return (threadGroupCount, threadsPerThreadgroup)
     }
 }
+
+#endif

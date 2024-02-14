@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2024/02/08.
 //
 
+#if !os(visionOS)
+
 import MetalKit
 import SwiftUI
 import SwiftyCreatives
@@ -37,3 +39,5 @@ public struct RayTraceSketchView: ViewRepresentable {
     public func updateUIView(_ uiView: UIViewType, context: Context) {}
     #endif
 }
+
+#endif

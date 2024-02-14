@@ -5,6 +5,8 @@
 //  Created by Yuki Kuwashima on 2024/02/08.
 //
 
+#if !os(visionOS)
+
 import MetalKit
 import SwiftyCreatives
 
@@ -37,3 +39,5 @@ public class RayTraceMTKView: MTKView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+#endif
