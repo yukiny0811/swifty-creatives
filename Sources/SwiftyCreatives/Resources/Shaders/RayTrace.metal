@@ -84,25 +84,19 @@ float3 specularCookTorranceBrdf(float3 reflectance, float3 normal, float3 viewDi
     return d  * g * f / (4.0 * dotNV * dotNL);
 }
 
-// returns color
-float3 backTraceRay(
-                    const thread intersector<triangle_data>& intersector,
-                           const float3 currentPosition,
-                           const float currentRoughness,
-                           const float currentMetallic,
-                           const int isMetal,
-                           const float3 toDirection,
-                           const float3 thisColor,
-                           const device PointLight* lights,
-                           const int lightCount,
-                           const float3 normal,
-                           const thread primitive_acceleration_structure& accelerationStructure,
-                           const int traceDepth, // first should be 0
-                           const int bounceCount,
-                           const float3 randomFactor,
-                           const float2 gid,
-                           const float s // sample count for random
-) {
+constant float rayOffsetFactor = 0.1;
+
+float3 calculateToColor(const int lightCount,
+                        const float3 currentPosition,
+                        const float3 normal,
+                        const thread intersector<triangle_data>& intersector,
+                        const thread primitive_acceleration_structure& accelerationStructure,
+                        const float3 toDirection,
+                        const float3 thisColor,
+                        const float currentRoughness,
+                        const float currentMetallic,
+                        const device PointLight* lights
+                        ) {
     float3 toColor = float3(0, 0, 0);
     for (int pl = 0; pl < lightCount; pl++) {
         ray lightRay;
@@ -113,7 +107,7 @@ float3 backTraceRay(
             continue;
         }
         
-        lightRay.origin = lightRay.origin + lightRay.direction * 0.001;
+        lightRay.origin = lightRay.origin + lightRay.direction * rayOffsetFactor;
         lightRay.max_distance = INFINITY;
         
         intersection_result<triangle_data> lightIntersection;
@@ -129,53 +123,130 @@ float3 backTraceRay(
             toColor += thisLightColor * f;
         }
     }
-    if (traceDepth >= bounceCount) {
-        return toColor;
-    }
-    
-    float3 thisRandomFactor = float3(randomFactor.x * float(traceDepth + 1) * 10, randomFactor.y * float(s + 1) * 10, randomFactor.z * float(s + 1) * float(traceDepth + 1) * 10);
+    return toColor;
+}
+
+ray createFromray(
+                  const float3 randomFactor,
+                  const float2 gid,
+                  const float s,
+                  const float3 currentPosition,
+                  const float3 toDirection,
+                  const int isMetal,
+                  const float3 normal,
+                  const float currentMetallic,
+                  const int traceDepth
+) {
+    float3 thisRandomFactor = float3(randomFactor.x * float(traceDepth + 1) * 10, randomFactor.y * float(s + 1) * 10, randomFactor.z * float(s + 1 * 3) * float(traceDepth + 1) * 10);
     float3 fromDirection;
     if (isMetal == 1) {
-        fromDirection = lambertDiffusionWithFuzz(reflect(-toDirection, normal), float2(gid.x, gid.y), thisRandomFactor, 1.0 - currentMetallic);
+        fromDirection = lambertDiffusionWithFuzz(reflect(-toDirection, normal), float2(gid.x * 21, gid.y * 39), thisRandomFactor, 1.0 - currentMetallic);
     } else {
-        fromDirection = lambertDiffusion(normal, float2(gid.x, gid.y), thisRandomFactor);
+        fromDirection = lambertDiffusion(normal, float2(gid.x * 81, gid.y * 48), thisRandomFactor);
     }
-    
+
     intersection_result<triangle_data> intersection;
     ray fromray;
     fromray.origin = currentPosition;
     fromray.direction = fromDirection;
-    fromray.origin = fromray.origin + fromray.direction * 0.001;
+    fromray.origin = fromray.origin + fromray.direction * rayOffsetFactor;
     fromray.max_distance = INFINITY;
-    intersection = intersector.intersect(fromray, accelerationStructure);
-    
-    if (intersection.type == intersection_type::none) {
-        return toColor;
-    }
-    RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
-    float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
-    thread float3 calculated = backTraceRay(
-                                     intersector,
-                                    fromray.origin + fromray.direction * intersection.distance,
-                                    triangle.roughness,
-                                    triangle.metallic,
-                                    triangle.isMetal,
-                                    -fromDirection,
-                                    triangle.colors[0].xyz,
-                                    lights,
-                                    lightCount,
-                                    thisNormal,
-                                    accelerationStructure,
-                                    traceDepth + 1,
-                                    bounceCount,
-                                    randomFactor,
-                                    gid,
-                                    s
-                                    );
-//    return toColor * calculated;
-    return calculated = (1.0 - currentMetallic) * toColor + currentMetallic * toColor * calculated;
+    return fromray;
 }
 
+inline float3 getFinalColor(
+                            float3 toColor,
+                            float3 thisColor,
+                            float3 calculated,
+                            float3 metallic
+) {
+    return (toColor + thisColor * calculated) / 2;
+}
+
+inline float3 getReturnColorOnRayEnd(
+                                     const float3 toColor,
+                                     const int isMetal
+) {
+    return isMetal ? float3(0.05, 0.05, 0.05) : toColor;
+}
+
+// MARK: - backtrace functions (compressed)
+
+float3 backTraceRay10 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }
+    return getFinalColor(toColor, thisColor, float3(0, 0, 0), currentMetallic);
+}
+
+float3 backTraceRay9 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay10(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay8 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay9(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay7 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay8(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay6 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay7(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay5 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay6(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay4 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay5(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay3 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay4(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay2 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay3(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+float3 backTraceRay1 (const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s) {float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;float3 calculated =
+    
+    backTraceRay2(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+// MARK: - backtrace function
+
+// returns color
+float3 backTraceRay(const thread intersector<triangle_data>& intersector,const float3 currentPosition,const float currentRoughness,const float currentMetallic,const int isMetal,const float3 toDirection,const float3 thisColor,const device PointLight* lights,const int lightCount,const float3 normal,const thread primitive_acceleration_structure& accelerationStructure,const int traceDepth,const int bounceCount,const float3 randomFactor,const float2 gid,const float s
+) {
+    float3 toColor = calculateToColor(lightCount,currentPosition,normal,intersector,accelerationStructure,toDirection,thisColor,currentRoughness,currentMetallic,lights);
+    if (traceDepth >= bounceCount) { return getReturnColorOnRayEnd(toColor, isMetal); }
+    ray fromray = createFromray(randomFactor, gid, s, currentPosition, toDirection, isMetal, normal, currentMetallic, traceDepth);
+    intersection_result<triangle_data> intersection = intersector.intersect(fromray, accelerationStructure);
+    if (intersection.type == intersection_type::none) { return getReturnColorOnRayEnd(toColor, isMetal); }
+    RayTraceTriangle triangle = *(const device RayTraceTriangle*)intersection.primitive_data;
+    float3 thisNormal = dot(fromray.direction, triangle.normal) < 0 ? triangle.normal : -triangle.normal;
+    float3 calculated = backTraceRay1(intersector,fromray.origin + fromray.direction * intersection.distance,triangle.roughness,triangle.metallic,triangle.isMetal,-fromray.direction,triangle.colors[0].xyz,lights,lightCount,thisNormal,accelerationStructure,traceDepth + 1,bounceCount,randomFactor,gid,s);
+    return getFinalColor(toColor, thisColor, calculated, currentMetallic);
+}
+
+// MARK: -
 
 kernel void rayTrace(
     texture2d<half, access::write> drawableTex [[ texture(0) ]],

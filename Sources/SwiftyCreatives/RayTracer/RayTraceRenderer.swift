@@ -14,6 +14,8 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
     var drawProcess: RayTraceSketch
     var uniform: RayTracingUniform
     
+    var isExecuting = false
+    
     let rayTrace: MTLComputePipelineState = {
         let function = ShaderCore.library.makeFunction(name: "rayTrace")!
         let computeDesc = MTLComputePipelineDescriptor()
@@ -29,6 +31,9 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
     }
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     public func draw(in view: MTKView) {
+        
+        if isExecuting { return }
+        
         view.drawableSize = CGSize(
             width: view.frame.size.width * 2,
             height: view.frame.size.height * 2
@@ -105,7 +110,7 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
             
             encoder.setBytes([uniform], length: MemoryLayout<RayTracingUniform>.stride, index: 1)
             encoder.setAccelerationStructure(accelerationStructure, bufferIndex: 2)
-            encoder.setBytes([f3(Float.random(in: 0...10000),Float.random(in: 0...10000),Float.random(in: 0...10000))],length: f3.memorySize, index: 3)
+            encoder.setBytes([f3(Float.random(in: 0...300),Float.random(in: 0...300),Float.random(in: 0...300))],length: f3.memorySize, index: 3)
             encoder.setBytes([drawProcess.rayTraceConfig.bounceCount], length: Int32.memorySize, index: 4)
             encoder.setBytes([drawProcess.rayTraceConfig.sampleCount], length: Int32.memorySize, index: 5)
             encoder.setBytes(drawProcess.pointLights, length: MemoryLayout<PointLight>.stride * drawProcess.pointLights.count, index: 6)
@@ -120,9 +125,9 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
         dispatch.present(drawable: drawable)
         dispatch.custom { cb in
             cb.commit()
-            view.isPaused = true
+            self.isExecuting = true
             cb.waitUntilCompleted()
-            view.isPaused = false
+            self.isExecuting = false
         }
     }
     
