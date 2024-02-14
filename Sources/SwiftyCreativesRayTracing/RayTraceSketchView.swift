@@ -7,6 +7,7 @@
 
 import MetalKit
 import SwiftUI
+import SwiftyCreatives
 #if os(macOS)
 import AppKit
 #else

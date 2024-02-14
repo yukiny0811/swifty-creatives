@@ -6,12 +6,13 @@
 //
 
 import MetalKit
+import SwiftyCreatives
 
 public class RayTraceMTKView: MTKView {
     var renderer: RayTraceRenderer
     init(renderer: RayTraceRenderer) {
         self.renderer = renderer
-        super.init(frame: .zero, device: ShaderCore.device)
+        super.init(frame: .zero, device: SwiftyCreatives.ShaderCore.device)
         self.frame = .zero
         self.delegate = renderer
         self.enableSetNeedsDisplay = false

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftyCreativesCore
 import MetalKit
+import SwiftyCreatives
 
 open class RayTraceSketch {
     

@@ -68,6 +68,17 @@ let SwiftyCreatives = Target.target(
     ]
 )
 
+let SwiftyCreativesRayTracing = Target.target(
+    name: "SwiftyCreativesRayTracing",
+    dependencies: [
+        SwiftyCreatives.asDependency
+    ],
+    path: "Sources/SwiftyCreativesRayTracing",
+    resources: [
+        .process("Resources")
+    ]
+)
+
 let SwiftyCreativesTests = Target.testTarget(
     name: "SwiftyCreativesTests",
     dependencies: [
@@ -91,7 +102,10 @@ let package = Package(
     products: [
         .library(
             name: "SwiftyCreatives",
-            targets: ["SwiftyCreatives"]
+            targets: [
+                SwiftyCreatives.name,
+                SwiftyCreativesRayTracing.name,
+            ]
         )
     ],
     dependencies: dependencies,
@@ -101,5 +115,6 @@ let package = Package(
         SwiftyCreatives,
         SwiftyCreativesTests,
         SwiftyCreativesCore,
+        SwiftyCreativesRayTracing,
     ]
 )

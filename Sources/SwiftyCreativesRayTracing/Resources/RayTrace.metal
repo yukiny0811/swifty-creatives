@@ -4,7 +4,7 @@
 using namespace metal;
 using namespace raytracing;
 
-#include "../../../SwiftyCreativesCore/include/SwiftyCreativesCore.h"
+#include "../../SwiftyCreativesCore/include/SwiftyCreativesCore.h"
 
 constant float PI = 3.14159265;
 constant float INV_PI = 1.0 / PI;

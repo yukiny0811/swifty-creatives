@@ -5,7 +5,7 @@
 //  Created by Yuki Kuwashima on 2024/02/08.
 //
 
-import SwiftyCreatives
+import SwiftyCreativesRayTracing
 import SwiftUI
 
 struct MyTraceBox {

@@ -6,7 +6,7 @@
 //
 
 import MetalKit
-import SwiftyCreativesCore
+import SwiftyCreatives
 import EasyMetalShader
 
 public class RayTraceRenderer: NSObject, MTKViewDelegate {
@@ -17,11 +17,11 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
     var isExecuting = false
     
     let rayTrace: MTLComputePipelineState = {
-        let function = ShaderCore.library.makeFunction(name: "rayTrace")!
+        let function = ShaderCore.rayTracingShaderLibrary.makeFunction(name: "rayTrace")!
         let computeDesc = MTLComputePipelineDescriptor()
         computeDesc.computeFunction = function
         computeDesc.maxCallStackDepth = 100
-        let state = try! ShaderCore.device.makeComputePipelineState(descriptor: computeDesc, options: [], reflection: nil)
+        let state = try! SwiftyCreatives.ShaderCore.device.makeComputePipelineState(descriptor: computeDesc, options: [], reflection: nil)
         return state
     }()
     
@@ -69,7 +69,7 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
                     )
                 }
                 let geometryDescriptor = MTLAccelerationStructureTriangleGeometryDescriptor()
-                geometryDescriptor.vertexBuffer = ShaderCore.device.makeBuffer(
+                geometryDescriptor.vertexBuffer = SwiftyCreatives.ShaderCore.device.makeBuffer(
                     bytes: vertices,
                     length: f3.memorySize * vertices.count
                 )
@@ -77,7 +77,7 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
                 geometryDescriptor.vertexBufferOffset = 0
                 geometryDescriptor.vertexStride = f3.memorySize
                 geometryDescriptor.triangleCount = vertices.count / 3
-                geometryDescriptor.primitiveDataBuffer = ShaderCore.device.makeBuffer(
+                geometryDescriptor.primitiveDataBuffer = SwiftyCreatives.ShaderCore.device.makeBuffer(
                     bytes: triangles,
                     length: MemoryLayout<RayTraceTriangle>.stride * triangles.count
                 )
@@ -87,9 +87,9 @@ public class RayTraceRenderer: NSObject, MTKViewDelegate {
             }
             
             // allocate storage
-            let sizes = ShaderCore.device.accelerationStructureSizes(descriptor: accelerationStructureDescriptor)
-            accelerationStructure = ShaderCore.device.makeAccelerationStructure(size: sizes.accelerationStructureSize)!
-            let scratchBuffer = ShaderCore.device.makeBuffer(length: sizes.buildScratchBufferSize, options: .storageModePrivate)!
+            let sizes = SwiftyCreatives.ShaderCore.device.accelerationStructureSizes(descriptor: accelerationStructureDescriptor)
+            accelerationStructure = SwiftyCreatives.ShaderCore.device.makeAccelerationStructure(size: sizes.accelerationStructureSize)!
+            let scratchBuffer = SwiftyCreatives.ShaderCore.device.makeBuffer(length: sizes.buildScratchBufferSize, options: .storageModePrivate)!
             
             let accelerationEncoder = commandBuffer.makeAccelerationStructureCommandEncoder()!
             accelerationEncoder.build(

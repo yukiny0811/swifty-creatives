@@ -9,14 +9,14 @@ import Metal
 
 public struct BoxInfo: PrimitiveInfo {
     public final class VertexPoint {
-        static let A: f3 = f3(x: -1.0, y:   1.0, z:   1.0)
-        static let B: f3 = f3(x: -1.0, y:  -1.0, z:   1.0)
-        static let C: f3 = f3(x:  1.0, y:  -1.0, z:   1.0)
-        static let D: f3 = f3(x:  1.0, y:   1.0, z:   1.0)
-        static let Q: f3 = f3(x: -1.0, y:   1.0, z:  -1.0)
-        static let R: f3 = f3(x:  1.0, y:   1.0, z:  -1.0)
-        static let S: f3 = f3(x: -1.0, y:  -1.0, z:  -1.0)
-        static let T: f3 = f3(x:  1.0, y:  -1.0, z:  -1.0)
+        public static let A: f3 = f3(x: -1.0, y:   1.0, z:   1.0)
+        public static let B: f3 = f3(x: -1.0, y:  -1.0, z:   1.0)
+        public static let C: f3 = f3(x:  1.0, y:  -1.0, z:   1.0)
+        public static let D: f3 = f3(x:  1.0, y:   1.0, z:   1.0)
+        public static let Q: f3 = f3(x: -1.0, y:   1.0, z:  -1.0)
+        public static let R: f3 = f3(x:  1.0, y:   1.0, z:  -1.0)
+        public static let S: f3 = f3(x: -1.0, y:  -1.0, z:  -1.0)
+        public static let T: f3 = f3(x:  1.0, y:  -1.0, z:  -1.0)
     }
     public static let primitiveType: MTLPrimitiveType = .triangle
     public static let vertices: [f3] = [
