@@ -70,5 +70,5 @@ struct Vertex {
     float3 position [[ attribute(VertexAttribute_Position) ]];
     float2 uv [[ attribute(VertexAttribute_UV) ]];
     float3 normal [[ attribute(VertexAttribute_Normal) ]];
-    float4 color [[ attribute(VertexAttribute_VertexColor) ]];
+    float4 color [[ attribute(VertexAttribute_Color) ]];
 };
