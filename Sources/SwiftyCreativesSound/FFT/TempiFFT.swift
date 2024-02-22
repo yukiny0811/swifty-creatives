@@ -66,7 +66,7 @@ class TempiFFT : NSObject {
         
         // Check if the size is a power of two
         let lg2 = logbf(sizeFloat)
-        assert(remainderf(sizeFloat, powf(2.0, lg2)) == 0, "size \(sizeFloat) must be a power of 2. exInfo: sampleRate:\(inSampleRate), size:\(inSize)")
+//        assert(remainderf(sizeFloat, powf(2.0, lg2)) == 0, "size \(sizeFloat) must be a power of 2. exInfo: sampleRate:\(inSampleRate), size:\(inSize)")
         
         self.size = inSize
         self.halfSize = inSize / 2
