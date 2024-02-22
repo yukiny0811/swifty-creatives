@@ -72,6 +72,8 @@ class TransparentRenderer: RendererBase {
     override func draw(in view: MTKView) {
         super.draw(in: view)
         
+        drawProcess.metalDrawableSize = f2(Float(view.currentDrawable!.texture.width), Float(view.currentDrawable!.texture.height))
+        
         let commandBuffer = ShaderCore.commandQueue.makeCommandBuffer()!
         
         // MARK: - render pass descriptor
