@@ -85,9 +85,9 @@ public class AddRenderer: RendererBase {
         
         commandBuffer!.present(view.currentDrawable!)
         commandBuffer!.commit()
-        commandBuffer!.waitUntilCompleted()
         
         #if canImport(XCTest)
+        commandBuffer!.waitUntilCompleted()
         self.drawProcess.afterCommit(texture: renderPassDescriptor.colorAttachments[0].texture)
         #endif
     }
