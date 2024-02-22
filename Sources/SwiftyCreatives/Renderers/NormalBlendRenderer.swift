@@ -47,9 +47,11 @@ public class NormalBlendRenderer: RendererBase {
 
     public override func draw(in view: MTKView) {
         super.draw(in: view)
-        guard let _ = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
+        guard let drawable = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
             return
         }
+        
+        drawProcess.metalDrawableSize = f2(Float(drawable.texture.width), Float(drawable.texture.height))
         
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
         
