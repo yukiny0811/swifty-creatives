@@ -39,6 +39,7 @@ public extension FunctionBase {
         }
         setUVs([f2.zero, f2.zero, f2.zero, f2.zero])
         setNormals([f3.zero, f3.zero, f3.zero, f3.zero])
+        setVertexColors([f4.zero, f4.zero, f4.zero, f4.zero])
         setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
         privateEncoder?.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
     }
