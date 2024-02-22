@@ -14,6 +14,13 @@ public extension FunctionBase {
         setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
         guard let textPosBuffer = text.posBuffer else { return }
         privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        let tempUVBuf = ShaderCore.device.makeBuffer(length: textPosBuffer.length * 2 / 3)
+        let tempNormalBuf = ShaderCore.device.makeBuffer(length: textPosBuffer.length)
+        let tempVertexColorBuf = ShaderCore.device.makeBuffer(length: textPosBuffer.length * 4 / 3)
+        privateEncoder?.setVertexBuffer(tempUVBuf, offset: 0, index: VertexBufferIndex.UV.rawValue)
+        privateEncoder?.setVertexBuffer(tempNormalBuf, offset: 0, index: VertexBufferIndex.Normal.rawValue)
+        privateEncoder?.setVertexBuffer(tempVertexColorBuf, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
+        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
         privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
     
