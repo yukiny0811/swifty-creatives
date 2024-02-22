@@ -65,7 +65,7 @@ public class FastAudioCapturer: NSObject, AudioCapturer {
         captureDevice: AVCaptureDevice? = AVCaptureDevice.default(for: .audio),
         fftMinFreq: Float = 100,
         fftMaxFreq: Float = 30000,
-        bandCalculationMethod: FFTBandCalculationMethod = .linear(256)
+        bandCalculationMethod: FFTBandCalculationMethod = .linear(512)
     ) {
         self.fftNoiseExtractionMethod = noiseExtractionMethod
         self.fftWindowType = fftWindowType
