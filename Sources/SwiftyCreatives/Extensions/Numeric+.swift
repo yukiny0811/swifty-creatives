@@ -6,7 +6,7 @@
 //
 
 extension Numeric {
-    static var memorySize: Int {
+    public static var memorySize: Int {
         return MemoryLayout<Self>.stride
     }
 }

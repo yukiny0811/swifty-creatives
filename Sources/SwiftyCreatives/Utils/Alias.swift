@@ -9,9 +9,9 @@
 import SwiftUI
 
 #if os(macOS)
-typealias ViewRepresentable = NSViewRepresentable
+public typealias ViewRepresentable = NSViewRepresentable
 #elseif os(iOS) || os(visionOS) || os(tvOS)
-typealias ViewRepresentable = UIViewRepresentable
+public typealias ViewRepresentable = UIViewRepresentable
 #endif
 
 // MARK: - simd
