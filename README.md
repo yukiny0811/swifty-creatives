@@ -187,6 +187,3 @@ open func touchesCancelled(camera: MainCamera, touchLocations: [f2]) {}
 - swifty-creatives library is created by Yuki Kuwashima
 - twitter: [@yukiny_sfc](https://twitter.com/yukiny_sfc)
 - [email](yukiny0811@gmail.com)
-
-## License
-swifty-creatives library is released under the MIT license. See [LICENSE](https://github.com/yukiny0811/swifty-creatives/blob/main/LICENSE) for details.
