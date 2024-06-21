@@ -15,6 +15,7 @@ public extension FunctionBase {
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)
         setNormals(RectShapeInfo.normals)
+        setVertexColors(RectShapeInfo.vertices.map { _ in f4.zero })
         privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
@@ -23,6 +24,7 @@ public extension FunctionBase {
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)
         setNormals(RectShapeInfo.normals)
+        setVertexColors(RectShapeInfo.vertices.map { _ in f4.zero })
         privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
@@ -31,6 +33,7 @@ public extension FunctionBase {
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)
         setNormals(RectShapeInfo.normals)
+        setVertexColors(RectShapeInfo.vertices.map { _ in f4.zero })
         privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
@@ -39,6 +42,7 @@ public extension FunctionBase {
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)
         setNormals(RectShapeInfo.normals)
+        setVertexColors(RectShapeInfo.vertices.map { _ in f4.zero })
         privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
@@ -47,6 +51,7 @@ public extension FunctionBase {
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)
         setNormals(RectShapeInfo.normals)
+        setVertexColors(RectShapeInfo.vertices.map { _ in f4.zero })
         privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
     
@@ -55,6 +60,7 @@ public extension FunctionBase {
         setVertices(RectShapeInfo.vertices)
         setUVs(RectShapeInfo.uvs)
         setNormals(RectShapeInfo.normals)
+        setVertexColors(RectShapeInfo.vertices.map { _ in f4.zero })
         privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
     }
 }
