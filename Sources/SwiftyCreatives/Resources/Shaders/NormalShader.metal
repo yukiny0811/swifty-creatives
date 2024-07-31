@@ -36,6 +36,7 @@ vertex RasterizerData normal_vertex (const Vertex vIn [[ stage_in ]],
     rd.surfaceNormal = (modelMatrix * float4(vIn.normal, 1.0)).xyz;
     rd.toCameraVector = uniformCameraPos.value - rd.worldPosition;
     rd.position = uniformProjectionMatrix.value * uniformViewMatrix.value * modelMatrix * float4(vIn.position, 1.0);
+    rd.size = 1;
     if (useVertexColor.value) {
         rd.color = vIn.color;
     } else {

@@ -76,4 +76,11 @@ public extension FunctionBase {
         setVertexColors(colors)
         privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: vertices.count)
     }
+
+    func mesh(vertices: MTLBuffer, colors: MTLBuffer, primitiveType: MTLPrimitiveType) {
+        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false, useVertexColor: true)
+        privateEncoder?.setVertexBuffer(vertices, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        privateEncoder?.setVertexBuffer(colors, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
+        privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: vertices.length / f3.memorySize)
+    }
 }

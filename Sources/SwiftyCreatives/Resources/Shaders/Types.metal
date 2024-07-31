@@ -64,6 +64,7 @@ struct RasterizerData {
     float3 worldPosition;
     float3 surfaceNormal;
     float3 toCameraVector;
+    float size [[ point_size ]];
 };
 
 struct Vertex {
