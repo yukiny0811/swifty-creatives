@@ -15,6 +15,7 @@ public extension FunctionBase {
         setVertices(CircleInfo.vertices)
         setUVs(CircleInfo.uvs)
         setNormals(CircleInfo.normals)
+        setVertexColors(CircleInfo.vertices.map { _ in f4.zero })
         privateEncoder?.drawIndexedPrimitives(type: CircleInfo.primitiveType, indexCount: 28 * 3, indexType: .uint16, indexBuffer:CircleInfo.indexBuffer, indexBufferOffset: 0)
     }
     
