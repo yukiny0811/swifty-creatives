@@ -19,7 +19,20 @@ public extension FunctionBase {
                 mesh(path, primitiveType: primitiveType)
             } else {
                 if let buffer = ShaderCore.device.makeBuffer(bytes: path, length: path.count * f3.memorySize) {
-                    mesh(buffer, count: path.count)
+                    mesh(buffer)
+                }
+            }
+        }
+    }
+
+    func svg(_ object: SVGObj, primitiveType: MTLPrimitiveType = .triangle) {
+        for (i, path) in object.triangulated.enumerated() {
+            color(object.colors[i])
+            if path.count * f3.memorySize < 4096 {
+                mesh(path, primitiveType: primitiveType)
+            } else {
+                if let buffer = ShaderCore.device.makeBuffer(bytes: path, length: path.count * f3.memorySize) {
+                    mesh(buffer)
                 }
             }
         }

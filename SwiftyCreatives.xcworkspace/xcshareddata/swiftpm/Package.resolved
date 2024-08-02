@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yukiny0811/FontVertexBuilder",
       "state" : {
-        "revision" : "a6e28db6b43457e3fe03215c9bf878721e484129",
-        "version" : "1.2.1"
+        "revision" : "c062760f8c063b9449a197daa6b7123333a4049c",
+        "version" : "1.2.2"
       }
     },
     {

@@ -14,35 +14,42 @@ struct ExampleMacOSApp: App {
         WindowGroup {
             NavigationSplitView {
                 List {
-                    NavigationLink("1 Blooming Boxes") {
-                        Sample1View()
+                    Section("Examples") {
+                        NavigationLink("1 Blooming Boxes") {
+                            Sample1View()
+                        }
+                        NavigationLink("2 Rectangle") {
+                            Sample2View()
+                        }
+                        NavigationLink("3 Box") {
+                            Sample3View()
+                        }
+                        NavigationLink("4 Colorful Boxes") {
+                            Sample4View()
+                        }
+                        NavigationLink("5 Tree (L-system)") {
+                            Sample5View()
+                        }
+                        NavigationLink("6 Fog") {
+                            Sample6View()
+                        }
+                        NavigationLink("7 Rect with hit test") {
+                            Sample7View()
+                        }
+                        NavigationLink("8 Box with hit test") {
+                            Sample8View()
+                        }
+                        NavigationLink("9 fov") {
+                            Sample9View()
+                        }
+                        NavigationLink("10 Text2D") {
+                            Sample10View()
+                        }
                     }
-                    NavigationLink("2 Rectangle") {
-                        Sample2View()
-                    }
-                    NavigationLink("3 Box") {
-                        Sample3View()
-                    }
-                    NavigationLink("4 Colorful Boxes") {
-                        Sample4View()
-                    }
-                    NavigationLink("5 Tree (L-system)") {
-                        Sample5View()
-                    }
-                    NavigationLink("6 Fog") {
-                        Sample6View()
-                    }
-                    NavigationLink("7 Rect with hit test") {
-                        Sample7View()
-                    }
-                    NavigationLink("8 Box with hit test") {
-                        Sample8View()
-                    }
-                    NavigationLink("9 fov") {
-                        Sample9View()
-                    }
-                    NavigationLink("10 Text2D") {
-                        Sample10View()
+                    Section("Features") {
+                        NavigationLink("Feature1") {
+                            Feature1.VIEW()
+                        }
                     }
                 }
             } detail: {
