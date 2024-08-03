@@ -12,8 +12,8 @@ public class SVGObj: SVG {
     public var triangulated: [[f3]] = []
     public var colors: [f4] = []
 
-    public override init?(url: URL) async {
-        await super.init(url: url)
+    public override init?(url: URL, maxDepth: Int = 8) async {
+        await super.init(url: url, maxDepth: maxDepth)
         triangulated = triangulatedPaths.map {
             $0.map {
                 f3($0.x, $0.y, 0)

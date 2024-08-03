@@ -13,7 +13,7 @@ extension Target {
 let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.15.2"),
     .package(url: "https://github.com/yukiny0811/SimpleSimdSwift", from: "1.0.1"),
-    .package(url: "https://github.com/yukiny0811/FontVertexBuilder", from: "1.2.2"),
+    .package(url: "https://github.com/yukiny0811/FontVertexBuilder", from: "1.2.3"),
     .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", from: "3.2.0"),
     .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
 ]
