@@ -1,5 +1,5 @@
 //
-//  Features.swift
+//  Feature1.swift
 //  ExampleMacOSApp
 //
 //  Created by Yuki Kuwashima on 2024/08/03.
