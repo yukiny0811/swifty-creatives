@@ -25,6 +25,8 @@
 		56C53FC7294A645100962DD6 /* ExampleMacOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C53FC6294A645100962DD6 /* ExampleMacOSApp.swift */; };
 		56C53FCB294A645200962DD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56C53FCA294A645200962DD6 /* Assets.xcassets */; };
 		56C53FCE294A645200962DD6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56C53FCD294A645200962DD6 /* Preview Assets.xcassets */; };
+		56D33F1E2C5DE9CF000D4E0D /* sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 56D33F1C2C5DE9CF000D4E0D /* sphere.mtl */; };
+		56D33F1F2C5DE9CF000D4E0D /* sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 56D33F1D2C5DE9CF000D4E0D /* sphere.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,8 @@
 		56C53FCA294A645200962DD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56C53FCD294A645200962DD6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		56C53FCF294A645200962DD6 /* ExampleMacOSApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ExampleMacOSApp.entitlements; sourceTree = "<group>"; };
+		56D33F1C2C5DE9CF000D4E0D /* sphere.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sphere.mtl; sourceTree = "<group>"; };
+		56D33F1D2C5DE9CF000D4E0D /* sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sphere.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,8 +86,8 @@
 		5668C0882C5DE37000082B71 /* FeatureExamples */ = {
 			isa = PBXGroup;
 			children = (
-				5668C08B2C5DE38D00082B71 /* Feature2.swift */,
 				5668C0892C5DE37F00082B71 /* Feature1.swift */,
+				5668C08B2C5DE38D00082B71 /* Feature2.swift */,
 				5668C08D2C5DE3B500082B71 /* Feature3.swift */,
 			);
 			path = FeatureExamples;
@@ -122,6 +126,8 @@
 				5668C0872C5DE36700082B71 /* Samples */,
 				56C53FC6294A645100962DD6 /* ExampleMacOSApp.swift */,
 				5668C0852C5D77CD00082B71 /* apple.svg */,
+				56D33F1C2C5DE9CF000D4E0D /* sphere.mtl */,
+				56D33F1D2C5DE9CF000D4E0D /* sphere.obj */,
 				56C53FCA294A645200962DD6 /* Assets.xcassets */,
 				56C53FCF294A645200962DD6 /* ExampleMacOSApp.entitlements */,
 				56C53FCC294A645200962DD6 /* Preview Content */,
@@ -205,9 +211,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56D33F1E2C5DE9CF000D4E0D /* sphere.mtl in Resources */,
 				56C53FCE294A645200962DD6 /* Preview Assets.xcassets in Resources */,
 				5668C0862C5D77CD00082B71 /* apple.svg in Resources */,
 				56C53FCB294A645200962DD6 /* Assets.xcassets in Resources */,
+				56D33F1F2C5DE9CF000D4E0D /* sphere.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

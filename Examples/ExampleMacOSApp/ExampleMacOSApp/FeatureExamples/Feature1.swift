@@ -19,6 +19,7 @@ final class Feature1: Sketch {
         case boldline
         case image
         case svg
+        case object3d
         mutating func toggleNext() {
             self = StandardGeometry(rawValue: self.rawValue + 1) ?? StandardGeometry(rawValue: 0)!
         }
@@ -29,6 +30,7 @@ final class Feature1: Sketch {
 
     let imgObj = Img().load(name: "apple", bundle: nil).adjustScale(with: .basedOnWidth).multiplyScale(1.2)
     var svgObj: SVGObj?
+    let modelObj = ModelObject().loadModel(name: "sphere", extensionName: "obj")
 
     override init() {
         super.init()
@@ -73,6 +75,8 @@ final class Feature1: Sketch {
             if let svgObj {
                 svg(svgObj)
             }
+        case .object3d:
+            model(modelObj)
         }
     }
 
