@@ -89,10 +89,11 @@ open class Text3D: PathText {
         verticalAlignment: PathText.VerticalAlignment = .center,
         kern: Float = 0.0,
         lineSpacing: Float = 0.0,
-        extrudingValue: Float = 0
+        extrudingValue: Float = 0,
+        maxDepth: Int = 1
     ) {
         self.extrudingValue = extrudingValue
-        super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
+        super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing, maxDepth: maxDepth)
         let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
         try? createAndSetBuffer(from: triangulatedPaths)
     }

@@ -1,0 +1,9 @@
+# Blender 3.4.1 MTL File: 'None'
+# www.blender.org
+
+newmtl _texture
+Kd 1.00 1.00 1.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+map_Kd apple

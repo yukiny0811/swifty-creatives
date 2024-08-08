@@ -15,8 +15,8 @@
 
 import Accelerate
 
-enum NoiseExtractor {
-    static func extractSignalFromNoise(
+public enum NoiseExtractor {
+    public static func extractSignalFromNoise(
         sampleCount: Int,
         noisySignal: [Float],
         threshold: Double,

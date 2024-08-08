@@ -58,9 +58,6 @@ public extension FunctionBase {
             }
             char(c, factory: factory) { [self] offset in
                 translate(-offset.x, 0, 0)
-                push {
-                    translate(0, -offset.y, 0)
-                }
             } applySizeAfter: { [self] size in
                 translate(-size.x, 0, 0)
                 spacerFactor = -size.x

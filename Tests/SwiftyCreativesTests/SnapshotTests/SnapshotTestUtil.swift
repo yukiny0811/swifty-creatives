@@ -14,7 +14,7 @@ import MetalKit
 enum SnapshotTestUtil {
     
     static let isRecording = false
-    
+
     static func testGPU() throws {
         try XCTSkipIf(MTLCreateSystemDefaultDevice() == nil)
     }
