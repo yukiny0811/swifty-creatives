@@ -12,7 +12,7 @@ public class SVGObj: SVG {
     public var triangulated: [[f3]] = []
     public var colors: [f4] = []
 
-    public override init?(url: URL, maxDepth: Int = 8) async {
+    public override init?(url: URL, maxDepth: Int = 1) async {
         await super.init(url: url, maxDepth: maxDepth)
         triangulated = triangulatedPaths.map {
             $0.map {

@@ -115,7 +115,8 @@ open class Text3DRaw: PathText {
         verticalAlignment: PathText.VerticalAlignment = .center,
         kern: Float = 0.0,
         lineSpacing: Float = 0.0,
-        extrudingValue: Float = 0
+        extrudingValue: Float = 0,
+        maxDepth: Int = 1
     ) {
         self.extrudingValue = extrudingValue
         super.init(
@@ -127,7 +128,8 @@ open class Text3DRaw: PathText {
             textAlignment: textAlignment,
             verticalAlignment: verticalAlignment,
             kern: kern,
-            lineSpacing: lineSpacing
+            lineSpacing: lineSpacing,
+            maxDepth: maxDepth
         )
         let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
         createAndSetBuffer(from: triangulatedPaths)

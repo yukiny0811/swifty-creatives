@@ -47,7 +47,7 @@ open class Text2D: PathText {
         verticalAlignment: PathText.VerticalAlignment = .center,
         kern: Float = 0.0,
         lineSpacing: Float = 0.0,
-        maxDepth: Int = 8
+        maxDepth: Int = 1
     ) {
         super.init(
             text: text,
