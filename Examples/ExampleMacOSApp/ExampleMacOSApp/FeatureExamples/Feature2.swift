@@ -16,6 +16,7 @@ final class Feature2: Sketch {
         case text3d
         case text3dRaw
         case textFactoryRaw
+        case text2dPath
         mutating func toggleNext() {
             self = Self(rawValue: self.rawValue + 1) ?? Self(rawValue: 0)!
         }
@@ -69,6 +70,13 @@ final class Feature2: Sketch {
                 mesh(vertices: vertices, colors: vertices.map { _ in f4.randomPoint(0.5...1) }, primitiveType: .triangle)
             }
             break
+        case .text2dPath:
+            let str = text2d.calculatedPaths.map { $0.glyphs }
+            if let letter = str.first {
+                for line in letter {
+                    mesh(line.map { f3($0.x, $0.y, 0) }, primitiveType: .lineStrip)
+                }
+            }
         }
     }
 
