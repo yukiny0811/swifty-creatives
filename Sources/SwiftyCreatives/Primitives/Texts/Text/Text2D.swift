@@ -46,7 +46,8 @@ open class Text2D: PathText {
         textAlignment: CTTextAlignment = .natural,
         verticalAlignment: PathText.VerticalAlignment = .center,
         kern: Float = 0.0,
-        lineSpacing: Float = 0.0
+        lineSpacing: Float = 0.0,
+        maxDepth: Int = 1
     ) {
         super.init(
             text: text,
@@ -57,7 +58,8 @@ open class Text2D: PathText {
             textAlignment: textAlignment,
             verticalAlignment: verticalAlignment,
             kern: kern,
-            lineSpacing: lineSpacing
+            lineSpacing: lineSpacing,
+            maxDepth: maxDepth
         )
         let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
         try? createAndSetBuffer(from: triangulatedPaths)

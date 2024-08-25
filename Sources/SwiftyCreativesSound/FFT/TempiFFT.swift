@@ -8,8 +8,8 @@
 
 import Accelerate
 
-class TempiFFT : NSObject {
-    
+public class TempiFFT : NSObject {
+
     /// The length of the sample buffer we'll be analyzing.
     private(set) var size: Int
     
@@ -17,7 +17,7 @@ class TempiFFT : NSObject {
     private(set) var sampleRate: Float
     
     /// The Nyquist frequency is ```sampleRate``` / 2
-    var nyquistFrequency: Float {
+    public var nyquistFrequency: Float {
         get {
             return sampleRate / 2.0
         }
@@ -33,7 +33,7 @@ class TempiFFT : NSObject {
     private(set) public var bandFrequencies: [Float]!
     
     /// The average bandwidth throughout the spectrum (nyquist / magnitudes.count)
-    var bandwidth: Float {
+    public var bandwidth: Float {
         get {
             return self.nyquistFrequency / Float(self.magnitudes.count)
         }
@@ -46,8 +46,8 @@ class TempiFFT : NSObject {
     private(set) var bandMinFreq, bandMaxFreq: Float!
     
     /// Supplying a window type (hanning or hamming) smooths the edges of the incoming waveform and reduces output errors from the FFT function (aka "spectral leakage" - ewww).
-    var windowType = TempiFFTWindowType.none
-    
+    public var windowType = TempiFFTWindowType.none
+
     private var halfSize:Int
     private var log2Size:Int
     private var window:[Float] = []
@@ -58,8 +58,8 @@ class TempiFFT : NSObject {
     /// Instantiate the FFT.
     /// - Parameter withSize: The length of the sample buffer we'll be analyzing. Must be a power of 2. The resulting ```magnitudes``` are of length ```inSize/2```.
     /// - Parameter sampleRate: Sampling rate of the provided audio data.
-    init(withSize inSize:Int, sampleRate inSampleRate: Float) {
-        
+    public init(withSize inSize:Int, sampleRate inSampleRate: Float) {
+
         let sizeFloat: Float = Float(inSize)
         
         self.sampleRate = inSampleRate
@@ -88,8 +88,8 @@ class TempiFFT : NSObject {
     
     /// Perform a forward FFT on the provided single-channel audio data. When complete, the instance can be queried for information about the analysis or the magnitudes can be accessed directly.
     /// - Parameter inMonoBuffer: Audio data in mono format
-    func fftForward(_ inMonoBuffer:[Float]) {
-        
+    public func fftForward(_ inMonoBuffer:[Float]) {
+
         var analysisBuffer = inMonoBuffer
         
         // If we have a window, apply it now. Since 99.9% of the time the window array will be exactly the same, an optimization would be to create it once and cache it, possibly caching it by size.
@@ -152,7 +152,7 @@ class TempiFFT : NSObject {
     }
     
     /// Applies logical banding on top of the spectrum data. The bands are spaced linearly throughout the spectrum.
-    func calculateLinearBands(minFrequency: Float, maxFrequency: Float, numberOfBands: Int) {
+    public func calculateLinearBands(minFrequency: Float, maxFrequency: Float, numberOfBands: Int) {
         assert(hasPerformedFFT, "*** Perform the FFT first.")
         
         let actualMaxFrequency = min(self.nyquistFrequency, maxFrequency)
@@ -184,7 +184,7 @@ class TempiFFT : NSObject {
     }
     
     /// Applies logical banding on top of the spectrum data. The bands are grouped by octave throughout the spectrum. Note that the actual min and max frequencies in the resulting band may be lower/higher than the minFrequency/maxFrequency because the band spectrum <i>includes</i> those frequencies but isn't necessarily bounded by them.
-    func calculateLogarithmicBands(minFrequency: Float, maxFrequency: Float, bandsPerOctave: Int) {
+    public func calculateLogarithmicBands(minFrequency: Float, maxFrequency: Float, bandsPerOctave: Int) {
         assert(hasPerformedFFT, "*** Perform the FFT first.")
         
         // The max can't be any higher than the nyquist
@@ -281,7 +281,7 @@ class TempiFFT : NSObject {
     /// Get the magnitude of the requested frequency in the spectrum.
     /// - Parameter inFrequency: The requested frequency. Must be less than the Nyquist frequency (```sampleRate/2```).
     /// - Returns: A magnitude.
-    func magnitudeAtFrequency(_ inFrequency: Float) -> Float {
+    public func magnitudeAtFrequency(_ inFrequency: Float) -> Float {
         assert(hasPerformedFFT, "*** Perform the FFT first.")
         let index = Int(floorf(inFrequency / self.bandwidth ))
         return self.magnitudes[index]
@@ -297,8 +297,8 @@ class TempiFFT : NSObject {
     }
     
     /// Calculate the average magnitude of the frequency band bounded by lowFreq and highFreq, inclusive
-    func averageMagnitude(lowFreq: Float, highFreq: Float) -> Float {
-        
+    public func averageMagnitude(lowFreq: Float, highFreq: Float) -> Float {
+
         var curFreq = lowFreq
         var total: Float = 0
         var count: Int = 0
@@ -312,8 +312,8 @@ class TempiFFT : NSObject {
     }
     
     /// Sum magnitudes across bands bounded by lowFreq and highFreq, inclusive
-    func sumMagnitudes(lowFreq: Float, highFreq: Float, useDB: Bool) -> Float {
-        
+    public func sumMagnitudes(lowFreq: Float, highFreq: Float, useDB: Bool) -> Float {
+
         var curFreq = lowFreq
         var total: Float = 0
         while curFreq <= highFreq {
@@ -329,7 +329,7 @@ class TempiFFT : NSObject {
     }
     
     /// A convenience function that converts a linear magnitude (like those stored in ```magnitudes```) to db (which is log 10).
-    class func toDB(_ inMagnitude: Float) -> Float {
+    public class func toDB(_ inMagnitude: Float) -> Float {
         // ceil to 128db in order to avoid log10'ing 0
         let magnitude = max(inMagnitude, 0.000000000001)
         return 10 * log10f(magnitude)
