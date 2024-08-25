@@ -5,6 +5,8 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+  schedule:
+    - cron: "30 5 * * *"
 env:
   DEVELOPER_DIR: /Applications/Xcode_15.2.app
 jobs:
