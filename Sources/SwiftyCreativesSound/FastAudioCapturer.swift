@@ -99,6 +99,7 @@ public class FastAudioCapturer: NSObject, AudioCapturer {
     }
 }
 
+@available(macOS 14.0, *)
 extension FastAudioCapturer: AVCaptureAudioDataOutputSampleBufferDelegate {
     public func captureOutput(
         _ output: AVCaptureOutput,

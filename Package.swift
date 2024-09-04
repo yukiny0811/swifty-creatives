@@ -73,7 +73,7 @@ let package = Package(
     name: "SwiftyCreatives",
     platforms: [
         .iOS(.v17),
-        .macOS(.v14),
+        .macOS(.v13),
         .tvOS(.v17),
         .visionOS(.v1),
     ],
