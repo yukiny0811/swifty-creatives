@@ -167,7 +167,11 @@ void OITFragmentFunction(RasterizerData in,
         constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
         fragmentColor = tex.sample(textureSampler, float2(in.uv.x*tex.get_width(), in.uv.y*tex.get_height()));
     }
-    
+
+    if (fragmentColor.a == 0) {
+        fragmentColor = half4(0, 0, 0, 0);
+    }
+
     fragmentColor = half4(createFog(in.position.z / in.position.w,
                                     float4(fragmentColor),
                                     uniformFogDensity.value,
