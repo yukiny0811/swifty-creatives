@@ -13,4 +13,7 @@
    <FileRef
       location = "group:Examples/ExampleiOSApp/ExampleiOSApp.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Examples/ReactiveSwiftGraphicsExampleMacOS/ReactiveSwiftGraphicsExampleMacOS.xcodeproj">
+   </FileRef>
 </Workspace>

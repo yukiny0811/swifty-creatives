@@ -69,11 +69,19 @@ let SwiftyCreativesTests = Target.testTarget(
     ]
 )
 
+let ReactiveSwiftGraphics = Target.target(
+    name: "ReactiveSwiftGraphics",
+    dependencies: [
+        SwiftyCreatives.asDependency
+    ],
+    path: "Sources/ReactiveSwiftGraphics"
+)
+
 let package = Package(
     name: "SwiftyCreatives",
     platforms: [
         .iOS(.v17),
-        .macOS(.v13),
+        .macOS(.v14),
         .tvOS(.v17),
         .visionOS(.v1),
     ],
@@ -81,6 +89,10 @@ let package = Package(
         .library(
             name: "SwiftyCreatives",
             targets: ["SwiftyCreatives"]
+        ),
+        .library(
+            name: "ReactiveSwiftGraphics",
+            targets: ["ReactiveSwiftGraphics"]
         )
     ],
     dependencies: dependencies,
@@ -89,5 +101,6 @@ let package = Package(
         SwiftyCreativesMacro,
         SwiftyCreatives,
         SwiftyCreativesTests,
+        ReactiveSwiftGraphics,
     ]
 )
