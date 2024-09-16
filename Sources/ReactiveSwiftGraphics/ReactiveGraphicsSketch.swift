@@ -34,13 +34,12 @@ public class ReactiveGraphicsSketch: Sketch, ObservableObject {
             }
             push {
 
-                let p = self.packet
                 translate(e.position)
                 rotateX(e.rotation.x)
                 rotateY(e.rotation.y)
                 rotateZ(e.rotation.z)
                 scale(e.scale)
-                e.customRender(packet: p, ray: currentRay)
+                e.customRender(functions: HasSketchFunctions.self, encoder: encoder, customMatrix: &customMatrix, ray: currentRay)
 
                 if let hasColliderEntity = e as? (any HasCollider), let currentRay, hasColliderEntity.rayInteractionEnabled {
                     let didCollide = hasColliderEntity.collider.didCollide(ray: currentRay, mat: getCustomMatrix())

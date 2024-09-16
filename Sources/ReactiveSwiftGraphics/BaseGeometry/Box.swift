@@ -41,9 +41,9 @@ public struct Box: ReactiveGraphicsEntity, HasCollider {
         Empty()
     }
 
-    public func customRender(packet: SCPacket, ray: (origin: f3, direction: f3)?) {
-        packet.color(color)
-        packet.box(1)
+    public func customRender(functions: HasSketchFunctions.Type, encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], ray: (origin: f3, direction: f3)?) {
+        functions.color(encoder, color)
+        functions.box(encoder, 1)
     }
 
     public func enableRayInteraction() -> Self {
