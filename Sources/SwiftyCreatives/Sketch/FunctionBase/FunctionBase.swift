@@ -13,6 +13,29 @@ public protocol FunctionBase: AnyObject {
     var customMatrix: [f4x4] { get set }
 }
 
+public protocol HasSketchFunctions: AnyObject {
+    var encoder: MTLRenderCommandEncoder? { get set }
+    var customMatrix: [f4x4] { get set }
+}
+
+extension HasSketchFunctions {
+    @DrawFunction internal static func setModelPos(_ encoder: MTLRenderCommandEncoder?, _ value: f3) {
+        encoder?.setVertexBytes([value], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+    }
+    @DrawFunction internal static func setModelScale(_ encoder: MTLRenderCommandEncoder?, _ value: f3) {
+        encoder?.setVertexBytes([value], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+    }
+    @DrawFunction internal static func setVertices(_ encoder: MTLRenderCommandEncoder?, _ value: [f3]) {
+        encoder?.setVertexBytes(value, length: value.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+    }
+    @DrawFunction internal static func setUVs(_ encoder: MTLRenderCommandEncoder?, _ value: [f2]) {
+        encoder?.setVertexBytes(value, length: value.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+    }
+    @DrawFunction internal static func setNormals(_ encoder: MTLRenderCommandEncoder?, _ value: [f3]) {
+        encoder?.setVertexBytes(value, length: value.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+    }
+}
+
 extension FunctionBase {
     
     internal func setUniforms(modelPos: f3, modelScale: f3, hasTexture: Bool, useVertexColor: Bool = false) {
@@ -22,27 +45,27 @@ extension FunctionBase {
         setUseVertexColor(useVertexColor)
     }
     
-    private func setModelPos(_ value: f3) {
-        privateEncoder?.setVertexBytes([value], length: f3.memorySize, index: VertexBufferIndex.ModelPos.rawValue)
+    internal func setModelPos(_ value: f3) {
+        SketchFunctions.setModelPos(privateEncoder, value)
     }
     
-    private func setModelScale(_ value: f3) {
-        privateEncoder?.setVertexBytes([value], length: f3.memorySize, index: VertexBufferIndex.ModelScale.rawValue)
+    internal func setModelScale(_ value: f3) {
+        SketchFunctions.setModelScale(privateEncoder, value)
     }
     
     internal func setVertices(_ value: [f3]) {
-        privateEncoder?.setVertexBytes(value, length: value.count * f3.memorySize, index: VertexBufferIndex.Position.rawValue)
+        SketchFunctions.setVertices(privateEncoder, value)
     }
     
     internal func setUVs(_ value: [f2]) {
-        privateEncoder?.setVertexBytes(value, length: value.count * f2.memorySize, index: VertexBufferIndex.UV.rawValue)
+        SketchFunctions.setUVs(privateEncoder, value)
     }
     
     internal func setNormals(_ value: [f3]) {
-        privateEncoder?.setVertexBytes(value, length: value.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
+        SketchFunctions.setNormals(privateEncoder, value)
     }
     
-    private func setHasTexture(_ value: Bool) {
+    internal func setHasTexture(_ value: Bool) {
         privateEncoder?.setFragmentBytes([value], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
     }
     

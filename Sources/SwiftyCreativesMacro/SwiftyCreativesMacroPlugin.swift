@@ -13,6 +13,7 @@ import SwiftSyntaxMacros
 @main
 struct SwiftyCreativesMacroPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
-        SketchObject.self
+        SketchObject.self,
+        DrawFunction.self,
     ]
 }
