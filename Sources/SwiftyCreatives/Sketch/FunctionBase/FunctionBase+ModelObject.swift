@@ -10,25 +10,29 @@ import SimpleSimdSwift
 import Metal
 import CoreImage
 
-public extension FunctionBase {
-    
-    func model(_ modelObject: ModelObject) {
-        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        modelObject.draw(privateEncoder!)
+public extension HasSketchFunctions {
+
+    @DrawFunction
+    static func model(_ encoder: MTLRenderCommandEncoder?, _ modelObject: ModelObject) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false)
+        modelObject.draw(encoder!)
     }
     
-    func model(_ modelObject: ModelObject, primitiveType: MTLPrimitiveType) {
-        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        modelObject.draw(privateEncoder!, primitiveType: primitiveType)
+    @DrawFunction
+    static func model(_ encoder: MTLRenderCommandEncoder?, _ modelObject: ModelObject, primitiveType: MTLPrimitiveType) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false)
+        modelObject.draw(encoder!, primitiveType: primitiveType)
     }
     
-    func model(_ modelObject: ModelObject, with image: CGImage) {
-        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        modelObject.draw(privateEncoder!, with: image)
+    @DrawFunction
+    static func model(_ encoder: MTLRenderCommandEncoder?, _ modelObject: ModelObject, with image: CGImage) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false)
+        modelObject.draw(encoder!, with: image)
     }
     
-    func model(_ modelObject: ModelObject, with texture: MTLTexture) {
-        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-        modelObject.draw(privateEncoder!, with: texture)
+    @DrawFunction
+    static func model(_ encoder: MTLRenderCommandEncoder?, _ modelObject: ModelObject, with texture: MTLTexture) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false)
+        modelObject.draw(encoder!, with: texture)
     }
 }

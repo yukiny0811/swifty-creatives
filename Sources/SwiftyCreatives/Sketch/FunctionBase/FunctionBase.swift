@@ -8,14 +8,10 @@
 import Metal
 import SimpleSimdSwift
 
-public protocol FunctionBase: AnyObject {
-    var privateEncoder: SCEncoder? { get set }
-    var customMatrix: [f4x4] { get set }
-}
-
-public protocol HasSketchFunctions: AnyObject {
-    var encoder: MTLRenderCommandEncoder? { get set }
-    var customMatrix: [f4x4] { get set }
+open class HasSketchFunctions {
+    public var encoder: MTLRenderCommandEncoder?
+    public var customMatrix: [f4x4] = [f4x4.createIdentity()]
+    public init() {}
 }
 
 extension HasSketchFunctions {
@@ -34,66 +30,34 @@ extension HasSketchFunctions {
     @DrawFunction internal static func setNormals(_ encoder: MTLRenderCommandEncoder?, _ value: [f3]) {
         encoder?.setVertexBytes(value, length: value.count * f3.memorySize, index: VertexBufferIndex.Normal.rawValue)
     }
-}
-
-extension FunctionBase {
-    
-    internal func setUniforms(modelPos: f3, modelScale: f3, hasTexture: Bool, useVertexColor: Bool = false) {
-        setModelPos(modelPos)
-        setModelScale(modelScale)
-        setHasTexture(hasTexture)
-        setUseVertexColor(useVertexColor)
+    @DrawFunction internal static func setHasTexture(_ encoder: MTLRenderCommandEncoder?, _ value: Bool) {
+        encoder?.setFragmentBytes([value], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
     }
-    
-    internal func setModelPos(_ value: f3) {
-        SketchFunctions.setModelPos(privateEncoder, value)
+    @DrawFunction internal static func setUseVertexColor(_ encoder: MTLRenderCommandEncoder?, _ value: Bool) {
+        encoder?.setVertexBytes([value], length: Bool.memorySize, index: VertexBufferIndex.UseVertexColor.rawValue)
     }
-    
-    internal func setModelScale(_ value: f3) {
-        SketchFunctions.setModelScale(privateEncoder, value)
+    @DrawFunction internal static func setColor(_ encoder: MTLRenderCommandEncoder?, _ value: f4) {
+        encoder?.setVertexBytes([value], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
     }
-    
-    internal func setVertices(_ value: [f3]) {
-        SketchFunctions.setVertices(privateEncoder, value)
+    @DrawFunction internal static func setTexture(_ encoder: MTLRenderCommandEncoder?, _ value: MTLTexture?) {
+        encoder?.setFragmentTexture(value, index: FragmentTextureIndex.MainTexture.rawValue)
     }
-    
-    internal func setUVs(_ value: [f2]) {
-        SketchFunctions.setUVs(privateEncoder, value)
+    @DrawFunction internal static func setCustomMatrix(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4]) {
+        encoder?.setVertexBytes([customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: VertexBufferIndex.CustomMatrix.rawValue)
     }
-    
-    internal func setNormals(_ value: [f3]) {
-        SketchFunctions.setNormals(privateEncoder, value)
+    @DrawFunction internal static func setVertexColors(_ encoder: MTLRenderCommandEncoder?, _ value: [f4]) {
+        encoder?.setVertexBytes(value, length: value.count * f4.memorySize, index: VertexBufferIndex.VertexColor.rawValue)
     }
-    
-    internal func setHasTexture(_ value: Bool) {
-        privateEncoder?.setFragmentBytes([value], length: Bool.memorySize, index: FragmentBufferIndex.HasTexture.rawValue)
+    @DrawFunction internal static func setFogDensity(_ encoder: MTLRenderCommandEncoder?, _ value: Float) {
+        encoder?.setFragmentBytes([value], length: Float.memorySize, index: FragmentBufferIndex.FogDensity.rawValue)
     }
-    
-    internal func setColor(_ value: f4) {
-        privateEncoder?.setVertexBytes([value], length: f4.memorySize, index: VertexBufferIndex.Color.rawValue)
+    @DrawFunction internal static func setFogColor(_ encoder: MTLRenderCommandEncoder?, _ value: f4) {
+        encoder?.setFragmentBytes([value], length: f4.memorySize, index: FragmentBufferIndex.FogColor.rawValue)
     }
-    
-    internal func setFogDensity(_ value: Float) {
-        privateEncoder?.setFragmentBytes([value], length: Float.memorySize, index: FragmentBufferIndex.FogDensity.rawValue)
-    }
-    
-    internal func setFogColor(_ value: f4) {
-        privateEncoder?.setFragmentBytes([value], length: f4.memorySize, index: FragmentBufferIndex.FogColor.rawValue)
-    }
-    
-    internal func setTexture(_ value: MTLTexture?) {
-        privateEncoder?.setFragmentTexture(value, index: FragmentTextureIndex.MainTexture.rawValue)
-    }
-    
-    internal func setCustomMatrix() {
-        privateEncoder?.setVertexBytes([self.customMatrix.reduce(f4x4.createIdentity(), *)], length: f4x4.memorySize, index: VertexBufferIndex.CustomMatrix.rawValue)
-    }
-    
-    internal func setUseVertexColor(_ value: Bool) {
-        privateEncoder?.setVertexBytes([value], length: Bool.memorySize, index: VertexBufferIndex.UseVertexColor.rawValue)
-    }
-    
-    internal func setVertexColors(_ value: [f4]) {
-        privateEncoder?.setVertexBytes(value, length: value.count * f4.memorySize, index: VertexBufferIndex.VertexColor.rawValue)
+    @DrawFunction internal static func setUniforms(_ encoder: MTLRenderCommandEncoder?, modelPos: f3, modelScale: f3, hasTexture: Bool, useVertexColor: Bool = false) {
+        Self.setModelPos(encoder, modelPos)
+        Self.setModelScale(encoder, modelScale)
+        Self.setHasTexture(encoder, hasTexture)
+        Self.setUseVertexColor(encoder, useVertexColor)
     }
 }

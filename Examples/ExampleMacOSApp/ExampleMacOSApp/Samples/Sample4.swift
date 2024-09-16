@@ -8,7 +8,6 @@
 import SwiftyCreatives
 import SwiftUI
 
-@SketchObject
 class MyBox {
     var pos: f3
     var col: f4
@@ -18,9 +17,9 @@ class MyBox {
         self.col = col
         self.scale = scale
     }
-    func draw() {
-        color(col)
-        box(pos, scale)
+    func draw(encoder: MTLRenderCommandEncoder?) {
+        HasSketchFunctions.color(encoder, col)
+        HasSketchFunctions.box(encoder, pos, scale)
     }
 }
 
@@ -42,7 +41,7 @@ final class Sample4: Sketch {
     }
     override func draw(encoder: SCEncoder) {
         for o in objects {
-            o.draw(encoder: encoder, customMatrix: getCustomMatrix())
+            o.draw(encoder: encoder)
         }
     }
 }

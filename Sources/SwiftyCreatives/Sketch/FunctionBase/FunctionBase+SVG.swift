@@ -9,30 +9,32 @@ import SimpleSimdSwift
 import SVGVertexBuilder
 import Metal
 
-public extension FunctionBase {
-    
-    func svg(_ object: SVGObj, colors: [f4], primitiveType: MTLPrimitiveType = .triangle) {
+public extension HasSketchFunctions {
+
+    @DrawFunction
+    static func svg(_ encoder: MTLRenderCommandEncoder?, _ object: SVGObj, colors: [f4], primitiveType: MTLPrimitiveType = .triangle) {
         for (i, path) in object.triangulated.enumerated() {
             let index = min(i, colors.count-1)
-            color(colors[index])
+            Self.color(encoder, colors[index])
             if path.count * f3.memorySize < 4096 {
-                mesh(path, primitiveType: primitiveType)
+                Self.mesh(encoder, path, primitiveType: primitiveType)
             } else {
                 if let buffer = ShaderCore.device.makeBuffer(bytes: path, length: path.count * f3.memorySize) {
-                    mesh(buffer)
+                    Self.mesh(encoder, buffer)
                 }
             }
         }
     }
 
-    func svg(_ object: SVGObj, primitiveType: MTLPrimitiveType = .triangle) {
+    @DrawFunction
+    static func svg(_ encoder: MTLRenderCommandEncoder?, _ object: SVGObj, primitiveType: MTLPrimitiveType = .triangle) {
         for (i, path) in object.triangulated.enumerated() {
-            color(object.colors[i])
+            Self.color(encoder, object.colors[i])
             if path.count * f3.memorySize < 4096 {
-                mesh(path, primitiveType: primitiveType)
+                Self.mesh(encoder, path, primitiveType: primitiveType)
             } else {
                 if let buffer = ShaderCore.device.makeBuffer(bytes: path, length: path.count * f3.memorySize) {
-                    mesh(buffer)
+                    Self.mesh(encoder, buffer)
                 }
             }
         }

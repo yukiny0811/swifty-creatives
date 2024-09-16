@@ -8,33 +8,40 @@
 import simd
 import SimpleSimdSwift
 
-public extension FunctionBase {
-    
-    func color(_ r: Float, _ g: Float, _ b: Float, _ a: Float) {
-        setColor(.init(r, g, b, a))
+public extension HasSketchFunctions {
+
+    @DrawFunction
+    func color(_ encoder: MTLRenderCommandEncoder?, _ r: Float, _ g: Float, _ b: Float, _ a: Float) {
+        Self.setColor(encoder, .init(r, g, b, a))
     }
     
-    func color(_ r: Float, _ g: Float, _ b: Float) {
-        setColor(.init(r, g, b, 1))
+    @DrawFunction
+    static func color(_ encoder: MTLRenderCommandEncoder?, _ r: Float, _ g: Float, _ b: Float) {
+        Self.setColor(encoder, .init(r, g, b, 1))
     }
     
-    func color(_ color: f4) {
-        setColor(color)
+    @DrawFunction
+    static func color(_ encoder: MTLRenderCommandEncoder?, _ color: f4) {
+        Self.setColor(encoder, color)
     }
     
-    func color(_ rgb: f3, alpha: Float) {
-        setColor(f4(rgb.x, rgb.y, rgb.z, alpha))
+    @DrawFunction
+    static func color(_ encoder: MTLRenderCommandEncoder?, _ rgb: f3, alpha: Float) {
+        Self.setColor(encoder, f4(rgb.x, rgb.y, rgb.z, alpha))
     }
     
-    func color(_ rgb: f3) {
-        setColor(f4(rgb.x, rgb.y, rgb.z, 1))
+    @DrawFunction
+    static func color(_ encoder: MTLRenderCommandEncoder?, _ rgb: f3) {
+        Self.setColor(encoder, f4(rgb.x, rgb.y, rgb.z, 1))
     }
     
-    func color(_ gray: Float) {
-        setColor(f4(gray, gray, gray, 1))
+    @DrawFunction
+    static func color(_ encoder: MTLRenderCommandEncoder?, _ gray: Float) {
+        Self.setColor(encoder, f4(gray, gray, gray, 1))
     }
     
-    func color(_ gray: Float, _ alpha: Float) {
-        setColor(f4(gray, gray, gray, alpha))
+    @DrawFunction
+    static func color(_ encoder: MTLRenderCommandEncoder?, _ gray: Float, _ alpha: Float) {
+        Self.setColor(encoder, f4(gray, gray, gray, alpha))
     }
 }

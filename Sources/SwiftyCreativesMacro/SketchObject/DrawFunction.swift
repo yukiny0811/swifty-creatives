@@ -32,13 +32,16 @@ public struct DrawFunction: PeerMacro {
         var functionSignature = functionDecl.signature
         let parameters = functionSignature.parameterClause.parameters
 
-        guard parameters[parameters.startIndex].trimmedDescription == "_ encoder: MTLRenderCommandEncoder?," else {
+        guard parameters[parameters.startIndex].trimmedDescription == "_ encoder: MTLRenderCommandEncoder?," || parameters[parameters.startIndex].trimmedDescription == "_ encoder: MTLRenderCommandEncoder?" else {
             throw "first parameter of function signature must be _ encoder: MTLRenderCommandEncoder?,"
         }
-        
+
         //  _ value: f3
         var copyingParameterString = ""
         for parameter in parameters[parameters.index(at: 1)..<parameters.endIndex] {
+            if parameter.trimmedDescription == "customMatrix: inout [f4x4]," || parameter.trimmedDescription == "customMatrix: inout [f4x4]" {
+                continue
+            }
             copyingParameterString += parameter.trimmedDescription + " "
         }
 

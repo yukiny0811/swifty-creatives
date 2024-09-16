@@ -7,18 +7,18 @@
 
 import Foundation
 
-@attached(
-    extension,
-    conformances: FunctionBase, SketchObjectHasDraw,
-    names: 
-        named(privateEncoder),
-        named(customMatrix)
-)
-@attached(
-    member,
-    conformances: FunctionBase, SketchObjectHasDraw,
-    names: 
-        named(privateEncoder),
-        named(customMatrix)
-)
-public macro SketchObject() = #externalMacro(module: "SwiftyCreativesMacro", type: "SketchObject")
+//@attached(
+//    extension,
+//    conformances: HasSketchFunctions, SketchObjectHasDraw,
+//    names:
+//        named(encoder),
+//        named(customMatrix)
+//)
+//@attached(
+//    member,
+//    conformances: HasSketchFunctions, SketchObjectHasDraw,
+//    names:
+//        named(encoder),
+//        named(customMatrix)
+//)
+//public macro SketchObject() = #externalMacro(module: "SwiftyCreativesMacro", type: "SketchObject")

@@ -15,7 +15,7 @@ open class HitTestableImg: RectanglePlanePrimitive<RectShapeInfo>, ImageLoadable
     override public func draw(_ encoder: SCEncoder) {}
     
     @available(*, unavailable, message: "Use img() in Sketch instead.")
-    public override func drawWithCache(packet: SCPacket) {}
+    public override func drawWithCache(packet: HasSketchFunctions) {}
     
     @available(*, unavailable, message: "Use img() in Sketch instead.")
     public override func drawWithCache(encoder: SCEncoder, customMatrix: f4x4) {}

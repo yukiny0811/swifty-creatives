@@ -15,16 +15,11 @@ import simd
 import SimpleSimdSwift
 import MetalKit
 
-open class Sketch: FunctionBase {
+open class Sketch: HasSketchFunctions {
     public var metalDrawableSize: f2 = .zero
-    public var customMatrix: [f4x4] = [f4x4.createIdentity()]
-    public var privateEncoder: SCEncoder?
     public var deltaTime: Float = 0
     public var frameRate: Float { 1 / deltaTime }
-    public var packet: SCPacket {
-        SCPacket(privateEncoder: privateEncoder!, customMatrix: getCustomMatrix())
-    }
-    public init() {}
+    public override init() { super.init() }
     #if os(visionOS)
     open func update() {}
     #else
@@ -37,7 +32,7 @@ open class Sketch: FunctionBase {
     
     public func beforeDraw(encoder: SCEncoder) {
         self.customMatrix = [f4x4.createIdentity()]
-        self.privateEncoder = encoder
+        self.encoder = encoder
     }
     open func preProcess(commandBuffer: MTLCommandBuffer) {}
     open func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {}

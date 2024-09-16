@@ -8,23 +8,26 @@
 import simd
 import SimpleSimdSwift
 
-public extension FunctionBase {
-    
-    func scale(_ value: f3) {
+public extension HasSketchFunctions {
+
+    @DrawFunction
+    static func scale(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], _ value: f3) {
         let scaleMatrix = f4x4.createScale(value.x, value.y, value.z)
-        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * scaleMatrix
-        setCustomMatrix()
+        customMatrix[customMatrix.count - 1] = customMatrix[customMatrix.count - 1] * scaleMatrix
+        Self.setCustomMatrix(encoder, customMatrix: &customMatrix)
     }
     
-    func scale(_ value: Float) {
+    @DrawFunction
+    static func scale(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], _ value: Float) {
         let scaleMatrix = f4x4.createScale(value, value, value)
-        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * scaleMatrix
-        setCustomMatrix()
+        customMatrix[customMatrix.count - 1] = customMatrix[customMatrix.count - 1] * scaleMatrix
+        Self.setCustomMatrix(encoder, customMatrix: &customMatrix)
     }
     
-    func scale(_ x: Float, _ y: Float, _ z: Float) {
+    @DrawFunction
+    static func scale(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], _ x: Float, _ y: Float, _ z: Float) {
         let scaleMatrix = f4x4.createScale(x, y, z)
-        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * scaleMatrix
-        setCustomMatrix()
+        customMatrix[customMatrix.count - 1] = customMatrix[customMatrix.count - 1] * scaleMatrix
+        Self.setCustomMatrix(encoder, customMatrix: &customMatrix)
     }
 }

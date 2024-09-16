@@ -8,17 +8,19 @@
 import simd
 import SimpleSimdSwift
 
-public extension FunctionBase {
-    
-    func translate(_ x: Float, _ y: Float, _ z: Float) {
+public extension HasSketchFunctions {
+
+    @DrawFunction
+    static func translate(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], _ x: Float, _ y: Float, _ z: Float) {
         let translateMatrix = f4x4.createTransform(x, y, z)
-        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * translateMatrix
-        setCustomMatrix()
+        customMatrix[customMatrix.count - 1] = customMatrix[customMatrix.count - 1] * translateMatrix
+        Self.setCustomMatrix(encoder, customMatrix: &customMatrix)
     }
-    
-    func translate(_ value: f3) {
+
+    @DrawFunction
+    static func translate(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], _ value: f3) {
         let translateMatrix = f4x4.createTransform(value.x, value.y, value.z)
-        self.customMatrix[self.customMatrix.count - 1] = self.customMatrix[self.customMatrix.count - 1] * translateMatrix
-        setCustomMatrix()
+        customMatrix[customMatrix.count - 1] = customMatrix[customMatrix.count - 1] * translateMatrix
+        Self.setCustomMatrix(encoder, customMatrix: &customMatrix)
     }
 }

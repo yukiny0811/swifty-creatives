@@ -1,6 +1,6 @@
 //
 //  FunctionBase+HitTestableImg.swift
-//  
+//
 //
 //  Created by Yuki Kuwashima on 2023/03/27.
 //
@@ -8,14 +8,16 @@
 import simd
 import SimpleSimdSwift
 
-public extension FunctionBase {
-    func img(_ hitTestableImg: HitTestableImg) {
-        setUniforms(modelPos: .zero, modelScale: hitTestableImg.scale, hasTexture: true)
-        setVertices(RectShapeInfo.vertices)
-        setUVs(RectShapeInfo.uvs)
-        setNormals(RectShapeInfo.normals)
-        setTexture(hitTestableImg.texture)
-        privateEncoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
+public extension HasSketchFunctions {
+
+    @DrawFunction
+    static func img(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], _ hitTestableImg: HitTestableImg) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: hitTestableImg.scale, hasTexture: true)
+        Self.setVertices(encoder, RectShapeInfo.vertices)
+        Self.setUVs(encoder, RectShapeInfo.uvs)
+        Self.setNormals(encoder, RectShapeInfo.normals)
+        Self.setTexture(encoder, hitTestableImg.texture)
+        encoder?.drawPrimitives(type: RectShapeInfo.primitiveType, vertexStart: 0, vertexCount: RectShapeInfo.vertices.count)
         hitTestableImg.cachedCustomMatrix = customMatrix.reduce(f4x4.createIdentity(), *)
     }
 }

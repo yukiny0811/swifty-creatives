@@ -15,8 +15,8 @@ open class HitTestablePrimitive<Info: PrimitiveInfo>: Primitive<Info> {
         draw(encoder)
         cachedCustomMatrix = customMatrix
     }
-    public func drawWithCache(packet: SCPacket) {
-        draw(packet.privateEncoder!)
+    public func drawWithCache(packet: HasSketchFunctions) {
+        draw(packet.encoder!)
         cachedCustomMatrix = packet.customMatrix.reduce(f4x4.createIdentity(), *)
     }
 }

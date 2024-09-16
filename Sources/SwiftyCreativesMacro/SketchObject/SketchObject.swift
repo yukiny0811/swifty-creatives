@@ -25,7 +25,7 @@ extension SketchObject: ExtensionMacro {
         
         let thisExtension1: DeclSyntax =
         """
-        extension \(type.trimmed): FunctionBase {}
+        extension \(type.trimmed): HasSketchFunctions {}
         """
         
         let thisExtension2: DeclSyntax =

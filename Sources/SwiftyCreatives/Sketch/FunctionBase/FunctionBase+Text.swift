@@ -8,65 +8,71 @@
 import SimpleSimdSwift
 import Metal
 
-public extension FunctionBase {
-    
-    func text(_ text: Text2D, primitiveType: MTLPrimitiveType = .triangle) {
-        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
+public extension HasSketchFunctions {
+
+    @DrawFunction
+    static func text(_ encoder: MTLRenderCommandEncoder?, _ text: Text2D, primitiveType: MTLPrimitiveType = .triangle) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false)
         guard let textPosBuffer = text.posBuffer else { return }
-        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        encoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
         let tempUVBuf = ShaderCore.device.makeBuffer(length: textPosBuffer.length * 2 / 3)
         let tempNormalBuf = ShaderCore.device.makeBuffer(length: textPosBuffer.length)
         let tempVertexColorBuf = ShaderCore.device.makeBuffer(length: textPosBuffer.length * 4 / 3)
-        privateEncoder?.setVertexBuffer(tempUVBuf, offset: 0, index: VertexBufferIndex.UV.rawValue)
-        privateEncoder?.setVertexBuffer(tempNormalBuf, offset: 0, index: VertexBufferIndex.Normal.rawValue)
-        privateEncoder?.setVertexBuffer(tempVertexColorBuf, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
-        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
-        privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
+        encoder?.setVertexBuffer(tempUVBuf, offset: 0, index: VertexBufferIndex.UV.rawValue)
+        encoder?.setVertexBuffer(tempNormalBuf, offset: 0, index: VertexBufferIndex.Normal.rawValue)
+        encoder?.setVertexBuffer(tempVertexColorBuf, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
+        encoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        encoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
     
-    func text(_ text: Text3D, primitiveType: MTLPrimitiveType = .triangle) {
-        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
+    @DrawFunction
+    static func text(_ encoder: MTLRenderCommandEncoder?, _ text: Text3D, primitiveType: MTLPrimitiveType = .triangle) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false)
         guard let textPosBuffer = text.posBuffer else { return }
-        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
-        privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
+        encoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        encoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
     
-    func char(
+    @DrawFunction
+    static func char(
+        _ encoder: MTLRenderCommandEncoder?,
         _ character: Character,
         factory: TextFactory,
         primitiveType: MTLPrimitiveType = .triangle,
-        applyOffsetBefore: ((f2) -> ())? = nil,
-        applySizeAfter: ((f2) -> ())? = nil
+        applyOffsetBefore: (f2) -> () = { _ in },
+        applySizeAfter: (f2) -> () = { _ in }
     ) {
         if let cached = factory.cached[character] {
-            applyOffsetBefore?(cached.offset)
-            setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false)
-            privateEncoder?.setVertexBuffer(cached.buffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
-            privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: cached.verticeCount)
-            applySizeAfter?(cached.size)
+            applyOffsetBefore(cached.offset)
+            Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false)
+            encoder?.setVertexBuffer(cached.buffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+            encoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: cached.verticeCount)
+            applySizeAfter(cached.size)
         } else {
             print("no caches for \(character)")
         }
     }
     
-    func text(_ str: String, factory: TextFactory) {
+    @DrawFunction
+    static func text(_ encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], _ str: String, factory: TextFactory) {
         var spacerFactor: Float = 0
         for c in str {
             if c == " " {
-                translate(spacerFactor, 0, 0)
+                Self.translate(encoder, customMatrix: &customMatrix, spacerFactor, 0, 0)
                 continue
             }
-            char(c, factory: factory) { [self] offset in
-                translate(-offset.x, 0, 0)
-            } applySizeAfter: { [self] size in
-                translate(-size.x, 0, 0)
+            Self.char(encoder, c, factory: factory) { offset in
+                Self.translate(encoder, customMatrix: &customMatrix, -offset.x, 0, 0)
+            } applySizeAfter: { size in
+                Self.translate(encoder, customMatrix: &customMatrix, -size.x, 0, 0)
                 spacerFactor = -size.x
             }
         }
     }
     
-    func text(_ text: Text2D, topLeft: f4, topRight: f4, bottomLeft: f4, bottomRight: f4, primitiveType: MTLPrimitiveType = .triangle) {
-        setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false, useVertexColor: true)
+    @DrawFunction
+    static func text(_ encoder: MTLRenderCommandEncoder?, _ text: Text2D, topLeft: f4, topRight: f4, bottomLeft: f4, bottomRight: f4, primitiveType: MTLPrimitiveType = .triangle) {
+        Self.setUniforms(encoder, modelPos: .zero, modelScale: .one, hasTexture: false, useVertexColor: true)
         guard let textPosBuffer = text.posBuffer else { return }
         let colors: [f4] = text.finalVerticesNormalized.map { pos in
             let xTopColor = mix(topLeft, topRight, t: pos.x)
@@ -77,8 +83,8 @@ public extension FunctionBase {
         guard let vertexColorBuffer = ShaderCore.device.makeBuffer(bytes: colors, length: colors.count * f4.memorySize) else {
             return
         }
-        privateEncoder?.setVertexBuffer(vertexColorBuffer, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
-        privateEncoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
-        privateEncoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
+        encoder?.setVertexBuffer(vertexColorBuffer, offset: 0, index: VertexBufferIndex.VertexColor.rawValue)
+        encoder?.setVertexBuffer(textPosBuffer, offset: 0, index: VertexBufferIndex.Position.rawValue)
+        encoder?.drawPrimitives(type: primitiveType, vertexStart: 0, vertexCount: text.finalVertices.count)
     }
 }
