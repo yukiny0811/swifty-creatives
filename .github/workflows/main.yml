@@ -8,10 +8,10 @@ on:
   schedule:
     - cron: "30 5 * * *"
 env:
-  DEVELOPER_DIR: /Applications/Xcode_15.2.app
+  DEVELOPER_DIR: /Applications/Xcode_16.0.app
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15-xlarge
     steps:
       - uses: actions/checkout@v3
       - name: Build macOS
