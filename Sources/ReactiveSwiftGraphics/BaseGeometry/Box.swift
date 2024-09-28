@@ -41,7 +41,13 @@ public struct Box: ReactiveGraphicsEntity, HasCollider {
         Empty()
     }
 
-    public func customRender(functions: HasSketchFunctions.Type, encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], ray: (origin: f3, direction: f3)?) {
+    public func customRender(
+        functions: HasSketchFunctions.Type,
+        encoder: MTLRenderCommandEncoder?,
+        vertexDescriptor: MTLVertexDescriptor?,
+        customMatrix: inout [f4x4],
+        ray: (origin: f3, direction: f3)?
+    ) {
         functions.color(encoder, color)
         functions.box(encoder, 1)
     }

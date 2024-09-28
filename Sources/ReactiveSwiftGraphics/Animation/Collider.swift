@@ -13,12 +13,22 @@ public enum Collider: Equatable {
     case sphere(radius: Float)
     case box(xLength: Float, yLength: Float, zLength: Float)
 
-    func didCollide(ray: (origin: f3, direction: f3), mat: f4x4) -> Bool {
+    // returns nil if no collision, returns distance from camera if collided
+    func didCollide(ray: (origin: f3, direction: f3), mat: f4x4) -> Float? {
         switch self {
         case .none:
-            return false
+            return nil
         case .sphere(let radius):
-            return false
+            var selfPos_f4 = f4(0, 0, 0, 1) * f4x4.createIdentity()
+            selfPos_f4.w = 1
+            selfPos_f4 = selfPos_f4 * mat.transpose
+            let thisPosition: f3 = f3(selfPos_f4.x, selfPos_f4.y, selfPos_f4.z)
+            if let intersectionPos = Self.didSphereIntersect(origin: ray.origin, direction: ray.direction, sphereCenterPosition: thisPosition, sphereRadius: radius) {
+                let distance: Float = simd_distance(ray.origin, intersectionPos)
+                return distance
+            } else {
+                return nil
+            }
         case .box(let xLength, let yLength, let zLength):
             let mat1: f4x4 = .createTransform(xLength, 0, 0) * .createScale(1, yLength, zLength) * .createRotation(angle: Float.pi / 2, axis: f3(0, 1, 0))
             let hitResult1 = Self.calculateBoxHitTest(
@@ -75,9 +85,28 @@ public enum Collider: Equatable {
             )
 
             if hitResult1 == nil && hitResult2 == nil && hitResult3 == nil && hitResult4 == nil && hitResult5 == nil && hitResult6 == nil {
-                return false
+                return nil
             } else {
-                return true
+                var minDist: Float = 9999999
+                if let hitResult1 {
+                    minDist = min(minDist, simd_distance(ray.origin, hitResult1.globalPos))
+                }
+                if let hitResult2 {
+                    minDist = min(minDist, simd_distance(ray.origin, hitResult2.globalPos))
+                }
+                if let hitResult3 {
+                    minDist = min(minDist, simd_distance(ray.origin, hitResult3.globalPos))
+                }
+                if let hitResult4 {
+                    minDist = min(minDist, simd_distance(ray.origin, hitResult4.globalPos))
+                }
+                if let hitResult5 {
+                    minDist = min(minDist, simd_distance(ray.origin, hitResult5.globalPos))
+                }
+                if let hitResult6 {
+                    minDist = min(minDist, simd_distance(ray.origin, hitResult6.globalPos))
+                }
+                return minDist
             }
         }
     }
@@ -127,5 +156,31 @@ public enum Collider: Equatable {
         let processedLocalPos_f3 = f3(processedLocalPos.x, processedLocalPos.y, processedLocalPos.z)
 
         return (x, processedLocalPos_f3)
+    }
+
+    public static func didSphereIntersect(origin: simd_float3, direction: simd_float3, sphereCenterPosition: simd_float3, sphereRadius: Float) -> simd_float3? {
+        let oc = origin - sphereCenterPosition
+        let a = dot(direction, direction)
+        let b = 2.0 * dot(oc, direction)
+        let c = dot(oc, oc) - sphereRadius * sphereRadius
+        let discriminant = b * b - 4 * a * c
+
+        if discriminant < 0 {
+            // No intersection
+            return nil
+        } else {
+            // Find the nearest intersection point (smallest positive t)
+            let t1 = (-b - sqrt(discriminant)) / (2.0 * a)
+            let t2 = (-b + sqrt(discriminant)) / (2.0 * a)
+
+            // We want the smallest positive t (closest intersection)
+            let t = min(t1, t2)
+            if t > 0 {
+                // Calculate the intersection point
+                return origin + t * direction
+            } else {
+                return nil
+            }
+        }
     }
 }

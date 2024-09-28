@@ -18,19 +18,23 @@ public class ReactiveGraphicsSketch: Sketch, ObservableObject {
         self.entity = entity
     }
 
-    public override func draw(encoder: any SCEncoder) {
-        resolveGroup(group: entity)
+    public override func draw(encoder: any SCEncoder, vertexDescriptor: MTLVertexDescriptor) {
+        resolveGroup(group: entity, encoder: encoder, vertexDescriptor: vertexDescriptor)
         isTapping = false
     }
 
-    private func resolveGroup(group: Group) {
+    private func resolveGroup(group: Group, encoder: MTLRenderCommandEncoder, vertexDescriptor: MTLVertexDescriptor) {
+
+        var collisionEntity: (any HasCollider)?
+        var collisionMinDistance: Float = 999999
+
         for e in group.entities {
             pushMatrix()
             if e is Empty {
                 continue
             }
             if let e = e as? Group {
-                resolveGroup(group: e)
+                resolveGroup(group: e, encoder: encoder, vertexDescriptor: vertexDescriptor)
             }
             push {
 
@@ -39,24 +43,24 @@ public class ReactiveGraphicsSketch: Sketch, ObservableObject {
                 rotateY(e.rotation.y)
                 rotateZ(e.rotation.z)
                 scale(e.scale)
-                e.customRender(functions: HasSketchFunctions.self, encoder: encoder, customMatrix: &customMatrix, ray: currentRay)
+                e.customRender(functions: HasSketchFunctions.self, encoder: encoder, vertexDescriptor: vertexDescriptor, customMatrix: &customMatrix, ray: currentRay)
 
                 if let hasColliderEntity = e as? (any HasCollider), let currentRay, hasColliderEntity.rayInteractionEnabled {
-                    let didCollide = hasColliderEntity.collider.didCollide(ray: currentRay, mat: getCustomMatrix())
-                    if didCollide && hasColliderEntity.currentlyHovering == false {
+                    let collisionResult = hasColliderEntity.collider.didCollide(ray: currentRay, mat: getCustomMatrix())
+                    if let collisionResult, hasColliderEntity.currentlyHovering == false {
                         hasColliderEntity.setHovering(true)
                     }
-                    if didCollide && isTapping {
+                    if let collisionResult, isTapping {
                         hasColliderEntity.tapProcess?()
                     }
-                    if didCollide == false && hasColliderEntity.currentlyHovering {
+                    if collisionResult == nil && hasColliderEntity.currentlyHovering {
                         hasColliderEntity.setHovering(false)
                     }
                 }
             }
 
             if let childGroup = e.entity as? Group {
-                resolveGroup(group: childGroup)
+                resolveGroup(group: childGroup, encoder: encoder, vertexDescriptor: vertexDescriptor)
             }
             popMatrix()
         }

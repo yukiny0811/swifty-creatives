@@ -109,8 +109,8 @@ class TransparentRenderer: RendererBase {
         // MARK: - draw primitive
         drawProcess.beforeDraw(encoder: renderEncoder)
         drawProcess.update(camera: camera)
-        drawProcess.draw(encoder: renderEncoder)
-        
+        drawProcess.draw(encoder: renderEncoder, vertexDescriptor: vertexDescriptor)
+
         renderEncoder.setViewport(
             MTLViewport(
                 originX: 0,

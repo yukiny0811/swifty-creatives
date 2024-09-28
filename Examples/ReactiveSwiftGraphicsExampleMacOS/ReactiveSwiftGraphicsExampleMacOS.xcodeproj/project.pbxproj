@@ -7,22 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5653F4162C9E819C008B6A0A /* sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 5653F4152C9E819C008B6A0A /* sphere.obj */; };
+		5653F4172C9E819C008B6A0A /* sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 5653F4142C9E819C008B6A0A /* sphere.mtl */; };
+		56B90E8C2C9AD3900021F9A5 /* Into.plist in Resources */ = {isa = PBXBuildFile; fileRef = 56B90E8B2C9AD3900021F9A5 /* Into.plist */; };
 		56D9FF882C9824C000F03F81 /* ReactiveSwiftGraphicsExampleMacOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D9FF872C9824C000F03F81 /* ReactiveSwiftGraphicsExampleMacOSApp.swift */; };
 		56D9FF8A2C9824C000F03F81 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D9FF892C9824C000F03F81 /* ContentView.swift */; };
 		56D9FF8C2C9824C200F03F81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56D9FF8B2C9824C200F03F81 /* Assets.xcassets */; };
 		56D9FF8F2C9824C200F03F81 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56D9FF8E2C9824C200F03F81 /* Preview Assets.xcassets */; };
 		56D9FF992C9824E300F03F81 /* ReactiveSwiftGraphics in Frameworks */ = {isa = PBXBuildFile; productRef = 56D9FF982C9824E300F03F81 /* ReactiveSwiftGraphics */; };
-		56D9FF9B2C98250F00F03F81 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 56D9FF9A2C98250F00F03F81 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5653F4142C9E819C008B6A0A /* sphere.mtl */ = {isa = PBXFileReference; lastKnownFileType = text; path = sphere.mtl; sourceTree = "<group>"; };
+		5653F4152C9E819C008B6A0A /* sphere.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = sphere.obj; sourceTree = "<group>"; };
+		56B90E8B2C9AD3900021F9A5 /* Into.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Into.plist; sourceTree = "<group>"; };
 		56D9FF842C9824C000F03F81 /* ReactiveSwiftGraphicsExampleMacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactiveSwiftGraphicsExampleMacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56D9FF872C9824C000F03F81 /* ReactiveSwiftGraphicsExampleMacOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveSwiftGraphicsExampleMacOSApp.swift; sourceTree = "<group>"; };
 		56D9FF892C9824C000F03F81 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		56D9FF8B2C9824C200F03F81 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56D9FF8E2C9824C200F03F81 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		56D9FF902C9824C200F03F81 /* ReactiveSwiftGraphicsExampleMacOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReactiveSwiftGraphicsExampleMacOS.entitlements; sourceTree = "<group>"; };
-		56D9FF9A2C98250F00F03F81 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../.Trash/Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,12 +61,14 @@
 		56D9FF862C9824C000F03F81 /* ReactiveSwiftGraphicsExampleMacOS */ = {
 			isa = PBXGroup;
 			children = (
-				56D9FF9A2C98250F00F03F81 /* Info.plist */,
+				5653F4142C9E819C008B6A0A /* sphere.mtl */,
+				5653F4152C9E819C008B6A0A /* sphere.obj */,
 				56D9FF872C9824C000F03F81 /* ReactiveSwiftGraphicsExampleMacOSApp.swift */,
 				56D9FF892C9824C000F03F81 /* ContentView.swift */,
 				56D9FF8B2C9824C200F03F81 /* Assets.xcassets */,
 				56D9FF902C9824C200F03F81 /* ReactiveSwiftGraphicsExampleMacOS.entitlements */,
 				56D9FF8D2C9824C200F03F81 /* Preview Content */,
+				56B90E8B2C9AD3900021F9A5 /* Into.plist */,
 			);
 			path = ReactiveSwiftGraphicsExampleMacOS;
 			sourceTree = "<group>";
@@ -144,8 +150,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				56D9FF8F2C9824C200F03F81 /* Preview Assets.xcassets in Resources */,
+				56B90E8C2C9AD3900021F9A5 /* Into.plist in Resources */,
+				5653F4162C9E819C008B6A0A /* sphere.obj in Resources */,
+				5653F4172C9E819C008B6A0A /* sphere.mtl in Resources */,
 				56D9FF8C2C9824C200F03F81 /* Assets.xcassets in Resources */,
-				56D9FF9B2C98250F00F03F81 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

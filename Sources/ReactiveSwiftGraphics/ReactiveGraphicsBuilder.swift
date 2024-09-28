@@ -21,6 +21,18 @@ public struct ReactiveGraphicsBuilder {
     public static func buildBlock(_ components: [any ReactiveGraphicsEntity]) -> [any ReactiveGraphicsEntity] {
         components
     }
+    public static func buildBlock(_ components1: [any ReactiveGraphicsEntity], _ components2: [any ReactiveGraphicsEntity]) -> [any ReactiveGraphicsEntity] {
+        components1 + components2
+    }
+    public static func buildBlock(_ components1: [any ReactiveGraphicsEntity], _ components2: any ReactiveGraphicsEntity...) -> [any ReactiveGraphicsEntity] {
+        components1 + components2
+    }
+    public static func buildBlock(_ components1: [any ReactiveGraphicsEntity], _ component2: any ReactiveGraphicsEntity) -> [any ReactiveGraphicsEntity] {
+        components1 + [component2]
+    }
+    public static func buildBlock(_ component1: any ReactiveGraphicsEntity, _ components2: [any ReactiveGraphicsEntity]) -> [any ReactiveGraphicsEntity] {
+        [component1] + components2
+    }
     public static func buildArray(_ components: [any ReactiveGraphicsEntity]) -> [any ReactiveGraphicsEntity] {
         components
     }

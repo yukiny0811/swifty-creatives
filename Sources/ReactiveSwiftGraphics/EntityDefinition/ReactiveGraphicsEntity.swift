@@ -16,11 +16,23 @@ public protocol ReactiveGraphicsEntity: Equatable {
     associatedtype RGEntity: ReactiveGraphicsEntity
     @ReactiveGraphicsBuilder var entity: RGEntity { get }
 
-    func customRender(functions: HasSketchFunctions.Type, encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], ray: (origin: f3, direction: f3)?)
+    func customRender(
+        functions: HasSketchFunctions.Type,
+        encoder: MTLRenderCommandEncoder?,
+        vertexDescriptor: MTLVertexDescriptor?,
+        customMatrix: inout [f4x4],
+        ray: (origin: f3, direction: f3)?
+    )
 }
 
 extension ReactiveGraphicsEntity where Self: Equatable {
-    public func customRender(functions: HasSketchFunctions.Type, encoder: MTLRenderCommandEncoder?, customMatrix: inout [f4x4], ray: (origin: f3, direction: f3)?) {}
+    public func customRender(
+        functions: HasSketchFunctions.Type,
+        encoder: MTLRenderCommandEncoder?,
+        vertexDescriptor: MTLVertexDescriptor?,
+        customMatrix: inout [f4x4],
+        ray: (origin: f3, direction: f3)?
+    ) {}
     public func isEqual(to other: any ReactiveGraphicsEntity) -> Bool {
         if let otherEntity = other as? Self {
             return self == otherEntity
