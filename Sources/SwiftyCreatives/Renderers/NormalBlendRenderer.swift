@@ -12,7 +12,6 @@ import MetalKit
 public class NormalBlendRenderer: RendererBase {
     
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
-    let vertexDescriptor: MTLVertexDescriptor
     let depthStencilState: MTLDepthStencilState
     let renderPipelineState: MTLRenderPipelineState
     
@@ -26,10 +25,8 @@ public class NormalBlendRenderer: RendererBase {
         renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "normal_vertex")
         renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "normal_fragment")
         
-        vertexDescriptor = Self.createVertexDescriptor()
-        
-        renderPipelineDescriptor.vertexDescriptor = vertexDescriptor
-        
+        renderPipelineDescriptor.vertexDescriptor = RenderCore.sharedVertexDescriptor
+
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         let depthStencilDescriptor = Self.createDepthStencilDescriptor(compareFunc: .less, writeDepth: true)
         self.depthStencilState = ShaderCore.device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
@@ -75,7 +72,7 @@ public class NormalBlendRenderer: RendererBase {
         
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
-        drawProcess.draw(encoder: renderCommandEncoder!, vertexDescriptor: vertexDescriptor)
+        drawProcess.draw(encoder: renderCommandEncoder!)
         
         renderCommandEncoder?.setViewport(
             MTLViewport(

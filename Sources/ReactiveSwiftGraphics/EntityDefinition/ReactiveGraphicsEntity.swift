@@ -19,7 +19,6 @@ public protocol ReactiveGraphicsEntity: Equatable {
     func customRender(
         functions: HasSketchFunctions.Type,
         encoder: MTLRenderCommandEncoder?,
-        vertexDescriptor: MTLVertexDescriptor?,
         customMatrix: inout [f4x4],
         ray: (origin: f3, direction: f3)?
     )
@@ -29,7 +28,6 @@ extension ReactiveGraphicsEntity where Self: Equatable {
     public func customRender(
         functions: HasSketchFunctions.Type,
         encoder: MTLRenderCommandEncoder?,
-        vertexDescriptor: MTLVertexDescriptor?,
         customMatrix: inout [f4x4],
         ray: (origin: f3, direction: f3)?
     ) {}

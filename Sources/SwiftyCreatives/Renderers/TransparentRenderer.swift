@@ -22,7 +22,6 @@ class TransparentRenderer: RendererBase {
     var depthState: MTLDepthStencilState
     var clearTileState: MTLRenderPipelineState
     var resolveState: MTLRenderPipelineState
-    var vertexDescriptor: MTLVertexDescriptor
     
     let optimalTileSize = MTLSize(width: 32, height: 16, depth: 1)
     
@@ -35,12 +34,9 @@ class TransparentRenderer: RendererBase {
         let resolveFunction = try! ShaderCore.library.makeFunction(name: "OITResolve_4Layer", constantValues: constantValue)
         let clearFunction = try! ShaderCore.library.makeFunction(name: "OITClear_4Layer", constantValues: constantValue)
         
-        // MARK: - vertexDescriptor
-        vertexDescriptor = Self.createVertexDescriptor()
-        
         // MARK: - render pipeline descriptor
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
-        pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
+        pipelineStateDescriptor.vertexDescriptor = RenderCore.sharedVertexDescriptor
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.rasterSampleCount = 1
         pipelineStateDescriptor.depthAttachmentPixelFormat = .depth32Float_stencil8
@@ -109,7 +105,7 @@ class TransparentRenderer: RendererBase {
         // MARK: - draw primitive
         drawProcess.beforeDraw(encoder: renderEncoder)
         drawProcess.update(camera: camera)
-        drawProcess.draw(encoder: renderEncoder, vertexDescriptor: vertexDescriptor)
+        drawProcess.draw(encoder: renderEncoder)
 
         renderEncoder.setViewport(
             MTLViewport(

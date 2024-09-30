@@ -35,21 +35,30 @@ struct Material: Equatable {
     var specularTexture: MTLTexture?
 
     init(mdlMaterial: MDLMaterial?, textureLoader: MTKTextureLoader) {
-        self.diffuseTexture  = loadTexture(.baseColor, mdlMaterial: mdlMaterial, textureLoader: textureLoader)
+        self.diffuseTexture = loadTexture(.baseColor, mdlMaterial: mdlMaterial, textureLoader: textureLoader)
         self.specularTexture = loadTexture(.specular,  mdlMaterial: mdlMaterial, textureLoader: textureLoader)
     }
 
     func loadTexture(_ semantic: MDLMaterialSemantic, mdlMaterial: MDLMaterial?, textureLoader: MTKTextureLoader) -> MTLTexture? {
         guard let materialProperty = mdlMaterial?.property(with: semantic) else {
+            print("no material property \(semantic)")
             return nil
         }
         switch materialProperty.type {
         case .string:
             guard let textureName = materialProperty.stringValue else {
+                print("no texture")
                 return nil
             }
             return try? textureLoader.newTexture(name: textureName, scaleFactor: 1, bundle: .main)
+        case .texture:
+            guard let tex = materialProperty.textureSamplerValue?.texture else {
+                print("not texture sample value")
+                return nil
+            }
+            return try? ShaderUtils.textureLoader.newTexture(texture: tex)
         default:
+//            print(String(describing: materialProperty.type))
             return nil
         }
     }
@@ -134,8 +143,7 @@ public struct Model3D: ReactiveGraphicsEntity, HasCollider {
     public var tapProcess: (() -> ())?
     @GraphicsState public var currentlyHovering = false
 
-    @GraphicsState var model: ModelObject?
-    var modelURL: URL
+    let model: ModelObject
 
     public init(modelURL: URL, position: f3 = .zero, rotation: f3 = .zero, scale: f3 = .one, color: f4 = .one, currentlyHovering: Bool = false, collider: Collider) {
         self.position = position
@@ -144,8 +152,10 @@ public struct Model3D: ReactiveGraphicsEntity, HasCollider {
         self.color = color
         self.collider = .box(xLength: scale.x, yLength: scale.y, zLength: scale.z)
         self.currentlyHovering = currentlyHovering
-        self.modelURL = modelURL
         self.collider = collider
+        self.model = ModelObject()
+        self.model.loadModel(url: modelURL, vertexDescriptor: RenderCore.sharedVertexDescriptor, textureLoader: ShaderUtils.textureLoader)
+        print("model init called")
     }
 
     public var entity: some ReactiveGraphicsEntity {
@@ -155,21 +165,15 @@ public struct Model3D: ReactiveGraphicsEntity, HasCollider {
     public func customRender(
         functions: HasSketchFunctions.Type,
         encoder: MTLRenderCommandEncoder?,
-        vertexDescriptor: MTLVertexDescriptor?,
         customMatrix: inout [f4x4],
         ray: (origin: f3, direction: f3)?
     ) {
-
-        if model == nil, let vertexDescriptor {
-            model = ModelObject()
-            model?.loadModel(url: modelURL, vertexDescriptor: vertexDescriptor, textureLoader: ShaderUtils.textureLoader)
-        }
 
         guard let encoder else {
             return
         }
         functions.color(encoder, color)
-        model?.render(renderEncoder: encoder)
+        model.render(renderEncoder: encoder)
     }
 
     public func enableRayInteraction() -> Self {

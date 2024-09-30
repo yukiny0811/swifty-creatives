@@ -26,7 +26,7 @@ open class Sketch: HasSketchFunctions {
     open func setupCamera(camera: MainCamera) {}
     open func update(camera: MainCamera) {}
     #endif
-    open func draw(encoder: SCEncoder, vertexDescriptor: MTLVertexDescriptor) {}
+    open func draw(encoder: SCEncoder) {}
 
     open func afterCommit(texture: MTLTexture?) {}
     

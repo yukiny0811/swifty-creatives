@@ -11,7 +11,6 @@ import MetalKit
 
 public class AddRenderer: RendererBase {
     let renderPipelineDescriptor: MTLRenderPipelineDescriptor
-    let vertexDescriptor: MTLVertexDescriptor
     let renderPipelineState: MTLRenderPipelineState
     public init(sketch: Sketch, cameraConfig: CameraConfig, drawConfig: DrawConfig) {
         renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -23,9 +22,7 @@ public class AddRenderer: RendererBase {
         renderPipelineDescriptor.vertexFunction = ShaderCore.library.makeFunction(name: "add_vertex")
         renderPipelineDescriptor.fragmentFunction = ShaderCore.library.makeFunction(name: "add_fragment")
         
-        vertexDescriptor = Self.createVertexDescriptor()
-        
-        renderPipelineDescriptor.vertexDescriptor = vertexDescriptor
+        renderPipelineDescriptor.vertexDescriptor = RenderCore.sharedVertexDescriptor
         
         renderPipelineState = try! ShaderCore.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
@@ -66,7 +63,7 @@ public class AddRenderer: RendererBase {
         
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
-        drawProcess.draw(encoder: renderCommandEncoder!, vertexDescriptor: vertexDescriptor)
+        drawProcess.draw(encoder: renderCommandEncoder!)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(

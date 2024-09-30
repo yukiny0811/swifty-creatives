@@ -18,12 +18,12 @@ public class ReactiveGraphicsSketch: Sketch, ObservableObject {
         self.entity = entity
     }
 
-    public override func draw(encoder: any SCEncoder, vertexDescriptor: MTLVertexDescriptor) {
-        resolveGroup(group: entity, encoder: encoder, vertexDescriptor: vertexDescriptor)
+    public override func draw(encoder: any SCEncoder) {
+        resolveGroup(group: entity, encoder: encoder)
         isTapping = false
     }
 
-    private func resolveGroup(group: Group, encoder: MTLRenderCommandEncoder, vertexDescriptor: MTLVertexDescriptor) {
+    private func resolveGroup(group: Group, encoder: MTLRenderCommandEncoder) {
 
         var collisionEntity: (any HasCollider)?
         var collisionMinDistance: Float = 999999
@@ -34,7 +34,7 @@ public class ReactiveGraphicsSketch: Sketch, ObservableObject {
                 continue
             }
             if let e = e as? Group {
-                resolveGroup(group: e, encoder: encoder, vertexDescriptor: vertexDescriptor)
+                resolveGroup(group: e, encoder: encoder)
             }
             push {
 
@@ -43,7 +43,7 @@ public class ReactiveGraphicsSketch: Sketch, ObservableObject {
                 rotateY(e.rotation.y)
                 rotateZ(e.rotation.z)
                 scale(e.scale)
-                e.customRender(functions: HasSketchFunctions.self, encoder: encoder, vertexDescriptor: vertexDescriptor, customMatrix: &customMatrix, ray: currentRay)
+                e.customRender(functions: HasSketchFunctions.self, encoder: encoder, customMatrix: &customMatrix, ray: currentRay)
 
                 if let hasColliderEntity = e as? (any HasCollider), let currentRay, hasColliderEntity.rayInteractionEnabled {
                     let collisionResult = hasColliderEntity.collider.didCollide(ray: currentRay, mat: getCustomMatrix())
@@ -60,7 +60,7 @@ public class ReactiveGraphicsSketch: Sketch, ObservableObject {
             }
 
             if let childGroup = e.entity as? Group {
-                resolveGroup(group: childGroup, encoder: encoder, vertexDescriptor: vertexDescriptor)
+                resolveGroup(group: childGroup, encoder: encoder)
             }
             popMatrix()
         }
