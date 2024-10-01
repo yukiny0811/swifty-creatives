@@ -13,7 +13,7 @@ struct ContentView: View {
         NavigationStack {
             ReactiveGraphicsScene {
                 Model3D(
-                    modelURL: Bundle.main.url(forResource: "15", withExtension: "obj")!,
+                    modelURL: Bundle.main.url(forResource: "sphere", withExtension: "obj")!,
                     collider: .sphere(radius: 1)
                 )
             }

@@ -63,3 +63,25 @@ open class Sketch: HasSketchFunctions {
     open func touchesCancelled(camera: MainCamera, touchLocations: [f2]) {}
     #endif
 }
+
+open class AdvancedSketch {
+    public init() {}
+    open func setupCamera(camera: MainCamera) {}
+    open func draw(encoder: MTLRenderCommandEncoder) {}
+    open func postProcess(texture: MTLTexture, commandBuffer: MTLCommandBuffer) {}
+
+#if os(macOS)
+    open func mouseMoved(camera: MainCamera, location: f2) {}
+    open func mouseDown(camera: MainCamera, location: f2) {}
+    open func mouseDragged(camera: MainCamera, location: f2) {}
+    open func mouseUp(camera: MainCamera, location: f2) {}
+    open func mouseEntered(camera: MainCamera, location: f2) {}
+    open func mouseExited(camera: MainCamera, location: f2) {}
+    open func keyDown(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func keyUp(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func viewWillStartLiveResize(camera: MainCamera, viewFrame: CGRect) {}
+    open func resize(withOldSuperviewSize oldSize: NSSize, camera: MainCamera, viewFrame: CGRect) {}
+    open func viewDidEndLiveResize(camera: MainCamera, viewFrame: CGRect) {}
+    open func scrollWheel(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+#endif
+}

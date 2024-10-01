@@ -48,4 +48,22 @@ public struct SketchView: ViewRepresentable {
     #endif
 }
 
+public struct AdvancedSketchView: ViewRepresentable {
+    let renderer: AdvancedRenderer
+    let drawProcess: AdvancedSketch
+    public init(
+        _ sketch: AdvancedSketch,
+        cameraConfig: CameraConfig = DefaultPerspectiveConfig()
+    ) {
+        self.drawProcess = sketch
+        self.renderer = AdvancedRenderer(drawProcess, cameraConfig: cameraConfig)
+    }
+
+    public func makeNSView(context: Context) -> MTKView {
+        let mtkView = AdvancedTouchableMTKView(renderer: renderer)
+        return mtkView
+    }
+    public func updateNSView(_ nsView: MTKView, context: Context) {}
+}
+
 #endif

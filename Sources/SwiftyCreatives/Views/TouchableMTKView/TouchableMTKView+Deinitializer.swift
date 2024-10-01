@@ -21,4 +21,15 @@ extension TouchableMTKView {
     }
 }
 
+extension AdvancedTouchableMTKView {
+    func deinitView() {
+#if os(iOS)
+        if let recognizers = self.gestureRecognizers {
+            for recognizer in recognizers {
+                self.removeGestureRecognizer(recognizer)
+            }
+        }
+#endif
+    }
+}
 #endif
