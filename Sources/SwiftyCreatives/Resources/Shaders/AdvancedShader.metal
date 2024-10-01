@@ -96,9 +96,9 @@ inline float4x4 createModelRotationMatrix(
 
 vertex RasterizerData advanced_vertex (
                                        const Vertex vIn [[ stage_in ]],
-                                       const device float3& modelPos [[ buffer(10) ]],
-                                       const device float3& modelRot [[ buffer(11) ]],
-                                       const device float3& modelScale [[ buffer(12) ]],
+                                       const device float3& modelPos [[ buffer(16) ]],
+                                       const device float3& modelRot [[ buffer(17) ]],
+                                       const device float3& modelScale [[ buffer(18) ]],
                                        const device float4x4& projectionMatrix [[ buffer(13) ]],
                                        const device float4x4& viewMatrix [[ buffer(14) ]],
                                        const device float3& cameraPos [[ buffer(15) ]]
@@ -125,14 +125,14 @@ vertex RasterizerData advanced_vertex (
 
 fragment half4 advanced_fragment (
                                   RasterizerData rd [[stage_in]],
-                                  texture2d<half, access::sample> baseColorTex [[ texture(0) ]]
+                                  texture2d<half, access::sample> diffuseTex [[ texture(1) ]]
 ) {
 
     half4 resultColor = half4(0, 0, 0, 0);
 
-    if (!is_null_texture(baseColorTex)) {
+    if (!is_null_texture(diffuseTex)) {
         constexpr sampler textureSampler (coord::pixel, address::clamp_to_edge, filter::linear);
-        resultColor = baseColorTex.sample(textureSampler, float2(rd.uv.x*baseColorTex.get_width(), rd.uv.y*baseColorTex.get_height()));
+        resultColor = diffuseTex.sample(textureSampler, float2(rd.uv.x*diffuseTex.get_width(), rd.uv.y*diffuseTex.get_height()));
     } else {
         resultColor = half4(rd.color.x, rd.color.y, rd.color.z, 1);
     }

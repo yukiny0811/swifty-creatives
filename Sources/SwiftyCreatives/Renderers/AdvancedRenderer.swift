@@ -65,6 +65,9 @@ public class AdvancedRenderer: NSObject, MTKViewDelegate {
         renderCommandEncoder.setVertexBytes(camera.perspectiveMatrix, length: f4x4.memorySize, index: 13)
         renderCommandEncoder.setVertexBytes(camera.mainMatrix, length: f4x4.memorySize, index: 14)
         renderCommandEncoder.setVertexBytes([camera.getCameraPos()], length: f3.memorySize, index: 15)
+        renderCommandEncoder.setVertexBytes([f2.one], length: f2.memorySize, index: 11)
+        renderCommandEncoder.setVertexBytes([f3.one], length: f3.memorySize, index: 12)
+        renderCommandEncoder.setVertexBytes([f4.one], length: f4.memorySize, index: 19)
         renderCommandEncoder.setViewport(
             MTLViewport(
                 originX: 0,

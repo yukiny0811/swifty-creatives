@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		562F67D92CABB45D00C0689E /* AdvancedSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562F67D82CABB45D00C0689E /* AdvancedSample.swift */; };
 		5643923129A14E2F0053C6E6 /* Sample7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5643923029A14E2F0053C6E6 /* Sample7.swift */; };
 		5643923329A187740053C6E6 /* Sample8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5643923229A187740053C6E6 /* Sample8.swift */; };
 		5668C0862C5D77CD00082B71 /* apple.svg in Resources */ = {isa = PBXBuildFile; fileRef = 5668C0852C5D77CD00082B71 /* apple.svg */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		562F67D82CABB45D00C0689E /* AdvancedSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSample.swift; sourceTree = "<group>"; };
 		5643923029A14E2F0053C6E6 /* Sample7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample7.swift; sourceTree = "<group>"; };
 		5643923229A187740053C6E6 /* Sample8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample8.swift; sourceTree = "<group>"; };
 		5668C0852C5D77CD00082B71 /* apple.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = apple.svg; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				56C53FCA294A645200962DD6 /* Assets.xcassets */,
 				56C53FCF294A645200962DD6 /* ExampleMacOSApp.entitlements */,
 				56C53FCC294A645200962DD6 /* Preview Content */,
+				562F67D82CABB45D00C0689E /* AdvancedSample.swift */,
 			);
 			path = ExampleMacOSApp;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 				5668C08C2C5DE38D00082B71 /* Feature2.swift in Sources */,
 				566E503B2B6FB551002B98D6 /* Sample9.swift in Sources */,
 				566E503D2B6FC549002B98D6 /* Sample10.swift in Sources */,
+				562F67D92CABB45D00C0689E /* AdvancedSample.swift in Sources */,
 				569A83992999236000F62062 /* Sample6.swift in Sources */,
 				5643923129A14E2F0053C6E6 /* Sample7.swift in Sources */,
 				56694B09298AB8840022C24D /* Sample3.swift in Sources */,

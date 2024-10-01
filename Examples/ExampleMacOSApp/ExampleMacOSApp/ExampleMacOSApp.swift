@@ -14,6 +14,11 @@ struct ExampleMacOSApp: App {
         WindowGroup {
             NavigationSplitView {
                 List {
+                    Section("Advanced") {
+                        NavigationLink("advanced") {
+                            AdvancedSketchView(AdvancedSample())
+                        }
+                    }
                     Section("Examples") {
                         NavigationLink("1 Blooming Boxes") {
                             Sample1View()
