@@ -14,6 +14,8 @@ jobs:
     runs-on: macos-15-xlarge
     steps:
       - uses: actions/checkout@v3
+      - name: Download visionOS
+        run: sudo xcodebuild -runFirstLaunch && sudo xcrun simctl list && sudo xcodebuild -downloadPlatform visionOS && sudo xcodebuild -runFirstLaunch
       - name: Build macOS
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=macOS" | xcpretty
       - name: Build Mac Catalyst
@@ -34,6 +36,8 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
+      - name: Download visionOS
+        run: sudo xcodebuild -runFirstLaunch && sudo xcrun simctl list && sudo xcodebuild -downloadPlatform visionOS && sudo xcodebuild -runFirstLaunch
       - name: Test macOS
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64" | xcpretty
       - name: Test Mac Catalyst
@@ -54,6 +58,8 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
+      - name: Download visionOS
+        run: sudo xcodebuild -runFirstLaunch && sudo xcrun simctl list && sudo xcodebuild -downloadPlatform visionOS && sudo xcodebuild -runFirstLaunch
       - name: Build macOS Example
         run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -skipMacroValidation -scheme ExampleMacOSApp build -destination "platform=macOS" | xcpretty
       - name: Build iOS Example
