@@ -17,9 +17,9 @@ jobs:
       - name: Download visionOS
         run: sudo xcodebuild -runFirstLaunch && sudo xcrun simctl list && sudo xcodebuild -downloadPlatform visionOS && sudo xcodebuild -runFirstLaunch
       - name: Build macOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,variant=macOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=macOS" | xcpretty
       - name: Build Mac Catalyst
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,variant=Mac Catalyst" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=Mac Catalyst" | xcpretty
       - name: Build iOS
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=iOS" | xcpretty
       - name: Build iOS Simulator
