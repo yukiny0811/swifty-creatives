@@ -8,16 +8,20 @@ on:
   schedule:
     - cron: "30 5 * * *"
 env:
-  DEVELOPER_DIR: /Applications/Xcode_15.2.app
+  DEVELOPER_DIR: /Applications/Xcode_16.0.app
 jobs:
   build:
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app
+      - name: Install visionOS
+        run: set -o pipefail && sudo xcodebuild -runFirstLaunch && sudo xcrun simctl list && sudo xcodebuild -downloadPlatform visionOS && sudo xcodebuild -runFirstLaunch | xcpretty
       - name: Build macOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=macOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS" | xcpretty
       - name: Build Mac Catalyst
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,arch=arm64,variant=Mac Catalyst" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=macOS,variant=Mac Catalyst" | xcpretty
       - name: Build iOS
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives build -destination "generic/platform=iOS" | xcpretty
       - name: Build iOS Simulator
@@ -33,27 +37,29 @@ jobs:
   test:
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app
+      - name: Install visionOS
+        run: set -o pipefail && sudo xcodebuild -runFirstLaunch && sudo xcrun simctl list && sudo xcodebuild -downloadPlatform visionOS && sudo xcodebuild -runFirstLaunch | xcpretty
       - name: Test macOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS" | xcpretty
       - name: Test Mac Catalyst
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS,arch=arm64,variant=Mac Catalyst" | xcpretty
-      - name: Test iOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=iOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS,variant=Mac Catalyst" | xcpretty
       - name: Test iOS Simulator
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=iOS Simulator" | xcpretty
-      - name: Test visionOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=visionOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=iOS Simulator,name:iPhone 16 Pro Max" | xcpretty
       - name: Test visionOS Simulator
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=visionOS Simulator" | xcpretty
-      - name: Test tvOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=tvOS" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=visionOS Simulator,name:Apple Vision Pro" | xcpretty
       - name: Test tvOS Simulator
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=tvOS Simulator" | xcpretty
+        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=tvOS Simulator,Apple TV 4K (3rd generation) (at 1080p)" | xcpretty
   build-examples:
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app
+      - name: Install visionOS
+        run: set -o pipefail && sudo xcodebuild -runFirstLaunch && sudo xcrun simctl list && sudo xcodebuild -downloadPlatform visionOS && sudo xcodebuild -runFirstLaunch | xcpretty
       - name: Build macOS Example
         run: cd Examples/ExampleMacOSApp && set -o pipefail && xcodebuild -skipMacroValidation -scheme ExampleMacOSApp build -destination "platform=macOS" | xcpretty
       - name: Build iOS Example
