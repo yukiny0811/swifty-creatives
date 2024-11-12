@@ -46,16 +46,10 @@ jobs:
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS" | xcpretty
       - name: Test Mac Catalyst
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=macOS,variant=Mac Catalyst" | xcpretty
-      - name: Test iOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=iOS" | xcpretty
       - name: Test iOS Simulator
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=iOS Simulator" | xcpretty
-      - name: Test visionOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=visionOS" | xcpretty
       - name: Test visionOS Simulator
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=visionOS Simulator" | xcpretty
-      - name: Test tvOS
-        run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=tvOS" | xcpretty
       - name: Test tvOS Simulator
         run: set -o pipefail && xcodebuild -skipMacroValidation -scheme SwiftyCreatives test -destination "platform=tvOS Simulator" | xcpretty
   build-examples:
