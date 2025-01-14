@@ -14,7 +14,7 @@ import Spatial
 
 public class RendererBase {
     
-    var drawProcess: Sketch
+    public var drawProcess: Sketch
     
     let arSession: ARKitSession
     let worldTracking: WorldTrackingProvider
@@ -67,7 +67,7 @@ public class RendererBase {
 #else
 public class RendererBase: NSObject, MTKViewDelegate {
     var camera: MainCamera
-    var drawProcess: Sketch
+    public var drawProcess: Sketch
     var savedDate: Date
     var drawConfig: DrawConfig
     public var cachedTexture: MTLTexture?
