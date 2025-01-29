@@ -33,7 +33,7 @@ struct TestingApp: App {
 
         ImmersiveSpace(id: "ImmersiveSpace") {
             CompositorLayer(configuration: ContentStageConfiguration()) { layerRenderer in
-                let renderer = RendererBase.BlendMode.alphaBlend.getRenderer(sketch: SampleSketch(), layerRenderer: layerRenderer)
+                let renderer = RendererBase.BlendMode.normalBlend.getRenderer(sketch: SampleSketch(), layerRenderer: layerRenderer)
                 renderer.startRenderLoop()
             }
         }.immersionStyle(selection: .constant(.full), in: .full)
