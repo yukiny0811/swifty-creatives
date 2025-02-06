@@ -10,6 +10,10 @@ Using Metal directly for rendering. Inspired by Processing. Supports visionOS.
 
 ![outputFinalfinal](https://github.com/yukiny0811/swifty-creatives/assets/28947703/52d2d3f5-f69b-48f0-b77f-5db910615010)
 
+## AI Documentation (Q&A)
+
+https://chatgpt.com/g/g-67a4bd5b2f6c81918311ea49989be5d5-swifty-creatives-q-a
+
 ## Requirements
 
 - Swift5.9
