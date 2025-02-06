@@ -16,7 +16,8 @@ public extension Sketch {
             location.y = event.window!.contentRect(
                 forFrameRect: event.window!.frame
             ).height - location.y
-            location -= CGPoint(x: viewFrame.minX, y: viewFrame.minY)
+            location.x -= viewFrame.minX
+            location.y -= viewFrame.minY
             return f2(Float(location.x), Float(location.y))
         } else {
             let contentRect = event.window!.contentRect(forFrameRect: event.window!.frame)
