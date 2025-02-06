@@ -14,7 +14,7 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.17.4"),
     .package(url: "https://github.com/yukiny0811/SimpleSimdSwift", exact: "1.0.1"),
     .package(url: "https://github.com/yukiny0811/FontVertexBuilder", exact: "1.2.5"),
-    .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", exact: "3.2.1"),
+    .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", exact: "3.3.1"),
     .package(url: "https://github.com/apple/swift-syntax.git", from: "600.0.1"),
 ]
 
