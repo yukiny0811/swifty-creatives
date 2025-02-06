@@ -129,9 +129,9 @@ public class TouchableMTKView: MTKView {
     }
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
-        let diff = touch.location(in: self) - touch.previousLocation(in: self)
-        let moveRadX = Float(diff.y) * 0.01
-        let moveRadY = Float(diff.x) * 0.01
+        let diff = touch.location(in: self).f2Value - touch.previousLocation(in: self).f2Value
+        let moveRadX = diff.y * 0.01
+        let moveRadY = diff.x * 0.01
         switch renderer.camera.config.easyCameraType {
         case .manual:
             break
