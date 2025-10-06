@@ -99,6 +99,9 @@ public class TouchableMTKView: MTKView {
         }
         renderer.drawProcess.scrollWheel(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
     }
+    public override func magnify(with event: NSEvent) {
+        renderer.drawProcess.magnify(with: event, camera: renderer.camera, viewFrame: self.superview!.frame)
+    }
     #endif
     
     #if os(iOS)

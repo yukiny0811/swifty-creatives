@@ -58,6 +58,7 @@ open class Sketch: FunctionBase {
     open func resize(withOldSuperviewSize oldSize: NSSize, camera: MainCamera, viewFrame: CGRect) {}
     open func viewDidEndLiveResize(camera: MainCamera, viewFrame: CGRect) {}
     open func scrollWheel(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
+    open func magnify(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
     #endif
     
     #if os(iOS)
