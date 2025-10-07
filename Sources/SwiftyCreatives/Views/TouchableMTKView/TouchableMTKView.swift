@@ -10,7 +10,11 @@ import MetalKit
 #if !os(visionOS)
 
 public class TouchableMTKView: MTKView {
+
     var renderer: RendererBase
+
+    private var prevMagnification: Float = 1.0
+
     init(renderer: RendererBase) {
         self.renderer = renderer
         super.init(frame: .zero, device: ShaderCore.device)
@@ -126,6 +130,18 @@ public class TouchableMTKView: MTKView {
             renderer.camera.translate(0, 0, -Float(delta.x) * 0.0001)
         }
         renderer.drawProcess.onScroll(delta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
+    }
+    @objc func onPinch(recognizer: UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            prevMagnification = 1.0
+        case .changed:
+            let delta = Float(recognizer.scale) / prevMagnification
+            prevMagnification = Float(recognizer.scale)
+            renderer.drawProcess.onPinch(magnificationDelta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
+        default:
+            prevMagnification = 1.0
+        }
     }
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         renderer.drawProcess.touchesBegan(camera: renderer.camera, touchLocations: getTouchLocations(touches: touches))

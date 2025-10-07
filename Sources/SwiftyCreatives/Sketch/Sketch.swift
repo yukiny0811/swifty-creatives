@@ -67,5 +67,6 @@ open class Sketch: FunctionBase {
     open func touchesMoved(camera: MainCamera, touchLocations: [f2]) {}
     open func touchesEnded(camera: MainCamera, touchLocations: [f2]) {}
     open func touchesCancelled(camera: MainCamera, touchLocations: [f2]) {}
+    open func onPinch(magnificationDelta: Float, camera: MainCamera, view: UIView, gestureRecognizer: UIPinchGestureRecognizer) {}
     #endif
 }

@@ -39,6 +39,9 @@ extension TouchableMTKView {
         scrollGestureRecognizer.minimumNumberOfTouches = 2
         scrollGestureRecognizer.maximumNumberOfTouches = 2
         self.addGestureRecognizer(scrollGestureRecognizer)
+
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(onPinch))
+        addGestureRecognizer(pinch)
     }
     #endif
 }
