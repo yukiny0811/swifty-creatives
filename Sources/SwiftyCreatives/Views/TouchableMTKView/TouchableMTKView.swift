@@ -13,7 +13,7 @@ public class TouchableMTKView: MTKView {
 
     var renderer: RendererBase
 
-    private var prevMagnification: Float? = nil
+    private var lastScale: CGFloat = 1.0
 
     init(renderer: RendererBase) {
         self.renderer = renderer
@@ -134,17 +134,32 @@ public class TouchableMTKView: MTKView {
     @objc func onPinch(recognizer: UIPinchGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            prevMagnification = 0.0
+            lastScale = 1.0
+
         case .changed:
-            if let prevMagnification {
-                let delta = Float(recognizer.scale) - prevMagnification
-                self.prevMagnification = Float(recognizer.scale)
-                renderer.drawProcess.onPinch(magnificationDelta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
-            } else {
-                prevMagnification = 0.0
-            }
+            let s = recognizer.scale          
+            // 差分は引き算ではなく「割り算」
+            var deltaScale = s / lastScale
+            lastScale = s
+
+            // 破綻防止に軽くクランプ（指が飛んだ時のスパイク抑制）
+            deltaScale = min(max(deltaScale, 0.5), 2.0)
+
+            // 倍率差分→ズーム量へ。log2で“視覚対数”に寄せると自然
+            let dz = Float(log2(Double(deltaScale))) * 1.0
+
+            renderer.drawProcess.onPinch(
+                magnificationDelta: dz,
+                camera: renderer.camera,
+                view: self,
+                gestureRecognizer: recognizer
+            )
+
+        case .ended, .cancelled, .failed:
+            lastScale = 1.0
+
         default:
-            prevMagnification = nil
+            break
         }
     }
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
