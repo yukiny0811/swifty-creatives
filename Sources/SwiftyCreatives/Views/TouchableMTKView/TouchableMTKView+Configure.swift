@@ -41,12 +41,25 @@ extension TouchableMTKView {
         self.addGestureRecognizer(scrollGestureRecognizer)
 
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(onPinch))
+        pinch.delegate = self
         addGestureRecognizer(pinch)
 
         let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(onRotate))
+        rotationRecognizer.delegate = self
         addGestureRecognizer(rotationRecognizer)
     }
     #endif
 }
+
+#if os(iOS)
+extension TouchableMTKView: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+       return true
+   }
+}
+#endif
 
 #endif
