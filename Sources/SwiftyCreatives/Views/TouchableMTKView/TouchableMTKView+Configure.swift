@@ -42,6 +42,9 @@ extension TouchableMTKView {
 
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(onPinch))
         addGestureRecognizer(pinch)
+
+        let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(onRotate))
+        addGestureRecognizer(rotationRecognizer)
     }
     #endif
 }

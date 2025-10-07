@@ -14,6 +14,7 @@ public class TouchableMTKView: MTKView {
     var renderer: RendererBase
 
     private var lastScale: CGFloat = 1.0
+    private var lastRotation: CGFloat? = nil
 
     init(renderer: RendererBase) {
         self.renderer = renderer
@@ -137,7 +138,7 @@ public class TouchableMTKView: MTKView {
             lastScale = 1.0
 
         case .changed:
-            let s = recognizer.scale          
+            let s = recognizer.scale
             // 差分は引き算ではなく「割り算」
             var deltaScale = s / lastScale
             lastScale = s
@@ -160,6 +161,22 @@ public class TouchableMTKView: MTKView {
 
         default:
             break
+        }
+    }
+    @objc func onRotate(recognizer: UIRotationGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            lastRotation = recognizer.rotation
+        case .changed:
+            if let lastRotation {
+                let delta = recognizer.rotation - lastRotation
+                renderer.drawProcess.onRotation(rotationDelta: Float(delta), camera: renderer.camera, view: self, gestureRecognizer: recognizer)
+            }
+            lastRotation = recognizer.rotation
+        case .ended:
+            lastRotation = nil
+        default:
+            lastRotation = nil
         }
     }
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

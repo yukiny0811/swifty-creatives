@@ -32,9 +32,9 @@ open class Sketch: FunctionBase {
     open func update(camera: MainCamera) {}
     #endif
     open func draw(encoder: SCEncoder) {}
-    
+
     open func afterCommit(texture: MTLTexture?) {}
-    
+
     public func beforeDraw(encoder: SCEncoder) {
         self.customMatrix = [f4x4.createIdentity()]
         self.privateEncoder = encoder
@@ -44,7 +44,7 @@ open class Sketch: FunctionBase {
     public func getCustomMatrix() -> f4x4 {
         return customMatrix.reduce(f4x4.createIdentity(), *)
     }
-    
+
     #if os(macOS)
     open func mouseMoved(camera: MainCamera, location: f2) {}
     open func mouseDown(camera: MainCamera, location: f2) {}
@@ -60,7 +60,7 @@ open class Sketch: FunctionBase {
     open func scrollWheel(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
     open func magnify(with event: NSEvent, camera: MainCamera, viewFrame: CGRect) {}
     #endif
-    
+
     #if os(iOS)
     open func onScroll(delta: CGPoint, camera: MainCamera, view: UIView, gestureRecognizer: UIPanGestureRecognizer) {}
     open func touchesBegan(camera: MainCamera, touchLocations: [f2]) {}
@@ -68,5 +68,6 @@ open class Sketch: FunctionBase {
     open func touchesEnded(camera: MainCamera, touchLocations: [f2]) {}
     open func touchesCancelled(camera: MainCamera, touchLocations: [f2]) {}
     open func onPinch(magnificationDelta: Float, camera: MainCamera, view: UIView, gestureRecognizer: UIPinchGestureRecognizer) {}
+    open func onRotation(rotationDelta: Float, camera: MainCamera, view: UIView, gestureRecognizer: UIRotationGestureRecognizer) {}
     #endif
 }
