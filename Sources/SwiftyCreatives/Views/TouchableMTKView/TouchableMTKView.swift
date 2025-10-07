@@ -13,7 +13,7 @@ public class TouchableMTKView: MTKView {
 
     var renderer: RendererBase
 
-    private var prevMagnification: Float = 1.0
+    private var prevMagnification: Float? = nil
 
     init(renderer: RendererBase) {
         self.renderer = renderer
@@ -134,13 +134,17 @@ public class TouchableMTKView: MTKView {
     @objc func onPinch(recognizer: UIPinchGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            prevMagnification = 1.0
+            prevMagnification = 0.0
         case .changed:
-            let delta = Float(recognizer.scale) / prevMagnification
-            prevMagnification = Float(recognizer.scale)
-            renderer.drawProcess.onPinch(magnificationDelta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
+            if let prevMagnification {
+                let delta = Float(recognizer.scale) - prevMagnification
+                self.prevMagnification = Float(recognizer.scale)
+                renderer.drawProcess.onPinch(magnificationDelta: delta, camera: renderer.camera, view: self, gestureRecognizer: recognizer)
+            } else {
+                prevMagnification = 0.0
+            }
         default:
-            prevMagnification = 1.0
+            prevMagnification = nil
         }
     }
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
