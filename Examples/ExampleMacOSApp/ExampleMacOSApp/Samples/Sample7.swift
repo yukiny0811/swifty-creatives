@@ -23,7 +23,7 @@ final class Sample7: Sketch {
         MyHitTestableRect(),
         MyHitTestableRect()
     ]
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         for r in rect {
             translate(0, 3, 0)
             rotateY(0.3)

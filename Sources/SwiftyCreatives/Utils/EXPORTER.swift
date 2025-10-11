@@ -9,3 +9,7 @@
 @_exported import MetalKit
 @_exported import SwiftyCreativesSound
 @_exported import EasyMetalShader
+@_exported import FontVertexBuilder
+@_exported import SVGVertexBuilder
+@_exported import VectorTriangulator
+@_exported import SwiftyCoreText

@@ -19,7 +19,7 @@ final class Sample9: Sketch {
         camera.setFov(to: fov)
     }
     
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         color(1, 0.5, 1, 0.3)
         let count = 10
         let spacing: Float = 10

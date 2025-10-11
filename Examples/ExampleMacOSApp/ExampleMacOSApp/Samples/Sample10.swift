@@ -16,7 +16,7 @@ class Sample10: Sketch {
         fontSize: 10
     )
     
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         color(1)
         text(swiftTextObj)
     }

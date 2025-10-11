@@ -12,12 +12,12 @@ import SimpleSimdSwift
 public struct LetterCache {
     public var buffer: MTLBuffer
     public var verticeCount: Int
-    public var offset: f2
-    public var size: f2
+    public var offset: simd_double2
+    public var size: simd_double2
 }
 
 public struct LetterCacheRaw {
-    public var vertices: [f3]
-    public var offset: f2
-    public var size: f2
+    public var vertices: [simd_double3]
+    public var offset: simd_double2
+    public var size: simd_double2
 }

@@ -13,7 +13,7 @@ final class Sample6: Sketch {
         super.init()
     }
     let count = 10
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         setFog(color: f4.one, density: 0.02)
         color(0.8, 0.1, 0.1, 0.8)
         for z in -count...count {

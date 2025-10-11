@@ -40,7 +40,7 @@ final class Sample4: Sketch {
     override func update(camera: MainCamera) {
         camera.rotateAroundY(0.01)
     }
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         for o in objects {
             o.draw(encoder: encoder, customMatrix: getCustomMatrix())
         }

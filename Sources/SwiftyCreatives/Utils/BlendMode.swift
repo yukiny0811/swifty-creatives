@@ -40,7 +40,8 @@ public extension RendererBase {
 #else
 
 public extension RendererBase {
-    
+
+    @MainActor
     enum BlendMode {
         
         case normalBlend

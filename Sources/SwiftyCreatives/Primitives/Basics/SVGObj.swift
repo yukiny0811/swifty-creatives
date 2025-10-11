@@ -16,7 +16,7 @@ public class SVGObj: SVG {
         await super.init(url: url, maxDepth: maxDepth)
         triangulated = triangulatedPaths.map {
             $0.map {
-                f3($0.x, $0.y, 0)
+                f3(Float($0.x), Float($0.y), 0)
             }
         }
         colors = triangulatedPaths.map { _ in

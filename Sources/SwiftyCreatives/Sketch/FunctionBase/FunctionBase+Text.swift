@@ -35,8 +35,8 @@ public extension FunctionBase {
         _ character: Character,
         factory: TextFactory,
         primitiveType: MTLPrimitiveType = .triangle,
-        applyOffsetBefore: ((f2) -> ())? = nil,
-        applySizeAfter: ((f2) -> ())? = nil
+        applyOffsetBefore: ((simd_double2) -> ())? = nil,
+        applySizeAfter: ((simd_double2) -> ())? = nil
     ) {
         if let cached = factory.cached[character] {
             applyOffsetBefore?(cached.offset)
@@ -57,10 +57,10 @@ public extension FunctionBase {
                 continue
             }
             char(c, factory: factory) { [self] offset in
-                translate(-offset.x, 0, 0)
+                translate(-Float(offset.x), 0, 0)
             } applySizeAfter: { [self] size in
-                translate(-size.x, 0, 0)
-                spacerFactor = -size.x
+                translate(-Float(size.x), 0, 0)
+                spacerFactor = -Float(size.x)
             }
         }
     }
@@ -69,9 +69,9 @@ public extension FunctionBase {
         setUniforms(modelPos: .zero, modelScale: .one, hasTexture: false, useVertexColor: true)
         guard let textPosBuffer = text.posBuffer else { return }
         let colors: [f4] = text.finalVerticesNormalized.map { pos in
-            let xTopColor = mix(topLeft, topRight, t: pos.x)
-            let xBottomColor = mix(bottomLeft, bottomRight, t: pos.x)
-            let yColor = mix(xTopColor, xBottomColor, t: pos.y)
+            let xTopColor = mix(topLeft, topRight, t: Float(pos.x))
+            let xBottomColor = mix(bottomLeft, bottomRight, t: Float(pos.x))
+            let yColor = mix(xTopColor, xBottomColor, t: Float(pos.y))
             return yColor
         }
         guard let vertexColorBuffer = ShaderCore.device.makeBuffer(bytes: colors, length: colors.count * f4.memorySize) else {

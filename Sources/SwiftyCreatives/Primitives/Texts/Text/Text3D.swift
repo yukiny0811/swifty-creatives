@@ -26,7 +26,7 @@ open class Text3D: PathText {
         extrudingIndices = []
         for letter in triangulatedPaths {
             for portion in letter.glyphLines {
-                finalVertices += portion
+                finalVertices += portion.map { f3($0) }
             }
         }
         for letter in triangulatedPaths {
@@ -34,42 +34,42 @@ open class Text3D: PathText {
                 for i in 0..<portion.count {
                     extrudingIndices.append(finalVertices.count+i)
                 }
-                finalVertices += portion.map { $0 + f3(0, 0, extrudingValue) }
+                finalVertices += portion.map { f3($0) + f3(0, 0, extrudingValue) }
             }
         }
         for path in calculatedPaths {
             for glyph in path.glyphs {
                 for i in 0..<glyph.count {
                     if i != glyph.count - 1 {
-                        finalVertices.append(f3(glyph[i].x, glyph[i].y, 0) + f3(path.offset.x, path.offset.y, 0))
-                        
+                        finalVertices.append(f3(Float(glyph[i].x), Float(glyph[i].y), 0) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
                         extrudingIndices.append(finalVertices.count)
-                        finalVertices.append(f3(glyph[i].x, glyph[i].y, extrudingValue) + f3(path.offset.x, path.offset.y, 0))
-                        
+                        finalVertices.append(f3(Float(glyph[i].x), Float(glyph[i].y), extrudingValue) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
                         extrudingIndices.append(finalVertices.count)
-                        finalVertices.append(f3(glyph[i+1].x, glyph[i+1].y, extrudingValue) + f3(path.offset.x, path.offset.y, 0))
-                        
-                        finalVertices.append(f3(glyph[i].x, glyph[i].y, 0) + f3(path.offset.x, path.offset.y, 0))
-                        
-                        finalVertices.append(f3(glyph[i+1].x, glyph[i+1].y, 0) + f3(path.offset.x, path.offset.y, 0))
-                        
+                        finalVertices.append(f3(Float(glyph[i+1].x), Float(glyph[i+1].y), extrudingValue) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
+                        finalVertices.append(f3(Float(glyph[i].x), Float(glyph[i].y), 0) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
+                        finalVertices.append(f3(Float(glyph[i+1].x), Float(glyph[i+1].y), 0) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
                         extrudingIndices.append(finalVertices.count)
-                        finalVertices.append(f3(glyph[i+1].x, glyph[i+1].y, extrudingValue) + f3(path.offset.x, path.offset.y, 0))
+                        finalVertices.append(f3(Float(glyph[i+1].x), Float(glyph[i+1].y), extrudingValue) + f3(Float(path.offset.x), Float(path.offset.y), 0))
                     } else {
-                        finalVertices.append(f3(glyph[i].x, glyph[i].y, 0) + f3(path.offset.x, path.offset.y, 0))
-                        
+                        finalVertices.append(f3(Float(glyph[i].x), Float(glyph[i].y), 0) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
                         extrudingIndices.append(finalVertices.count)
-                        finalVertices.append(f3(glyph[i].x, glyph[i].y, extrudingValue) + f3(path.offset.x, path.offset.y, 0))
-                        
+                        finalVertices.append(f3(Float(glyph[i].x), Float(glyph[i].y), extrudingValue) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
                         extrudingIndices.append(finalVertices.count)
-                        finalVertices.append(f3(glyph[0].x, glyph[0].y, extrudingValue) + f3(path.offset.x, path.offset.y, 0))
-                        
-                        finalVertices.append(f3(glyph[i].x, glyph[i].y, 0) + f3(path.offset.x, path.offset.y, 0))
-                        
-                        finalVertices.append(f3(glyph[0].x, glyph[0].y, 0) + f3(path.offset.x, path.offset.y, 0))
-                        
+                        finalVertices.append(f3(Float(glyph[0].x), Float(glyph[0].y), extrudingValue) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
+                        finalVertices.append(f3(Float(glyph[i].x), Float(glyph[i].y), 0) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
+                        finalVertices.append(f3(Float(glyph[0].x), Float(glyph[0].y), 0) + f3(Float(path.offset.x), Float(path.offset.y), 0))
+
                         extrudingIndices.append(finalVertices.count)
-                        finalVertices.append(f3(glyph[0].x, glyph[0].y, extrudingValue) + f3(path.offset.x, path.offset.y, 0))
+                        finalVertices.append(f3(Float(glyph[0].x), Float(glyph[0].y), extrudingValue) + f3(Float(path.offset.x), Float(path.offset.y), 0))
                     }
                 }
             }
@@ -93,7 +93,18 @@ open class Text3D: PathText {
         maxDepth: Int = 1
     ) {
         self.extrudingValue = extrudingValue
-        super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing, maxDepth: maxDepth)
+        super.init(
+            text: text,
+            fontName: fontName,
+            fontSize: Double(fontSize),
+            bounds: bounds,
+            pivot: simd_double2(pivot),
+            textAlignment: textAlignment,
+            verticalAlignment: verticalAlignment,
+            kern: Double(kern),
+            lineSpacing: Double(lineSpacing),
+            maxDepth: maxDepth
+        )
         let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)
         try? createAndSetBuffer(from: triangulatedPaths)
     }

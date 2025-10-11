@@ -66,7 +66,7 @@ public class AddRenderer: RendererBase {
         
         drawProcess.beforeDraw(encoder: renderCommandEncoder!)
         drawProcess.update(camera: camera)
-        drawProcess.draw(encoder: renderCommandEncoder!)
+        drawProcess.draw(encoder: renderCommandEncoder!, camera: camera)
 
         renderCommandEncoder?.setViewport(
             MTLViewport(

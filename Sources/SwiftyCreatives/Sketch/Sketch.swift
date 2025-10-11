@@ -15,6 +15,7 @@ import simd
 import SimpleSimdSwift
 import MetalKit
 
+@MainActor
 open class Sketch: FunctionBase {
     public var metalDrawableSize: f2 = .zero
     public var customMatrix: [f4x4] = [f4x4.createIdentity()]
@@ -31,7 +32,7 @@ open class Sketch: FunctionBase {
     open func setupCamera(camera: MainCamera) {}
     open func update(camera: MainCamera) {}
     #endif
-    open func draw(encoder: SCEncoder) {}
+    open func draw(encoder: SCEncoder, camera: MainCamera) {}
 
     open func afterCommit(texture: MTLTexture?) {}
 

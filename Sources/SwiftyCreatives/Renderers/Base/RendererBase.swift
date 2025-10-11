@@ -12,6 +12,7 @@ import MetalKit
 import CompositorServices
 import Spatial
 
+@MainActor
 public class RendererBase {
     
     public var drawProcess: Sketch
@@ -65,6 +66,7 @@ public class RendererBase {
     }
 }
 #else
+@MainActor
 public class RendererBase: NSObject, MTKViewDelegate {
     var camera: MainCamera
     public var drawProcess: Sketch

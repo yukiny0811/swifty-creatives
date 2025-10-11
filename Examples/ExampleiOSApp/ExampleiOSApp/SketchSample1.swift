@@ -31,7 +31,7 @@ final class SketchSample1: Sketch {
         elapsed += deltaTime
     }
     
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         let elapsedSin = sin(elapsed)
         for b in boxes {
             color(elapsedSin, b.color.y, b.color.z, b.color.w)

@@ -12,8 +12,8 @@ import FontVertexBuilder
 
 open class Text2D: PathText {
     public var posBuffer: MTLBuffer?
-    public var finalVertices: [f3] = []
-    public var finalVerticesNormalized: [f3] = []
+    public var finalVertices: [simd_double3] = []
+    public var finalVerticesNormalized: [simd_double3] = []
     func createAndSetBuffer(from triangulatedPaths: [TriangulatedLetterPath]) throws {
         finalVertices = []
         for letter in triangulatedPaths {
@@ -24,8 +24,8 @@ open class Text2D: PathText {
         if finalVertices.count == 0 {
             throw TextBufferCreationError.noVertices
         }
-        var largestX: Float = 0
-        var largestY: Float = 0
+        var largestX: Double = 0
+        var largestY: Double = 0
         for vert in finalVertices {
             if vert.x > largestX {
                 largestX = vert.x
@@ -34,19 +34,22 @@ open class Text2D: PathText {
                 largestY = vert.y
             }
         }
-        finalVerticesNormalized = finalVertices.map { f3($0.x / largestX, $0.y / largestY, 0)}
-        posBuffer = ShaderCore.device.makeBuffer(bytes: finalVertices, length: finalVertices.count * f3.memorySize)
+        finalVerticesNormalized = finalVertices.map { simd_double3($0.x / largestX, $0.y / largestY, 0)}
+        posBuffer = ShaderCore.device.makeBuffer(
+            bytes: finalVertices.map { f3($0) },
+            length: finalVertices.count * f3.memorySize
+        )
     }
     public override init(
         text: String,
         fontName: String = "Avenir-BlackOblique",
-        fontSize: Float = 10.0,
+        fontSize: Double = 10.0,
         bounds: CGSize = .zero,
-        pivot: f2 = .zero,
+        pivot: simd_double2 = .zero,
         textAlignment: CTTextAlignment = .natural,
         verticalAlignment: PathText.VerticalAlignment = .center,
-        kern: Float = 0.0,
-        lineSpacing: Float = 0.0,
+        kern: Double = 0.0,
+        lineSpacing: Double = 0.0,
         maxDepth: Int = 1
     ) {
         super.init(

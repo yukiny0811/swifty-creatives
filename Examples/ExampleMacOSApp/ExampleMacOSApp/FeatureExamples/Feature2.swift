@@ -51,7 +51,7 @@ final class Feature2: Sketch {
         }
     }
 
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         color(1, 1, 1, 1)
 
         switch currentGeometry {
@@ -66,7 +66,7 @@ final class Feature2: Sketch {
                 mesh(blob.map { $0 + f3.randomPoint(0...0.3) }, primitiveType: .lineStrip)
             }
         case .textFactoryRaw:
-            if let vertices = factoryRaw.cached["H"]?.vertices {
+            if let vertices = factoryRaw.cached["H"]?.vertices.map({ f3($0) }) {
                 mesh(vertices: vertices, colors: vertices.map { _ in f4.randomPoint(0.5...1) }, primitiveType: .triangle)
             }
             break
@@ -74,7 +74,7 @@ final class Feature2: Sketch {
             let str = text2d.calculatedPaths.map { $0.glyphs }
             if let letter = str.first {
                 for line in letter {
-                    mesh(line.map { f3($0.x, $0.y, 0) }, primitiveType: .lineStrip)
+                    mesh(line.map { f3(Float($0.x), Float($0.y), 0) }, primitiveType: .lineStrip)
                 }
             }
         }

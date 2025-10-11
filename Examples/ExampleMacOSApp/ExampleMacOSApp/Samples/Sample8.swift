@@ -20,7 +20,7 @@ final class Sample8: Sketch {
         camera.setTranslate(0, 0, -20)
     }
     
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         color(1, 0, 0, 1)
         box(testBoxPos, f3.one * 0.1)
         translate(0, 3, 0)

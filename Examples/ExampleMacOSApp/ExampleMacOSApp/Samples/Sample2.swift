@@ -16,7 +16,7 @@ final class Sample2: Sketch {
         camera.rotateAroundY(0.01)
     }
     
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         color(c)
         rect(f3.one * 5)
     }

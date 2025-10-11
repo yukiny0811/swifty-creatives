@@ -15,13 +15,13 @@ import FontVertexBuilder
 public class RawTextFactory {
     
     private var fontName: String
-    private var fontSize: Float
+    private var fontSize: Double
     private var bounds: CGSize
-    private var pivot: f2
+    private var pivot: simd_double2
     private var textAlignment: CTTextAlignment
     private var verticalAlignment: PathText.VerticalAlignment
-    private var kern: Float
-    private var lineSpacing: Float
+    private var kern: Double
+    private var lineSpacing: Double
     private var isClockwiseFont: Bool
     
     public var cached: [Character: LetterCacheRaw] = [:]
@@ -40,8 +40,8 @@ public class RawTextFactory {
         let pathBuffer = ShaderCore.device.makeBuffer(bytes: characterPath, length: characterPath.count * f3.memorySize)!
         cached[char] = LetterCacheRaw(
             vertices: characterPath,
-            offset: f2(offset.x, offset.y),
-            size: f2(
+            offset: simd_double2(offset.x, offset.y),
+            size: simd_double2(
                 characterPath.max(by: {$0.x > $1.x})!.x,
                 characterPath.max(by: {$0.y > $1.y})!.y
             )
@@ -49,8 +49,8 @@ public class RawTextFactory {
         cachedBuffer[char] = LetterCache(
             buffer: pathBuffer,
             verticeCount: characterPath.count,
-            offset: f2(offset.x, offset.y),
-            size: f2(
+            offset: simd_double2(offset.x, offset.y),
+            size: simd_double2(
                 characterPath.max(by: {$0.x > $1.x})!.x,
                 characterPath.max(by: {$0.y > $1.y})!.y
             )
@@ -61,19 +61,19 @@ public class RawTextFactory {
         cacheCharacter(char: char)
     }
     
-    public func updateCache(_ char: Character, f: (_ vertices: inout [f3]) -> ()) {
+    public func updateCache(_ char: Character, f: (_ vertices: inout [simd_double3]) -> ()) {
         f(&cached[char]!.vertices)
         cachedBuffer[char]!.buffer.contents().copyMemory(from: cached[char]!.vertices, byteCount: f3.memorySize * cached[char]!.vertices.count)
     }
     
     public init(fontName: String = "Avenir-BlackOblique",
-                fontSize: Float = 10.0,
+                fontSize: Double = 10.0,
                 bounds: CGSize = .zero,
-                pivot: f2 = .zero,
+                pivot: simd_double2 = .zero,
                 textAlignment: CTTextAlignment = .natural,
                 verticalAlignment: PathText.VerticalAlignment = .center,
-                kern: Float = 0.0,
-                lineSpacing: Float = 0.0,
+                kern: Double = 0.0,
+                lineSpacing: Double = 0.0,
                 isClockwiseFont: Bool = true
     ) {
         self.fontName = fontName

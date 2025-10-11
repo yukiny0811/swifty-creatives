@@ -53,7 +53,7 @@ final class Feature1: Sketch {
         }
     }
 
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         color(1, 1, 1, 1)
 
         switch currentGeometry {

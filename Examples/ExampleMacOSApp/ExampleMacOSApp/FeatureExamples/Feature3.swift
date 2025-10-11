@@ -21,7 +21,7 @@ final class Feature3: Sketch {
         fftVisualizer.updateData(capturer)
     }
 
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
 
         color(1, 0, 1, 0.75)
         box(max(0, fftVisualizer.averageMags[0]) * 0.05)

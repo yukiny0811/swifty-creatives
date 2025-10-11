@@ -11,10 +11,10 @@ extension Target {
 }
 
 let dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.18.7"),
-    .package(url: "https://github.com/yukiny0811/SimpleSimdSwift", exact: "1.0.1"),
-    .package(url: "https://github.com/yukiny0811/FontVertexBuilder", exact: "1.2.5"),
-    .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", exact: "3.3.1"),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.18.7"),
+    .package(url: "https://github.com/yukiny0811/SimpleSimdSwift", from: "1.0.1"),
+    .package(url: "https://github.com/yukiny0811/FontVertexBuilder", from: "2.1.1"),
+    .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", from: "3.3.1"),
     .package(url: "https://github.com/apple/swift-syntax.git", from: "600.0.1"),
 ]
 
@@ -73,7 +73,7 @@ let package = Package(
     name: "SwiftyCreatives",
     platforms: [
         .iOS(.v17),
-        .macOS(.v13),
+        .macOS(.v14),
         .tvOS(.v17),
         .visionOS(.v1),
     ],

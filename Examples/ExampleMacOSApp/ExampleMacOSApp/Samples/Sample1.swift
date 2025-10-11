@@ -12,7 +12,7 @@ final class Sample1: Sketch {
     
     let bloomPostProcessor = BloomPostProcessor()
     
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         let count = 20
         for i in 0..<count {
             color(1, Float(i) / 40, 0, 0.5)

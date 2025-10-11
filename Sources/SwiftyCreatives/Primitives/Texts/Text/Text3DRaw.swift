@@ -55,7 +55,7 @@ open class Text3DRaw: PathText {
         var tempFinalVertices: [f3] = []
         for letter in triangulatedPaths {
             for portion in letter.glyphLines {
-                tempFinalVertices += portion
+                tempFinalVertices += portion.map { f3($0) }
             }
         }
         for i in 0..<tempFinalVertices.count {
@@ -122,13 +122,13 @@ open class Text3DRaw: PathText {
         super.init(
             text: text,
             fontName: fontName,
-            fontSize: fontSize,
+            fontSize: Double(fontSize),
             bounds: bounds,
-            pivot: pivot,
+            pivot: simd_double2(pivot),
             textAlignment: textAlignment,
             verticalAlignment: verticalAlignment,
-            kern: kern,
-            lineSpacing: lineSpacing,
+            kern: Double(kern),
+            lineSpacing: Double(lineSpacing),
             maxDepth: maxDepth
         )
         let triangulatedPaths = GlyphUtil.MainFunctions.triangulate(self.calculatedPaths)

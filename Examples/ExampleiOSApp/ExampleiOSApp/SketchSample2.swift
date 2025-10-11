@@ -40,7 +40,7 @@ final class SketchSample2: Sketch {
         viewObj.$rotation.update(multiplier: deltaTime * 5)
     }
     
-    override func draw(encoder: SCEncoder) {
+    override func draw(encoder: SCEncoder, camera: MainCamera) {
         rotateZ(viewObj.$rotation.animationValue)
         viewObj.drawWithCache(encoder: encoder, customMatrix: getCustomMatrix())
     }
