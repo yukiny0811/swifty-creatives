@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yukiny0811/EasyMetalShader.git",
       "state" : {
-        "revision" : "fc4810f3ac4358c600e8778317e25e37de1cf891",
-        "version" : "3.3.1"
+        "revision" : "7f496fcd2b000262151b90a863228215bf101eda",
+        "version" : "3.3.2"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-syntax.git",
       "state" : {
-        "revision" : "0687f71944021d616d34d922343dcef086855920",
-        "version" : "600.0.1"
+        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+        "version" : "602.0.0"
       }
     },
     {

@@ -74,7 +74,7 @@ public class AddRenderer: RendererBase {
                 originY: 0,
                 width: Double(view.bounds.width) * Double(drawConfig.contentScaleFactor),
                 height: Double(view.bounds.height) * Double(drawConfig.contentScaleFactor),
-                znear: -1,
+                znear: 0,
                 zfar: 1
             )
         )
