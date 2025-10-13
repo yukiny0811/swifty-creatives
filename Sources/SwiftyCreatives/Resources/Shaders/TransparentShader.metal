@@ -96,8 +96,8 @@ vertex RasterizerData vertexTransform_vision(Vertex vIn [[ stage_in ]],
 
 constant uint useDeviceMemory [[ function_constant(0) ]];
 
-typedef rgba8unorm<half4> rgba8storage;
-typedef r8unorm<half> r8storage;
+typedef rgba8unorm<float4> rgba8storage;
+typedef r8unorm<float> r8storage;
 
 template <int NUM_LAYERS>
 struct OITData {
@@ -118,12 +118,12 @@ struct FragOut {
 };
 
 template <typename OITDataT>
-inline void InsertFragment(OITDataT oitData, half4 color, half depth, half transmittance) {
+inline void InsertFragment(OITDataT oitData, float4 color, float depth, float transmittance) {
     const short numLayers = oitData->s_numLayers;
     for (short i = 0; i < numLayers - 1; ++i) {
-        half layerDepth = oitData->depths[i];
-        half4 layerColor = oitData->colors[i];
-        half layerTransmittance = oitData->transmittances[i];
+        float layerDepth = oitData->depths[i];
+        float4 layerColor = oitData->colors[i];
+        float layerTransmittance = oitData->transmittances[i];
 
         bool insert = (depth <= layerDepth);
         oitData->colors[i] = insert ? color : layerColor;
@@ -135,16 +135,16 @@ inline void InsertFragment(OITDataT oitData, half4 color, half depth, half trans
         transmittance = insert ? layerTransmittance : transmittance;
     }
     const short lastLayer = numLayers - 1;
-    half lastDepth = oitData->depths[lastLayer];
-    half4 lastColor = oitData->colors[lastLayer];
-    half lastTransmittance = oitData->transmittances[lastLayer];
+    float lastDepth = oitData->depths[lastLayer];
+    float4 lastColor = oitData->colors[lastLayer];
+    float lastTransmittance = oitData->transmittances[lastLayer];
 
     bool newDepthFirst = (depth <= lastDepth);
 
-    half firstDepth = newDepthFirst ? depth : lastDepth;
-    half4 firstColor = newDepthFirst ? color : lastColor;
-    half4 secondColor = newDepthFirst ? lastColor : color;
-    half firstTransmittance = newDepthFirst ? transmittance : lastTransmittance;
+    float firstDepth = newDepthFirst ? depth : lastDepth;
+    float4 firstColor = newDepthFirst ? color : lastColor;
+    float4 secondColor = newDepthFirst ? lastColor : color;
+    float firstTransmittance = newDepthFirst ? transmittance : lastTransmittance;
 
     oitData->colors[lastLayer] = firstColor + secondColor * firstTransmittance;
     oitData->depths[lastLayer] = firstDepth;
@@ -157,10 +157,10 @@ void OITFragmentFunction(RasterizerData in,
                          FrameUniforms_HasTexture uniformHasTexture,
                          FrameUniforms_FogDensity uniformFogDensity,
                          FrameUniforms_FogColor uniformFogColor,
-                         texture2d<half> tex) {
+                         texture2d<float> tex) {
     const float depth = in.position.z / in.position.w;
     
-    half4 fragmentColor = half4(in.color);
+    float4 fragmentColor = float4(in.color);
     fragmentColor.rgb *= (fragmentColor.a);
     
     if (uniformHasTexture.value) {
@@ -169,10 +169,10 @@ void OITFragmentFunction(RasterizerData in,
     }
 
     if (fragmentColor.a == 0) {
-        fragmentColor = half4(0, 0, 0, 0);
+        fragmentColor = float4(0, 0, 0, 0);
     }
 
-    fragmentColor = half4(createFog(in.position.z / in.position.w,
+    fragmentColor = float4(createFog(in.position.z / in.position.w,
                                     float4(fragmentColor),
                                     uniformFogDensity.value,
                                     uniformFogColor.value));
@@ -185,20 +185,20 @@ void OITClear(imageblock<OITImageblock<NUM_LAYERS>, imageblock_layout_explicit> 
     threadgroup_imageblock OITData<NUM_LAYERS> &pixelData = oitData.data(tid)->oitData;
     const short numLayers = pixelData.s_numLayers;
     for (ushort i = 0; i < numLayers; ++i) {
-        pixelData.colors[i] = half4(0.0);
-        pixelData.depths[i] = 65504.0;
+        pixelData.colors[i] = float4(0.0);
+        pixelData.depths[i] = 3.4028235e+38;
         pixelData.transmittances[i] = 1.0;
     }
 }
 
 template <int NUM_LAYERS>
-half4 OITResolve(OITData<NUM_LAYERS> pixelData) {
+float4 OITResolve(OITData<NUM_LAYERS> pixelData) {
     const short numLayers = pixelData.s_numLayers;
-    half4 finalColor = 0;
+    float4 finalColor = 0;
     half transmittance = 1;
     for (ushort i = 0; i < numLayers; ++i) {
-        finalColor += (half4)pixelData.colors[i] * transmittance;
-        transmittance *= (half)pixelData.transmittances[i];
+        finalColor += (float4)pixelData.colors[i] * transmittance;
+        transmittance *= (float)pixelData.transmittances[i];
     }
 //    finalColor.w = 1;
     return finalColor;
@@ -210,7 +210,7 @@ OITFragmentFunction_4Layer(RasterizerData in [[ stage_in ]],
                            const device FrameUniforms_HasTexture &uniformHasTexture [[ buffer(FragmentBuffer_HasTexture) ]],
                            const device FrameUniforms_FogDensity &fogDensity [[ buffer(FragmentBuffer_FogDensity) ]],
                            const device FrameUniforms_FogColor &fogColor [[ buffer(FragmentBuffer_FogColor) ]],
-                           texture2d<half, access::sample> tex [[ texture(FragmentTexture_MainTexture) ]]) {
+                           texture2d<float, access::sample> tex [[ texture(FragmentTexture_MainTexture) ]]) {
     OITFragmentFunction(in, &oitImageblock.oitData, uniformHasTexture, fogDensity, fogColor, tex);
     FragOut<4> Out;
     Out.aoitImageBlock = oitImageblock;
@@ -222,7 +222,7 @@ kernel void OITClear_4Layer(imageblock<OITImageblock<4>, imageblock_layout_expli
     OITClear(oitData, tid);
 }
 
-fragment half4 OITResolve_4Layer(OITImageblock<4> oitImageblock [[ imageblock_data ]]) {
+fragment float4 OITResolve_4Layer(OITImageblock<4> oitImageblock [[ imageblock_data ]]) {
     return OITResolve(oitImageblock.oitData);
 }
 
