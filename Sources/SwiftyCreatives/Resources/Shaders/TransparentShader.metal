@@ -103,7 +103,7 @@ template <int NUM_LAYERS>
 struct OITData {
     static constexpr constant short s_numLayers = NUM_LAYERS;
     rgba8storage colors [[ raster_order_group(0) ]] [NUM_LAYERS];
-    half depths [[ raster_order_group(0) ]] [NUM_LAYERS];
+    float depths [[ raster_order_group(0) ]] [NUM_LAYERS];
     r8storage transmittances [[ raster_order_group(0) ]] [NUM_LAYERS];
 };
 
@@ -195,7 +195,7 @@ template <int NUM_LAYERS>
 float4 OITResolve(OITData<NUM_LAYERS> pixelData) {
     const short numLayers = pixelData.s_numLayers;
     float4 finalColor = 0;
-    half transmittance = 1;
+    float transmittance = 1;
     for (ushort i = 0; i < numLayers; ++i) {
         finalColor += (float4)pixelData.colors[i] * transmittance;
         transmittance *= (float)pixelData.transmittances[i];
