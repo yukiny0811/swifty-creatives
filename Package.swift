@@ -14,8 +14,8 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.18.7"),
     .package(url: "https://github.com/yukiny0811/SimpleSimdSwift", from: "1.0.1"),
     .package(url: "https://github.com/yukiny0811/FontVertexBuilder", from: "2.1.1"),
-    .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", from: "3.3.1"),
-    .package(url: "https://github.com/apple/swift-syntax.git", from: "600.0.1"),
+    .package(url: "https://github.com/yukiny0811/EasyMetalShader.git", from: "3.3.2"),
+    .package(url: "https://github.com/apple/swift-syntax.git", from: "602.0.0"),
 ]
 
 enum CorePackage {
